@@ -1,1 +1,1 @@
-# Group-Project-Metroid-Vania-Game-TCSS491
+# Metroid-Vania-Game-TCSS491
