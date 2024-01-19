@@ -17,15 +17,15 @@ ASSET_MANAGER.downloadAll(function () {
 
 	// ASSET_MANAGER.autoRepeat("");		add music in future
 
-	//PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
+	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
 
 	// We access the HTML canvas using the global document variable and the getElementByID function.
 	canvas = document.getElementById("gameWorld");
 	ctx = canvas.getContext("2d");	// Paint to canvas element through a 2D context
 	ctx.imageSmoothingEnabled = false;
 
-	//PARAMS.CANVAS_WIDTH = canvas.width;
-	//PARAMS.CANVAS_HEIGHT = canvas.height;
+	PARAMS.CANVAS_WIDTH = canvas.width;
+	PARAMS.CANVAS_HEIGHT = canvas.height;
 
 	let slime = new Slime(0, 210);
 	let link = new Link();
@@ -34,7 +34,8 @@ ASSET_MANAGER.downloadAll(function () {
 	
 	gameEngine.init(ctx);
 
-	//gameEngine.addEntity(new SceneManager(gameEngine));
+	let scenemanager = new SceneManager();
+	gameEngine.addEntity(scenemanager);
 	// scene manager manages which scene we're in (level 1 sky, bricks, goombas, etc.)
 	// new SceneManager(gameEngine);
 

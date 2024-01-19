@@ -92,8 +92,8 @@ class Link {
         }
         // HitBox?
         //if(PARAMS.DEBUG) {
-        //  ctx.strokeStyle = "Green"
-        //  ctx.strokeRect(this.x, this.y,  this.width * scale, this.height * scale);
+         ctx.strokeStyle = "Green"
+         ctx.strokeRect(this.x, this.y,  this.width * scale, this.height * scale);
         //}
 
         // // right walk
