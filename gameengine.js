@@ -10,10 +10,12 @@ class GameEngine {
         this.entities = [];
 
         // Information on the input
-        this.left = false;
-        this.right = false;
-        this.up = false;
-        this.down = false;
+        this.left = false;      // A
+        this.right = false;     // D
+        this.up = false;        // W
+        this.down = false;      // S
+        this.A = false;         // Q
+        this.B = false;         // E
 
         this.click = null;
         this.mouse = null;
@@ -83,6 +85,14 @@ class GameEngine {
                 case "KeyS":
                     that.down = true;
                     break;
+                case "Period":
+                case "KeyE":
+                    that.B = true;
+                    break;
+                case "Comma":
+                case "KeyQ":
+                    that.A = true;
+                    break;
             }
         }
         function keyUpListener (e) {
@@ -103,6 +113,14 @@ class GameEngine {
                 case "ArrowDown":
                 case "KeyS":
                     that.down = false;
+                    break;
+                case "Period":
+                case "KeyE":
+                    that.B = false;
+                    break;
+                case "Comma":
+                case "KeyQ":
+                    that.A = false;
                     break;
             }
         }
@@ -140,6 +158,8 @@ class GameEngine {
         for (let i = this.entities.length - 1; i >= 0; i--) {
             this.entities[i].draw(this.ctx, this);
         }
+
+        this.camera.draw(this.ctx);
     };
 
     update() {
@@ -154,6 +174,8 @@ class GameEngine {
                 entity.update();            // it calls update
             }
         }
+
+        this.camera.update();
 
         // counts backwards like we are removing as we iterate, doesn't miss any elements
         for (let i = this.entities.length - 1; i >= 0; --i) {
