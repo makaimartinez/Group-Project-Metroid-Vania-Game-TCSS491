@@ -1,43 +1,31 @@
 const gameEngine = new GameEngine();
+
 const ASSET_MANAGER = new AssetManager();
 
-let canvas;
-let ctx;
+//ex 
+//ASSET_MANAGER.queueDownload("/sprites/img.png");
+//charakter spritesheet loaded
+ASSET_MANAGER.queueDownload("./assets/Sprout Lands - Sprites - Basic pack/Characters/Basic Charakter Spritesheet.png");
+ASSET_MANAGER.queueDownload("./assets/miku spritesheet.png");
+ASSET_MANAGER.queueDownload("./assets/specter knight.png");
 
-// sprites
-ASSET_MANAGER.queueDownload("./sprites/slime.png");
-ASSET_MANAGER.queueDownload("./sprites/linksprites.png");
+ASSET_MANAGER.downloadAll(() => {
+	const canvas = document.getElementById("gameWorld");
+	const ctx = canvas.getContext("2d");
 
-// music
-// ASSET_MANAGER.queueDownload("");		add music in future
-
-// sfx
-
-ASSET_MANAGER.downloadAll(function () {
-
-	// ASSET_MANAGER.autoRepeat("");		add music in future
+	gameEngine.init(ctx);
 
 	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
 
-	// We access the HTML canvas using the global document variable and the getElementByID function.
-	canvas = document.getElementById("gameWorld");
-	ctx = canvas.getContext("2d");	// Paint to canvas element through a 2D context
-	ctx.imageSmoothingEnabled = false;
+	// ctx.imageSmoothingEnabled = false;
 
-	PARAMS.CANVAS_WIDTH = canvas.width;
-	PARAMS.CANVAS_HEIGHT = canvas.height;
-
-	let slime = new Slime(0, 210);
-	let link = new Link();
-	gameEngine.addEntity(slime);
-	gameEngine.addEntity(link);
+	//scenemanager
+	// gameEngine.addEntity(new CatPlayer(gameEngine, 0, 0, ASSET_MANAGER.getAsset("./assets/Sprout Lands - Sprites - Basic pack/Characters/Basic Charakter Spritesheet.png")));
 	
-	gameEngine.init(ctx);
+	// gameEngine.addEntity(new SpecterKnight(gameEngine, 150, 250, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+	gameEngine.addEntity(new Ground(gameEngine, 10, 350, 750, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+	// gameEngine.addEntity(new Ground(gameEngine, 300, 300, 120, ASSET_MANAGER.getAsset("./specter knight.png")));
 
-	let scenemanager = new SceneManager();
-	gameEngine.addEntity(scenemanager);
-	// scene manager manages which scene we're in (level 1 sky, bricks, goombas, etc.)
-	// new SceneManager(gameEngine);
-
+	gameEngine.addEntity(new Miku(gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
 	gameEngine.start();
 });
