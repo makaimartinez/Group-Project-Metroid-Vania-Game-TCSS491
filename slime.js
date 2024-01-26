@@ -58,12 +58,12 @@ class Slime {
         // update position
     }
 
-    draw() {
+    draw(ctx) {
         let scale = 3;
         let tick = gameEngine.clockTick;
 
         // left walk
-        this.animations[0].drawFrame(tick, this.x, this.y, 1);
+        this.animations[0].drawFrame(tick, ctx, this.x, this.y, 1, false);
 
     }
 

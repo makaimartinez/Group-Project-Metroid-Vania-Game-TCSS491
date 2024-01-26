@@ -24,7 +24,7 @@ class GameEngine {
 
         // Options and the Details
         this.options = options || {
-            debugging: false,
+            debugging: true,
         };
     };
 
@@ -159,7 +159,7 @@ class GameEngine {
             this.entities[i].draw(this.ctx, this);
         }
 
-        this.camera.draw(this.ctx);
+        // this.camera.draw(this.ctx);
     };
 
     update() {

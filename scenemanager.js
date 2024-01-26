@@ -1,6 +1,6 @@
 class SceneManager {
     constructor(game) {
-        this.gameEngine = game
+        this.gameEngine = game;
         // this.gameEngine.camera = this;
         this.x = 0;
         this.score = 0;
@@ -13,15 +13,17 @@ class SceneManager {
     };
 
     clearEntities() {
-        gameEngine.entities.forEach(function (entity) {
-            entity.removeFromWorld = true;
-        });
+            gameEngine.entities.forEach(function (entity) {
+                entity.removeFromWorld = true;
+            });
     };
 
     loadLevel() {
         let slime = new Slime(0, 210);
+        
 	    this.gameEngine.addEntity(slime);
-	    // this.gameEngine.addEntity(this.link);
+        
+	    this.gameEngine.addEntity(new Miku(gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
     }
 
     update() {
