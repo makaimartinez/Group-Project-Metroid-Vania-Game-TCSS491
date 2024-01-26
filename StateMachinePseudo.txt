@@ -1,0 +1,37 @@
+isIdle (default)
+isJumping
+isMoving
+isAttacking
+isDamaged
+isThrowing
+dmgCooldown = 100
+
+
+on jump event:
+if !isJumping
+	JUMP
+else
+	do nothing
+
+
+on attack event:
+if !isAttacking
+	ATTACK
+else if !isAttacking AND !isJumping
+	AIR ATTACK
+else
+	do nothing
+
+
+on land event:
+if isJumping
+	isJumping = false
+if isDamaged
+	isDamaged = false
+	dmgCooldown++ (updates every tick)
+
+
+on hurt event:
+if dmgCooldown = 100
+	isDamaged = true
+	dmgCooldown = 0
