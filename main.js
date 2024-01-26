@@ -31,7 +31,7 @@ ASSET_MANAGER.downloadAll(function () {
 	
 	gameEngine.init(ctx);
 
-	let scenemanager = new SceneManager();
+	let scenemanager = new SceneManager(gameEngine);
 	gameEngine.addEntity(scenemanager);
 	// scene manager manages which scene we're in (level 1 sky, bricks, goombas, etc.)
 	// new SceneManager(gameEngine);

@@ -175,7 +175,7 @@ class GameEngine {
             }
         }
 
-        this.camera.update();
+        // this.camera.update();
 
         // counts backwards like we are removing as we iterate, doesn't miss any elements
         for (let i = this.entities.length - 1; i >= 0; --i) {

@@ -1,27 +1,27 @@
 class SceneManager {
     constructor(game) {
         this.gameEngine = game
-        this.gameEngine.camera = this;
+        // this.gameEngine.camera = this;
         this.x = 0;
         this.score = 0;
         this.coins = 0;
         this.lives = 3;
 
-        this.link = new Link();
+        // this.link = new Link();
 
         this.loadLevel();
     };
 
     clearEntities() {
-            gameEngine.entities.forEach(function (entity) {
-                entity.removeFromWorld = true;
-            });
+        gameEngine.entities.forEach(function (entity) {
+            entity.removeFromWorld = true;
+        });
     };
 
     loadLevel() {
         let slime = new Slime(0, 210);
 	    this.gameEngine.addEntity(slime);
-	    this.gameEngine.addEntity(this.link);
+	    // this.gameEngine.addEntity(this.link);
     }
 
     update() {
@@ -30,7 +30,7 @@ class SceneManager {
         let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
 
         // if (this.x < this.link.x - midpoint) this.x = this.link.x - midpoint;
-        this.x = this.link.x - midpoint;
+        // this.x = this.link.x - midpoint;
 
         // NOTE: THIS FOLLOWING CODE HAS A BUG WHERE CANVAS COLOR WON'T CHANGE BACK TO BLUE.
         // var canvas = document.getElementById("gameWorld");
