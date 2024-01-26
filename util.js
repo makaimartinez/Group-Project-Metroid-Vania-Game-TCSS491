@@ -60,5 +60,5 @@ const getDistance = (p1, p2) => {
 const PARAMS = {
     DEBUG: true,
     SCALE: 3,
-    BITWIDTH: 16
+    BITWIDTH: 16        // how wide a block is in world, 16px
 };

@@ -27,10 +27,7 @@ ASSET_MANAGER.downloadAll(function () {
 	PARAMS.CANVAS_WIDTH = canvas.width;
 	PARAMS.CANVAS_HEIGHT = canvas.height;
 
-	let slime = new Slime(0, 210);
-	let link = new Link();
-	gameEngine.addEntity(slime);
-	gameEngine.addEntity(link);
+
 	
 	gameEngine.init(ctx);
 
