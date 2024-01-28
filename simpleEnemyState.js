@@ -1,3 +1,6 @@
+//Author: Thomas Tien
+//use this as a simple example for state machines
+
 class Enemy {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y});
