@@ -153,7 +153,7 @@ class Miku {
         if(this.game.up) {
             
             if(this.y >= FLOOR) {
-                console.log("up");
+                // console.log("up");
                 this.velocity.y = -80;
             }
         }
