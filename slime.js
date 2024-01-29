@@ -12,11 +12,8 @@ class Slime {
         this.state = 0;         // left = 0, right = 1, idle = 2
         this.dead = false;
 
-
         this.speed = 50;
         this.velocity = { x: 0, y: 0};
-        // this.fallAcc = 
-
 
         this.animations = [];
         this.loadAnimations(this.spritesheet)
@@ -44,18 +41,34 @@ class Slime {
         // walk right
         this.animations[1] = new Animator(spritesheet, 0, 65,  this.width, this.height, this.frameCount, this.totalTime, this.framePadding, false, true);
         
-        // idel
+        // idle
         this.animations[2] = new Animator(spritesheet, 0, 129,  this.width, this.height, this.frameCount, this.totalTime, this.framePadding, false, true);
 
     }
 
     update() {
+        let TICK = gameEngine.clockTick;
+
         // update velocity
-        this.x -= this.speed * gameEngine.clockTick;
-        if (this.x < 100 ) {
-            this.x = 800;
+        if (this.state == 0) {
+            this.velocity.x -= this.speed * TICK;
+        }
+        if (this.state == 1) {
+            this.velocity.x += this.speed * TICK;
+        }
+        if (this.x < 200 ) {
+            this.state = 1;
+            this.velocity.x = 0;
+            this.velocity.x += this.speed * TICK;
+        }
+        if (this.x > 600 ) {
+            this.state = 0;
+            this.velocity.x = 0;
+            this.velocity.x -= this.speed * TICK;
         }
         // update position
+        this.x += this.velocity.x * TICK * PARAMS.SCALE;
+
     }
 
     draw(ctx) {
@@ -63,7 +76,7 @@ class Slime {
         let tick = gameEngine.clockTick;
 
         // left walk
-        this.animations[0].drawFrame(tick, ctx, this.x, this.y, 1, false);
+        this.animations[this.state].drawFrame(tick, ctx, this.x, this.y, 1, false);
 
     }
 
