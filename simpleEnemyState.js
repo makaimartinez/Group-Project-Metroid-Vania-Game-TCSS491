@@ -6,6 +6,8 @@ class Enemy {
         Object.assign(this, { game, x, y});
         this.currentState = new EnemyIdle(this);
         this.stateName = "idle";//states: idle, walk
+        this.BB;
+        this.lastBB;
     }
     
     update() {
@@ -18,10 +20,39 @@ class Enemy {
             delete this.currentState;
             this.currentState = newState;
         }
+        this.physics();
+        this.updateLastBB();
+        this.updateBB();
+        this.collide();
     }
 
     draw(ctx) {
         this.currentState.draw(ctx);
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, 42, 86);
+    }
+
+    updateLastBB() {
+        this.lastBB = this.BB;
+    }
+
+    physics() {
+        const TICK = this.game.clockTick;
+
+        this.y+= 4 * TICK * 2;
+    }
+
+    collide() {
+        let that = this;
+        this.game.entities.forEach(function(entity) {
+            if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
+                if(entity instanceof Ground) {
+                    console.log("hit ground");
+                }
+            }
+        })
     }
 }
 
