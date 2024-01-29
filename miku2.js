@@ -4,33 +4,11 @@ class Miku2 {
         
         this.velocity = {x:0, y:0};
 
-        // this.facing = false; //facing true: left false: right
-        // this.state = 0; //0 = idle, 1 = walking, 2 = running, 3= jump, 4= falling, 5= landing, 6= attacking, 7= dancing, 8 = jumping
-        
+        this.facing = false; //facing true: left false: right
         this.currentState = new mikuIdle(this); 
-        this.stateName = "idle";
-
-        const MIN_WALK = 30;
-        const MAX_WALK = 160;
-        const ACC_WALK = 40;
-        const DEC_SKID = 200;
-        const DEC_REL = 70;
-        
-        this.fall_acc = 100;
-        const MIN_FALL = 20;
-        const MAX_FALL = 100;
-
-        // this.defeat = false;
-        // this.flickerflag = true; //when hurt
-        //defeat
-        // this.fall_acc = 30;
-        
-        // this.animations = [];
-        // this.elaspedTime = 0;
-        // this.elaspedTimeFlicker = 0;
-        //loop length
-        // this.loadAnimations();
-        // this.currentAnimation = this.idle;
+        this.state = 0; //0 = idle, 1 = walk, 2 = run, 3= jump, 4= fall, 5= land, 6= attack, 7= dance, //8 = jumping
+        this.animations = [];
+        this.loadAnimations();
     }
 
     loadAnimations() {
@@ -93,107 +71,297 @@ class Miku2 {
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * facing) - alignX, this.y - alignY, scale, this.facing);
     }
 
-    update(){
+    update() {
         const TICK = this.game.clockTick;
         let game = this.game;
-        let newState;
-        if(this.stateName != "idle") {
-            newState = this.currentState.update(TICK,game);
-        } else {
-            newState = this.currentState.update();
-        }
+        let newState = this.currentState.update(game,TICK);
 
         //if it's a new state, switch to that state
-        if(newState != this.stateName) {
-            console.log(newState.name);
-            this.stateName = newState.name;
+        if(newState != this.state) {
+            // console.log(newState.name);
+            this.state = newState.name;
+            this.currentState.onExit();
             delete this.currentState;
             this.currentState = newState;
+            this.currentState.onEnter();
         }
-        console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
-
-        this.y+= this.velocity.y * TICK * 2;
-        this.x+= this.velocity.x * TICK * 2;
+        // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
+        this.physics(TICK);
+        this.updateLastBB();
+        this.updateBB();
+        this.collide();
     }
 
     draw(ctx) {
-        // this.adjustSpritePosition(ctx, 1.5);
+        this.adjustSpritePosition(ctx, 1.5);
         ctx.strokeStyle = "rgb(225,40,133)";
         ctx.strokeRect(this.x + 25, this.y + 5, 42, 86);
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, 42, 86);
+    }
+
+    updateLastBB() {
+        this.lastBB = this.BB;
+    }
+
+    physics(TICK) {
+        //falling
+        this.velocity.y += 100 * TICK;
+
+        this.y+= this.velocity.y * TICK * 2;
+        this.x+= this.velocity.x * TICK * 2;
+
+        if (this.velocity.x < 0) this.facing = true;
+        if (this.velocity.x > 0) this.facing = false;
+    }
+
+    collide() {
+        let that = this;
+        this.game.entities.forEach(function(entity) {
+            if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
+                if(entity instanceof Ground) {
+                    // console.log("hit ground");
+                    that.y = entity.BB.top - 86;
+                    that.velocity.y = 0;
+                    if(that.stateName == "fall") {
+                        that.currentState = new EnemyIdle(that);
+                        that.stateName = "idle";
+                    }
+                }
+            }
+        })
     }
 }
 
 class mikuIdle {
-    constructor(mainMiku) {
-        this.mainMiku = mainMiku;
-        this.name = "idle";
-
-        //on enter
-        this.mainMiku.velocity.x = 0;
-        this.mainMiku.velocity.y = 0;
+    constructor(stateManager) {
+        this.stateManager = stateManager;
+        this.name = 0;
     }
 
-    update() {
+    onEnter() {
+        this.stateManager.velocity.x = 0;
+        this.stateManager.velocity.y = 0;
+    }
+    
+    update(game, TICK) {
         //check for left and right
-        let mainMiku = this.mainMiku;
-        if(mainMiku.game.left || mainMiku.game.right) {
+        if(game.left || game.right) {
             let direction = 1;
-            if(mainMiku.game.left) direction = -1;
-            // console.log(mainMiku)
-            return new mikuWalk(mainMiku, direction);
+            if(game.left) direction = -1;
+            // console.log(stateManager)
+            return new mikuWalk(this.stateManager, direction);
         }
-        return "idle";
+        if(this.stateManager.velocity.y >0) {
+            // return "fall";
+            return new mikuFall(this.stateManager);
+        }
+        return this.name;
     }
 
-    draw(ctx) {
+    onExit() {
 
     }
 }
 
 class mikuWalk {
-    constructor(mainMiku, direction) {
-        this.mainMiku = mainMiku;
-        this.name = "walk";
-        this.mainMiku.velocity.x += direction * 5;
+    constructor(stateManager, direction) {
+        this.stateManager = stateManager;
+        this.name = 1;
+
+        this.direction = direction;
     }
 
-    update(TICK, game) {
-        mainMiku = this.mainMiku;
-        // if (game.right && !game.left && !game.down) {
-        //     mainMiku.velocity.x += 1;
-        // } else if (game.left && !game.right && !game.down) {
-        //     mainMiku.velocity.x -= 1;
-        // } else {
-        //     mainMiku.velocity.x -= 1;
-        // }
+    onEnter() {
+        const ACC_WALK = 40;
+        this.stateManager.velocity.x += this.direction * ACC_WALK;
+    }
 
-        // if (game.left && !game.right && !game.down) {
-        //     mainMiku.velocity.x -= 1;
-        // } else if (game.right && !game.left && !game.down) {
-        //     mainMiku.velocity.x += 1;
-        // } else {
-        //     mainMiku.velocity.x += 1;
-        // }
+    update(game, TICK) {
+        const MIN_WALK = 30;
+        const MAX_WALK = 160;
+        const ACC_WALK = 40;
+        const DEC_SKID = 200;
+        const DEC_REL = 70;
 
-        // if (mainMiku.velocity.x >= mainMiku.MAX_WALK) mainMiku.velocity.x = mainMiku.MAX_WALK;
-        // if (mainMiku.velocity.x <= -1 * mainMiku.MAX_WALK) mainMiku.velocity.x = -mainMiku.MAX_WALK;
-
-        //condition to leave
-        if(Math.abs(mainMiku.velocity.x) <= 10) {
-            console.log("idle");
-            // return new mikuIdle(mainMiku);
+        let stateManager = this.stateManager;
+        if(!stateManager.facing) {
+            if (game.right && !game.left && !game.down) {
+                stateManager.velocity.x += ACC_WALK * TICK;
+            } else if (game.left && !game.right && !game.down) {
+                stateManager.velocity.x -= DEC_SKID * TICK;
+            } else {
+                stateManager.velocity.x -= DEC_REL * TICK;
+            }
+        } else {
+            if (game.left && !game.right && !game.down) {
+                stateManager.velocity.x -= ACC_WALK * TICK;
+            } else if (game.right && !game.left && !game.down) {
+                stateManager.velocity.x += DEC_SKID * TICK;
+            } else {
+                stateManager.velocity.x += DEC_REL * TICK;
+            }
         }
-        return "walk";
+
+        if (stateManager.velocity.x >= MAX_WALK) stateManager.velocity.x = MAX_WALK;
+        if (stateManager.velocity.x <= -1 * MAX_WALK) stateManager.velocity.x = -MAX_WALK;
+
+        // condition to leave
+        if(Math.abs(stateManager.velocity.x) <= MIN_WALK) {
+            return new mikuIdle(stateManager);
+        }
+        return this.name;
+    }
+
+    onExit() {
+
+    }
+}
+
+class mikuRun {
+    constructor(stateManager) {
+        this.stateManager = stateManager;
+        this.name = 2;
+    }
+
+    onEnter() {
+
+    }
+
+    update(game, TICK) {
+
+    }
+    
+    onExit() {
+
+    }
+}
+
+class mikuJump {
+    constructor(stateManager) {
+        this.stateManager = stateManager;
+        this.name = 3;
+    }
+
+    onEnter() {
+
+    }
+
+    update(game, TICK) {
+
+    }
+    
+    onExit() {
+
     }
 }
 
 class mikuFall {
-    constructor(mainMiku) {
-        this.mainMiku = mainMiku;
-        this.name = "fall";
+    constructor(stateManager) {
+        this.stateManager = stateManager;
+        this.name = 4;
     }
 
-    update() {
+    onEnter() {
+
+    }
+
+    update(game, TICK) {
+        const MIN_WALK = 30;
+        const MAX_WALK = 160;
+        const ACC_WALK = 20;
+        const DEC_SKID = 100;
+        const DEC_REL = 45;
+
+        let stateManager = this.stateManager;
+        // if(!stateManager.facing) {
+        //     if (game.right && !game.left && !game.down) {
+        //         stateManager.velocity.x += ACC_WALK * TICK;
+        //     } else if (game.left && !game.right && !game.down) {
+        //         stateManager.velocity.x -= DEC_SKID * TICK;
+        //     } else {
+        //         stateManager.velocity.x -= DEC_REL * TICK;
+        //     }
+        // } else {
+        //     if (game.left && !game.right && !game.down) {
+        //         stateManager.velocity.x -= ACC_WALK * TICK;
+        //     } else if (game.right && !game.left && !game.down) {
+        //         stateManager.velocity.x += DEC_SKID * TICK;
+        //     } else {
+        //         stateManager.velocity.x += DEC_REL * TICK;
+        //     }d
+        // }
+
+        // if (stateManager.velocity.x >= MAX_WALK) stateManager.velocity.x = MAX_WALK;
+        // if (stateManager.velocity.x <= -1 * MAX_WALK) stateManager.velocity.x = -MAX_WALK;
+
+        // condition to leave
+        if(Math.abs(stateManager.velocity.y) == 0) {
+            return new mikuIdle(stateManager);
+        }
+        return this.name;
+    }
+
+    onExit() {
+
+    }
+}
+
+class mikuLand {
+    constructor(stateManager) {
+        this.stateManager = stateManager;
+        this.name = 5;
+    }
+
+    onEnter() {
+
+    }
+
+    update(game, TICK) {
+        return this.name;
+    }
+    
+    onExit() {
+
+    }
+}
+
+class mikuAttack {
+    constructor(stateManager) {
+        this.stateManager = stateManager;
+        this.name = 6;
+    }
+
+    onEnter() {
+
+    }
+
+    update(game, TICK) {
+        return this.name;
+    }
+    
+    onExit() {
+
+    }
+}
+
+class mikuDance {
+    constructor(stateManager) {
+        this.stateManager = stateManager;
+        this.name = 2;
+    }
+
+    onEnter() {
+
+    }
+
+    update(game, TICK) {
+        return this.name;
+    }
+    
+    onExit() {
 
     }
 }
