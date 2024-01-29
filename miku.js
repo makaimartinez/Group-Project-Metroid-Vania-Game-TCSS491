@@ -6,8 +6,6 @@ class Miku {
         Object.assign(this, { game, x, y, spritesheet});
         //(spritesheet, xStart, yStart, refWidth, refHeight, frameCount, frameDuration, framePadding, reverse, loop)
         
-        this.x = x;
-        this.y = y;
         this.velocity = {x:0, y:0};
 
         this.facing = false; //facing true: left false: right

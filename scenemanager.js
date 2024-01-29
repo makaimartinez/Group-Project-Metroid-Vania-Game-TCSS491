@@ -22,8 +22,10 @@ class SceneManager {
         let slime = new Slime(0, 210);
         
 	    this.gameEngine.addEntity(slime);
-        
-	    this.gameEngine.addEntity(new Miku(gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
+        this.gameEngine.addEntity(new Enemy(this.gameEngine, 100, 200));
+        this.gameEngine.addEntity(new Ground(this.game, 30, 300, 200));
+	    this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
+        this.gameEngine.addEntity(new Miku2(this.gameEngine, 200, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
     }
 
     update() {

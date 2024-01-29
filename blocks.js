@@ -12,6 +12,7 @@ class Ground {
     };
 
     draw(ctx) {
+        ctx.strokeStyle = "black";
         ctx.strokeRect(this.x, this.y, this.w, PARAMS.BLOCKWIDTH);
     };
 }
