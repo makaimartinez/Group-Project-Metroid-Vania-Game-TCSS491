@@ -31,6 +31,8 @@ class SceneManager {
         // Creating textured environment tiles
         this.gameEngine.addEntity(new GrassTile(this.gameEngine, 220, 300, 64));
         this.gameEngine.addEntity(new StoneTile(this.gameEngine, 284, 300, 64));
+
+        // ITEMS
     }
 
     update() {
