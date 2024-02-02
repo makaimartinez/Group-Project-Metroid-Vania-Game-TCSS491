@@ -29,10 +29,10 @@ class SceneManager {
 	    this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
 
         // Creating textured environment tiles (X and Y are multiplied by the size defined in each block's class)
-        this.gameEngine.addEntity(new GrassTile(this.gameEngine, 8, 2));
-        this.gameEngine.addEntity(new DirtTile(this.gameEngine, 8, 3));
-        this.gameEngine.addEntity(new StoneTile(this.gameEngine, 9, 2));
-        this.gameEngine.addEntity(new DevTile(this.gameEngine, 9, 3));
+        this.gameEngine.addEntity(new GrassTile(this.gameEngine, 15, 2));
+        this.gameEngine.addEntity(new DirtTile(this.gameEngine, 15, 3));
+        this.gameEngine.addEntity(new StoneTile(this.gameEngine, 16, 2));
+        this.gameEngine.addEntity(new DevTile(this.gameEngine, 16, 3));
         this.gameEngine.addEntity(new GrassTile(this.gameEngine, 12, 9));
 
 
