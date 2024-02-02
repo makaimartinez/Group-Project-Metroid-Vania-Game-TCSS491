@@ -468,7 +468,7 @@ class mikuDance {
     constructor(stateManager) {
         this.stateManager = stateManager;
         this.name = 7;
-        this.danceDuration = 500;
+        this.danceDuration = 530;
         this.danceTime = 0;
     }
 
