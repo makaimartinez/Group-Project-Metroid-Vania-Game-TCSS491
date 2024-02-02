@@ -4,12 +4,14 @@ const ASSET_MANAGER = new AssetManager();
 let canvas;
 let ctx;
 
-// sprites
-ASSET_MANAGER.queueDownload("./sprites/slime.png");
-ASSET_MANAGER.queueDownload("./sprites/linksprites.png");
-ASSET_MANAGER.queueDownload("./assets/specter knight.png");
+// player and enemies
+ASSET_MANAGER.queueDownload("./assets/slime.png");
 ASSET_MANAGER.queueDownload("./assets/miku spritesheet.png");
+
+// items and environment
 ASSET_MANAGER.queueDownload("./assets/bg_groundTiles.png");
+ASSET_MANAGER.queueDownload("./assets/chest.png");
+
 
 // music
 // ASSET_MANAGER.queueDownload("");		add music in future
@@ -31,12 +33,7 @@ ASSET_MANAGER.downloadAll(function () {
 
 	gameEngine.init(ctx);
 
-	// let scenemanager = new SceneManager();
 	gameEngine.addEntity(new SceneManager(gameEngine));
-	// gameEngine.addEntity(new Slime(10,10));
-	// gameEngine.addEntity(new Miku(gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
-	// scene manager manages which scene we're in (level 1 sky, bricks, goombas, etc.)
-	// new SceneManager(gameEngine);
 
 	gameEngine.start();
 });
