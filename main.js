@@ -4,6 +4,7 @@ const ASSET_MANAGER = new AssetManager();
 let canvas;
 let ctx;
 
+ASSET_MANAGER.queueDownload("./assets/bg_background.png");
 // player and enemies
 ASSET_MANAGER.queueDownload("./assets/slime.png");
 ASSET_MANAGER.queueDownload("./assets/miku spritesheet.png");

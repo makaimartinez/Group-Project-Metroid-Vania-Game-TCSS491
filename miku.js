@@ -125,7 +125,7 @@ class Miku {
         let that = this;
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
-                if(entity instanceof Ground ) {//&& (that.lastBB.bot) <= entity.BB.top
+                if(entity.BB.name == "ground") {//&& (that.lastBB.bot) <= entity.BB.top
                     // fix bug where "landing" on the side puts character on top
                     that.y = entity.BB.top - 86;
                     that.velocity.y = 0;
