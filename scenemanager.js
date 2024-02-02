@@ -26,7 +26,6 @@ class SceneManager {
         this.gameEngine.addEntity(new Ground(this.gameEngine, 100, 300, 50));
         this.gameEngine.addEntity(new Ground(this.gameEngine, 30, 600, 800));
 	    this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
-        this.gameEngine.addEntity(new Miku2(this.gameEngine, 200, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
 
         // Creating textured environment tiles
         this.gameEngine.addEntity(new GrassTile(this.gameEngine, 220, 300, 64));
