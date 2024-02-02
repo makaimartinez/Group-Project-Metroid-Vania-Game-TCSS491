@@ -2,6 +2,8 @@
 class Chest {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y});
+        this.x *= PARAMS.BLOCKWIDTH;
+        this.y *= PARAMS.BLOCKWIDTH;
         this.spritesheet = ASSET_MANAGER.getAsset("./assets/chest.png");
         this.size = 48; // 48 x 48 px 
 

@@ -19,7 +19,7 @@ class SceneManager {
     };
 
     loadLevel() {
-        let slime = new Slime(0, 210);
+        let slime = new Slime(200, 550);
         
 	    this.gameEngine.addEntity(slime);
         this.gameEngine.addEntity(new Enemy(this.gameEngine, 100, 200));
@@ -36,6 +36,9 @@ class SceneManager {
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the total length in blocks
         this.drawFloor(0, 20);
+
+        // items
+        this.gameEngine.addEntity(new Chest(this.gameEngine, 9, 11.5));
     };
 
     drawFloor(theType, theLength) {
