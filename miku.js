@@ -118,7 +118,7 @@ class Miku {
         this.x+= this.velocity.x * TICK * 2;
 
         if (this.velocity.x < 0) this.facing = true;
-        if (this.velocity.x >= 0) this.facing = false;
+        if (this.velocity.x > 0) this.facing = false;
     }
 
     collide() {
@@ -440,6 +440,9 @@ class mikuAttack {
                     stateManager.velocity.x += DEC_REL * TICK;
                 }
             }
+            if(Math.abs(this.stateManager.velocity.x) < 1) {
+                this.calledState = new mikuIdle();
+            } 
         }
 
         if(this.attackTime > this.attackDuration) {
