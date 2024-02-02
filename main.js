@@ -7,7 +7,7 @@ let ctx;
 // player and enemies
 ASSET_MANAGER.queueDownload("./assets/slime.png");
 ASSET_MANAGER.queueDownload("./assets/miku spritesheet.png");
-
+ASSET_MANAGER.queueDownload("./assets/specter knight.png");
 // items and environment
 ASSET_MANAGER.queueDownload("./assets/bg_groundTiles.png");
 ASSET_MANAGER.queueDownload("./assets/chest.png");
