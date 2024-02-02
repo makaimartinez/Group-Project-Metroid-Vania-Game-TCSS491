@@ -16,6 +16,7 @@ class GameEngine {
         this.down = false;      // S
         this.A = false;         // Q
         this.B = false;         // E
+        this.Z = false;         // Z for emoting
 
         this.click = null;
         this.mouse = null;
@@ -93,6 +94,9 @@ class GameEngine {
                 case "KeyQ":
                     that.A = true;
                     break;
+                case "KeyZ":
+                    that.Z = true;
+                    break;
             }
         }
         function keyUpListener (e) {
@@ -121,6 +125,9 @@ class GameEngine {
                 case "Comma":
                 case "KeyQ":
                     that.A = false;
+                    break;
+                case "KeyZ":
+                    that.Z = false;
                     break;
             }
         }

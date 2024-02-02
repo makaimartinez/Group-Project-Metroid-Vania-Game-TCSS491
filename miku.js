@@ -68,7 +68,7 @@ class Miku {
                 alignX = 18;
                 break;
             case 7:
-                alignX - 15;
+                alignX = 15;
                 break;
         }
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX, this.y - alignY, scale, this.facing);
@@ -125,7 +125,7 @@ class Miku {
         let that = this;
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
-                if(entity instanceof Ground ) {//&& (that.lastBB.bot) <= entity.BB.top
+                if(entity.BB.name == "ground") {//&& (that.lastBB.bot) <= entity.BB.top
                     // fix bug where "landing" on the side puts character on top
                     that.y = entity.BB.top - 86;
                     that.velocity.y = 0;
@@ -160,12 +160,14 @@ class mikuIdle {
             // return fall
             return new mikuFall(this.stateManager);
         }
-        
         if(game.up) {
             // return jump
             return new mikuJump(this.stateManager);
         }
-        if(game.attack) {
+        if(game.Z) {
+            return new mikuDance(this.stateManager);
+        }
+        if(game.A) {
             // return attack
             return new mikuAttack(this.stateManager, this);
         }
@@ -465,7 +467,9 @@ class mikuAttack {
 class mikuDance {
     constructor(stateManager) {
         this.stateManager = stateManager;
-        this.name = 2;
+        this.name = 7;
+        this.danceDuration = 500;
+        this.danceTime = 0;
     }
 
     onEnter() {
@@ -473,6 +477,14 @@ class mikuDance {
     }
 
     update(game, TICK) {
+        this.danceTime++;
+
+        if(this.danceTime >= this.danceDuration) {
+            this.danceTime = 0;
+            console.log("exit");
+            return new mikuIdle(this.stateManager);
+        }
+
         return this.name;
     }
     
