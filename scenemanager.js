@@ -19,24 +19,52 @@ class SceneManager {
     };
 
     loadLevel() {
-        let slime = new Slime(550, 550);
+        let slime = new Slime(0, 210);
         
 	    this.gameEngine.addEntity(slime);
         this.gameEngine.addEntity(new Enemy(this.gameEngine, 100, 200));
         this.gameEngine.addEntity(new Ground(this.gameEngine, 100, 300, 50));
         this.gameEngine.addEntity(new Ground(this.gameEngine, 30, 600, 800));
 	    this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
-        this.gameEngine.addEntity(new Miku2(this.gameEngine, 200, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
 
-        // 
+        // Creating textured environment tiles (X and Y are multiplied by the size defined in each block's class)
+        this.gameEngine.addEntity(new GrassTile(this.gameEngine, 8, 2));
+        this.gameEngine.addEntity(new DirtTile(this.gameEngine, 8, 3));
+        this.gameEngine.addEntity(new StoneTile(this.gameEngine, 9, 2));
+        this.gameEngine.addEntity(new DevTile(this.gameEngine, 9, 3));
 
-        // Creating textured environment tiles
-        this.gameEngine.addEntity(new GrassTile(this.gameEngine, 220, 300, 64));
-        this.gameEngine.addEntity(new StoneTile(this.gameEngine, 284, 300, 64));
+        // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
+        // Second argument is the total length in blocks
+        this.drawFloor(0, 20);
+    };
 
-        // ITEMS
-        this.gameEngine.addEntity(new Chest(this.gameEngine, 500, 550));
-    }
+    drawFloor(theType, theLength) {
+        
+        if (theType == '0') {
+            console.log(theType);
+            for (var i = 0; i < theLength; i++) {
+                this.gameEngine.addEntity(new GrassTile(this.gameEngine, i, 9));
+            };
+        } else if (theType == '1') {
+
+            console.log(theType);
+            for (var i = 0; i < theLength; i++) {
+                this.gameEngine.addEntity(new StoneTile(this.gameEngine, i, 9));
+            }
+        } else if (theType == '2') {
+
+            console.log(theType);
+            for (var i = 0; i < theLength; i++) {
+                this.gameEngine.addEntity(new DirtTile(this.gameEngine, i, 9));
+            }
+        } else {
+
+            console.log(theType);
+            for (var i = 0; i < theLength; i++) {
+                this.gameEngine.addEntity(new DevTile(this.gameEngine, i, 9));
+            }
+        };
+    };
 
     update() {
         // PARAMS.DEBUG = document.getElementById("debug").checked;
