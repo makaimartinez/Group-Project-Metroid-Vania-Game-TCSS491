@@ -21,7 +21,6 @@ ASSET_MANAGER.downloadAll(function () {
 	// ASSET_MANAGER.autoRepeat("");		add music in future
 
 	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
-
 	// We access the HTML canvas using the global document variable and the getElementByID function.
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");	// Paint to canvas element through a 2D context
