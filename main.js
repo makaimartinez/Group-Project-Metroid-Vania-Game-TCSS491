@@ -9,6 +9,7 @@ ASSET_MANAGER.queueDownload("./sprites/slime.png");
 ASSET_MANAGER.queueDownload("./sprites/linksprites.png");
 
 ASSET_MANAGER.queueDownload("./assets/miku spritesheet.png");
+ASSET_MANAGER.queueDownload("./assets/bg_groundTiles.png");
 
 // music
 // ASSET_MANAGER.queueDownload("");		add music in future
