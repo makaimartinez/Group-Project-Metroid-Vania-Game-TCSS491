@@ -19,7 +19,7 @@ class SceneManager {
     };
 
     loadLevel() {
-        let slime = new Slime(300, 210);
+        let slime = new Slime(550, 550);
         
 	    this.gameEngine.addEntity(slime);
         this.gameEngine.addEntity(new Enemy(this.gameEngine, 100, 200));
