@@ -8,7 +8,7 @@ class Slime {
         // sprite height = 64
         // padding = 0
 
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/slime.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./assets/slime.png");
         this.state = 0;         // left = 0, right = 1, idle = 2
         this.dead = false;
 
