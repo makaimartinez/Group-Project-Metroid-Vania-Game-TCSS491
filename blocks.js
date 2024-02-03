@@ -35,8 +35,8 @@ class GrassTile {
 
     draw(ctx, game) {
         ctx.drawImage(this.spritesheet, 0, 0, 32, 32, this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
-        //ctx.strokeStyle = "black";
-        //ctx.strokeRect(this.x, this.y, this.size, this.size);
+        ctx.strokeStyle = "black";
+        //ctx.strokeRect(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
     };
 }
 
@@ -58,8 +58,8 @@ class StoneTile {
 
     draw(ctx, game) {
         ctx.drawImage(this.spritesheet, 32, 0, 32, 32, this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
-        //ctx.strokeStyle = "black";
-        //ctx.strokeRect(this.x, this.y, this.size, this.size);
+        ctx.strokeStyle = "black";
+        //ctx.strokeRect(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
     };
 }
 
@@ -81,8 +81,8 @@ class DirtTile {
 
     draw(ctx, game) {
         ctx.drawImage(this.spritesheet, 64, 0, 32, 32, this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
-        //ctx.strokeStyle = "black";
-        //ctx.strokeRect(this.x, this.y, this.size, this.size);
+        ctx.strokeStyle = "black";
+        //ctx.strokeRect(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
     };
 }
 
@@ -104,7 +104,25 @@ class DevTile {
 
     draw(ctx, game) {
         ctx.drawImage(this.spritesheet, 96, 0, 32, 32, this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
-        //ctx.strokeStyle = "black";
-        //ctx.strokeRect(this.x, this.y, this.size, this.size);
+        ctx.strokeStyle = "black";
+        //ctx.strokeRect(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+    };
+}
+
+class Background {
+    constructor(game, x) {
+        Object.assign(this, { game, x });
+        this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_background.png");
+
+        // this.leftBB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH * 2)
+        // this.rightBB = new BoundingBox(this.x + this.w - PARAMS.BLOCKWIDTH, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH * 2)
+    };
+
+    update() {
+
+    };
+
+    draw(ctx, game) {
+        ctx.drawImage(this.spritesheet, this.x, 0, PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2, 0, 0, PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2);
     };
 }
