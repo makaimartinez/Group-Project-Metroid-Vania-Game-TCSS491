@@ -167,7 +167,7 @@ class mikuIdle {
         if(game.Z) {
             return new mikuDance(this.stateManager);
         }
-        if(game.A) {
+        if(game.click) {
             // return attack
             return new mikuAttack(this.stateManager, this);
         }
@@ -229,7 +229,7 @@ class mikuWalk {
             // return "jump";
             return new mikuJump(this.stateManager);
         }
-        if(game.attack) {
+        if(game.click) {
             // return attack
             return new mikuAttack(this.stateManager, this);
         }
@@ -397,7 +397,7 @@ class mikuAttack {
         this.stateManager = stateManager;
         this.calledState = calledState;
         this.name = 6;
-        this.attackDuration = 250;
+        this.attackDuration = 260;
         this.attackTime = 0;
 
         this.direction = 1;
@@ -460,7 +460,7 @@ class mikuAttack {
     }
     
     onExit() {
-
+        this.stateManager.game.click = false;
     }
 }
 
