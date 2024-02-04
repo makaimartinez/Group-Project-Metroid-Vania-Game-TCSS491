@@ -151,7 +151,7 @@ class Player {
                         that.newState = new playerLand(that);
                     }
                 }
-                if(entity.BB.name == "slime") {
+                if(entity.BB.name == "slime" || entity.BB.name == "specter") {
                     // console.log("hurt");
                     if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
