@@ -26,8 +26,8 @@ class SceneManager {
         this.gameEngine.addEntity(new SpecterKnight(this.gameEngine, 300, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         //this.gameEngine.addEntity(new Ground(this.gameEngine, 100, 300, 50));
         //this.gameEngine.addEntity(new Ground(this.gameEngine, 30, 600, 800));
-	    this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
-        this.gameEngine.addEntity(new Player(this.gameEngine, 0, 50, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png")));
+	    // this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
+        this.gameEngine.addEntity(new Player(this.gameEngine, 0, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png")));
         // Creating textured environment tiles (X and Y are multiplied by the size defined in each block's class)
         this.gameEngine.addEntity(new GrassTile(this.gameEngine, 15, 2));
         this.gameEngine.addEntity(new DirtTile(this.gameEngine, 15, 3));

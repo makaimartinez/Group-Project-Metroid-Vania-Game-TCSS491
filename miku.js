@@ -79,6 +79,9 @@ class Miku {
         let game = this.game;
         this.newState = this.currentState.update(game,TICK);
 
+        //if click, turn off click
+        if(this.game.click) this.game.click = false;
+
         // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
         this.physics(TICK);
         this.updateLastBB();

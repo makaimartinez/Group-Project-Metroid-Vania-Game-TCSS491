@@ -93,6 +93,9 @@ class Player {
         let game = this.game;
         this.newState = this.currentState.update(game,TICK);
 
+        //if click, turn off click
+        if(this.game.click) this.game.click = false;        
+
         // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
         this.physics(TICK);
         this.updateLastBB();
@@ -115,11 +118,9 @@ class Player {
         ctx.strokeRect(this.x + 20, this.y + 10, 42, 86);
         // ctx.strokeRect(this.x + 20, this.y + 10 - 100, 42, 86);   
     }
-
     updateBB() {
-        this.BB = new BoundingBox(this.x + 20, this.y + 10, 42, 86);
+        this.BB = new BoundingBox(this.x + 20, this.y + 10, 42, 86, "player");
     }
-
     updateLastBB() {
         this.lastBB = this.BB;
     }
@@ -131,22 +132,28 @@ class Player {
         this.y+= this.velocity.y * TICK * 2;
         this.x+= this.velocity.x * TICK * 2;
 
-        if (this.velocity.x < 0) this.facing = true;
-        if (this.velocity.x > 0) this.facing = false;
+        // if (this.velocity.x < 0) this.facing = true;
+        // if (this.velocity.x > 0) this.facing = false;
     }
 
     collide() {
         let that = this;
         this.game.entities.forEach(function(entity) {
+            // if(entity.BB.name == "slime") console.log("slime")
             if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
-                if(entity.BB.name == "ground") {//&& (that.lastBB.bot) <= entity.BB.top
+                if(entity.BB.name == "ground")  {//&& (that.lastBB.bottom) <= entity.BB.top)
                     // fix bug where "landing" on the side puts character on top
-                    // console.log("enter")
-                    that.y = entity.BB.top - 95;
+                    // console.log(that.lastBB.bottom + " " + entity.BB.top)
+                    that.y = entity.BB.top - 96;
                     that.velocity.y = 0;
                     if(that.stateName == 4 || that.state == 3) {
+                        console.log(that.y + " " + entity.BB.top)
                         that.newState = new playerLand(that);
                     }
+                }
+                if(entity.BB.name == "slime") {
+                    // console.log("hurt");
+                    if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
             }
         })
@@ -185,7 +192,7 @@ class playerIdle {
         }
         if(game.click) {
             // return attack
-            // return new playerAttack(this.stateManager, this);
+            return new playerAttackDown(this.stateManager, this);
         }
         return this.name;
     }
@@ -237,6 +244,9 @@ class playerWalk {
         if (stateManager.velocity.x >= MAX_WALK) stateManager.velocity.x = MAX_WALK;
         if (stateManager.velocity.x <= -1 * MAX_WALK) stateManager.velocity.x = -MAX_WALK;
 
+        if (stateManager.velocity.x < 0) stateManager.facing = true;
+        if (stateManager.velocity.x > 0) stateManager.facing = false;
+
         // condition to leave
         if(Math.abs(stateManager.velocity.x) <= MIN_WALK) {
             return new playerIdle(stateManager);
@@ -247,7 +257,7 @@ class playerWalk {
         }
         if(game.click) {
             // return attack
-            // return new playerAttack(this.stateManager, this);
+            return new playerAttackDown(this.stateManager, this);
         }
         if(this.stateManager.velocity.y > 0) {
             // return "fall";
@@ -361,7 +371,7 @@ class playerLand {
         this.stateManager = stateManager;
         this.name = 5;
 
-        this.landingDuration = 75;
+        this.landingDuration = 15;
         this.landingTime = 0;
     }
 
@@ -393,7 +403,42 @@ class playerLand {
 }
 
 class playerAttackDown {
+    constructor(statemanager, calledState) {
+        this.statemanager = statemanager;
+        this.calledState = calledState;
+        this.name = 6;
+        this.duration = 210;
+        this.time = 0;
+        this.direction = 1;
+    }
 
+    onEnter() {
+        this.statemanager.velocity.x =0;
+        if(this.statemanager.facing) {//facing left
+            this.direction = -1;
+        }
+        // if(Math.abs(this.statemanager.velocity.x) > 0) this.statemanager.velocity.x +=5 * -1 * this.direction; 
+    }
+
+    update(game) {
+        this.time++;    
+
+        // console.log(this.time);
+        if(this.time >= this.duration) {
+            console.log("done");
+            // return this.calledState;
+            return new playerIdle(this.statemanager);
+        }
+        if(game.click) {
+            // return attack
+            // return new playerAttackUp(this.stateManager, this);
+        }
+        return this.name;
+    }
+
+    onExit() {
+        this.statemanager.velocity.x = 0;
+    }
 }
 
 class playerAttackUp {
@@ -401,5 +446,33 @@ class playerAttackUp {
 }
 
 class playerHurt {
+    constructor(statemanager, dmgSource) {
+        this.statemanager = statemanager;
+        this.dmgSource = dmgSource;
+        this.name = 8;
+        this.duration = 180;
+        this.time = 0;
+    }
 
+    onEnter() {
+        let dmgDirection = this.dmgSource.BB.center.x < this.statemanager.x;
+        // console.log(dmgDirection);
+        if(dmgDirection) {
+            this.statemanager.velocity.x = 50;
+        } else {
+            this.statemanager.velocity.x = -50;
+        }
+    }
+
+    update() {
+        this.time++;
+        if(this.time >= this.duration) {
+            return new playerIdle(this.statemanager);
+        }
+        return this.name;
+    }
+
+    onExit() {
+
+    }
 }
