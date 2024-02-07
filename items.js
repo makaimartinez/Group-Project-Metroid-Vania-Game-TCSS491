@@ -12,7 +12,7 @@ class Chest {
     };
 
     update(){
-        // if player collides
+        // if player attacks, remove chest entity (or show as opened) and display items on the ground
         // transistion to chest screen or auto collect?
 
     };
@@ -23,3 +23,16 @@ class Chest {
         ctx.strokeRect(this.x, this.y, this.size, this.size);
     };
 }
+
+// speed
+
+
+// health
+
+// weapons
+
+    // spear
+
+    // sword
+
+// armor
