@@ -4,12 +4,15 @@ const ASSET_MANAGER = new AssetManager();
 let canvas;
 let ctx;
 
+ASSET_MANAGER.queueDownload("./assets/bg_background.png");
 // player and enemies
 ASSET_MANAGER.queueDownload("./assets/slime.png");
+ASSET_MANAGER.queueDownload("./assets/pack_loreon_char_free_modified.png");
 ASSET_MANAGER.queueDownload("./assets/miku spritesheet.png");
-
+ASSET_MANAGER.queueDownload("./assets/specter knight.png");
 // items and environment
 ASSET_MANAGER.queueDownload("./assets/bg_groundTiles.png");
+
 ASSET_MANAGER.queueDownload("./assets/chest.png");
 
 
