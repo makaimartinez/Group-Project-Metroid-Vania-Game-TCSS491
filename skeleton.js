@@ -252,11 +252,9 @@ class skellyDeath {
         Object.assign(this, {stateManager});
         this.name = 5;
     }
-
     onEnter() {
-        this.stateManager.velocity.x *=0.5;
+        
     }
-
     update(TICK) {
         return this.name;
     }

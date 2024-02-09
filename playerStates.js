@@ -429,7 +429,6 @@ class playerAttackDown {
 
         // console.log(this.time);
         if(this.time >= this.duration) {
-            console.log("done");
             // return this.calledState;
             return new playerIdle(this.statemanager);
         }
