@@ -68,7 +68,7 @@ class Miku {
                 alignX = 18;
                 break;
             case 7:
-                alignX - 15;
+                alignX = 15;
                 break;
         }
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX, this.y - alignY, scale, this.facing);
@@ -78,6 +78,9 @@ class Miku {
         const TICK = this.game.clockTick;
         let game = this.game;
         this.newState = this.currentState.update(game,TICK);
+
+        //if click, turn off click
+        if(this.game.click) this.game.click = false;
 
         // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
         this.physics(TICK);
@@ -160,12 +163,14 @@ class mikuIdle {
             // return fall
             return new mikuFall(this.stateManager);
         }
-        
         if(game.up) {
             // return jump
             return new mikuJump(this.stateManager);
         }
-        if(game.attack) {
+        if(game.Z) {
+            return new mikuDance(this.stateManager);
+        }
+        if(game.click) {
             // return attack
             return new mikuAttack(this.stateManager, this);
         }
@@ -227,7 +232,7 @@ class mikuWalk {
             // return "jump";
             return new mikuJump(this.stateManager);
         }
-        if(game.attack) {
+        if(game.click) {
             // return attack
             return new mikuAttack(this.stateManager, this);
         }
@@ -395,7 +400,7 @@ class mikuAttack {
         this.stateManager = stateManager;
         this.calledState = calledState;
         this.name = 6;
-        this.attackDuration = 250;
+        this.attackDuration = 260;
         this.attackTime = 0;
 
         this.direction = 1;
@@ -458,14 +463,16 @@ class mikuAttack {
     }
     
     onExit() {
-
+        this.stateManager.game.click = false;
     }
 }
 
 class mikuDance {
     constructor(stateManager) {
         this.stateManager = stateManager;
-        this.name = 2;
+        this.name = 7;
+        this.danceDuration = 530;
+        this.danceTime = 0;
     }
 
     onEnter() {
@@ -473,6 +480,14 @@ class mikuDance {
     }
 
     update(game, TICK) {
+        this.danceTime++;
+
+        if(this.danceTime >= this.danceDuration) {
+            this.danceTime = 0;
+            console.log("exit");
+            return new mikuIdle(this.stateManager);
+        }
+
         return this.name;
     }
     

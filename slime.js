@@ -45,6 +45,10 @@ class Slime {
 
     }
 
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, this.width, 48, "slime");
+    }
+
     update() {
         let TICK = gameEngine.clockTick;
 
@@ -68,6 +72,8 @@ class Slime {
         // update position
         this.x += this.velocity.x * TICK * PARAMS.SCALE;
 
+        //updateBB
+        this.updateBB();
     }
 
     draw(ctx) {
