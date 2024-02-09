@@ -126,7 +126,7 @@ class SpecterKnight {
                     // fix bug where "landing" on the side puts character on top
                     that.y = entity.BB.top - 90;
                     if(that.stateName == 4 || that.state == 3) {
-                        // that.newState = new mikuLand(that);
+                       
                     }
                 }
             }

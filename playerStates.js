@@ -116,6 +116,9 @@ class Player {
     draw(ctx) {
         this.adjustSpritePosition(ctx, 3);
         ctx.strokeRect(this.x + 20, this.y + 10, 42, 86);
+        ctx.beginPath();
+        ctx.arc(this.x + 20 + 21, this.y + 5 + 43, 200, 0, 2 * Math.PI);
+        ctx.stroke();
         // ctx.strokeRect(this.x + 20, this.y + 10 - 100, 42, 86);   
     }
     updateBB() {
@@ -335,6 +338,7 @@ class playerFall {
         //air physics
         const MAX_WALK = 160;
         const ACC_WALK = 40;
+        const ACC_RUN = 60;
 
         let stateManager = this.stateManager;
         // horizontal physics
@@ -407,7 +411,7 @@ class playerAttackDown {
         this.statemanager = statemanager;
         this.calledState = calledState;
         this.name = 6;
-        this.duration = 210;
+        this.duration = 205;
         this.time = 0;
         this.direction = 1;
     }
