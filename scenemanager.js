@@ -39,9 +39,13 @@ class SceneManager {
 
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the total length in blocks
-        this.drawFloor(0, 23, 11);
-        this.drawFloor(2, 23, 12);
-        this.drawFloor(2, 23, 13);
+        this.drawFloor(0, 0, 13, 11);
+        this.drawFloor(2, 0, 13, 12);
+        this.drawFloor(2, 0, 13, 13);
+
+        this.drawFloor(0, 16, 7, 11);
+        this.drawFloor(2, 16, 7, 12);
+        this.drawFloor(2, 16, 7, 13);
 
         // items
         this.gameEngine.addEntity(new Chest(this.gameEngine, 9, 10));
@@ -52,30 +56,30 @@ class SceneManager {
 
     };
 
-    drawFloor(theType, theLength, theLevel) {
+    drawFloor(theType, theStartX, theLength, theLevel) {
         
         if (theType == '0') {
             console.log(theType);
             for (var i = 0; i < theLength; i++) {
-                this.gameEngine.addEntity(new GrassTile(this.gameEngine, i, theLevel));
+                this.gameEngine.addEntity(new GrassTile(this.gameEngine, theStartX + i, theLevel));
             };
         } else if (theType == '1') {
 
             console.log(theType);
             for (var i = 0; i < theLength; i++) {
-                this.gameEngine.addEntity(new StoneTile(this.gameEngine, i, theLevel));
+                this.gameEngine.addEntity(new StoneTile(this.gameEngine, theStartX + i, theLevel));
             }
         } else if (theType == '2') {
 
             console.log(theType);
             for (var i = 0; i < theLength; i++) {
-                this.gameEngine.addEntity(new DirtTile(this.gameEngine, i, theLevel));
+                this.gameEngine.addEntity(new DirtTile(this.gameEngine, theStartX + i, theLevel));
             }
         } else {
 
             console.log(theType);
             for (var i = 0; i < theLength; i++) {
-                this.gameEngine.addEntity(new DevTile(this.gameEngine, i, theLevel));
+                this.gameEngine.addEntity(new DevTile(this.gameEngine, theStartX + i, theLevel));
             }
         };
     };
