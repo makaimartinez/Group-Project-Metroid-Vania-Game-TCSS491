@@ -5,7 +5,11 @@ class skelly {
     constructor(game, x, y, spritesheet) {
         Object.assign(this, { game, x, y,spritesheet});
         this.currentState = new skellyFall(this);//new EnemyFall(this);
-        this.state = 2;//states: idle, walk, attack, hurt, death
+        this.state = 2;//states: idle, walk, fall, attack, hurt, death
+        this.health = 3;
+        this.defeat = false;
+        this.hurt = false;
+
         this.newState = this.state;
         this.facing = false;
 
@@ -71,18 +75,37 @@ class skelly {
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX, this.y - alignY - 100, scale, false);
     }
 
+    hit() {
+        this.hurt = true;
+    }
+
+    receive() {
+        if(this.hurt && this.health <= 0 && this.state != 5) {
+            this.newState = new skellyDeath(this);
+        } else if(this.hurt && (this.state != 4 && this.state != 5)) {
+            this.newState = new skellyHurt(this);
+        } 
+    }
+
     update() {
         const TICK = this.game.clockTick;
         this.newState = this.currentState.update(TICK);
+        
+        if(this.defeat) {
+            this.removeFromWorld = true;
+        }
+
+        this.receive();
+
         this.physics();
         this.updateLastBB();
         this.updateBB();
         this.collide();
-        // console.log(this.newState + " " + this.state);
+        
         //if it's a new state, switch to that state
         if(this.newState != this.state) {
             this.state = this.newState.name;
-            delete this.currentState;
+            this.currentState.onExit();
             this.currentState = this.newState;
             this.currentState.onEnter();
         }
@@ -91,12 +114,17 @@ class skelly {
 
     draw(ctx) {
         this.adjustSpritePosition(ctx,2.8);
+        
+        ctx.font = "15px serif";
+        ctx.fillStyle = "Black";
+        ctx.textAlign = "right";
+        ctx.fillText("HP " + this.health, this.x + 30, this.y + 20);
         // ctx.strokeRect(this.x, this.y + 25 - 100, 44, 65);
         ctx.strokeRect(this.x, this.y + 25, 44, 65);
     }
 
     updateBB() {
-        this.BB = new BoundingBox(this.x, this.y + 25, 44, 65);
+        this.BB = new BoundingBox(this.x, this.y + 25, 44, 65,"skelly");
     }
 
     updateLastBB() {
@@ -105,8 +133,6 @@ class skelly {
 
     physics() {
         const TICK = this.game.clockTick;
-
-        // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
 
         this.velocity.y += this.fallAC * TICK;
 
@@ -134,7 +160,7 @@ class skellyIdle {
     constructor(stateManager) {
         Object.assign(this, {stateManager});
         this.name = 0;
-        this.idleDuration = 500;
+        this.idleDuration = 4.4;
         this.idleTime = 0;
     }
 
@@ -144,7 +170,7 @@ class skellyIdle {
 
     update(TICK) {
         //update stuff
-        this.idleTime++;
+        this.idleTime+=TICK;
         
         //condition to exit
         if(this.idleTime >= this.idleDuration) {
@@ -168,7 +194,7 @@ class skellyWalk {
     constructor(stateManager) {
         Object.assign(this, {stateManager});
         this.name = 1;
-        this.walkDuration = 1000;
+        this.walkDuration = 2.6 * 3;
         this.walkTime = 0;
     }
 
@@ -177,7 +203,7 @@ class skellyWalk {
 
     update(TICK) {
         //update stuff
-        this.walkTime++;
+        this.walkTime+=TICK;
         this.direction = 1;
         if(this.stateManager.facing) this.direction = -1;
         this.stateManager.x+=0.2 * this.direction;
@@ -200,7 +226,7 @@ class skellyFall {
     }
 
     onEnter() {
-        // this.stateManager.velocity.x *=0.5;
+
     }
 
     update(TICK) {
@@ -233,17 +259,29 @@ class skellyHurt {
     constructor(stateManager) {
         Object.assign(this, {stateManager});
         this.name = 4;
+        this.duration = 2;
+        this.elaspedTime = 0;
     }
 
     onEnter() {
-        this.stateManager.velocity.x *=0.5;
+        this.stateManager.health-=1;
+        // this.stateManager.velocity.x = dmgDirection * 4; 
     }
 
     update(TICK) {
+        this.elaspedTime+=TICK;
+        // console.log(this.elaspedTime);
+        if(this.elaspedTime >= this.duration) {
+            return new skellyIdle(this.stateManager);
+        }
+
         return this.name;
     }
-    onExit() {
 
+    onExit() {
+        console.log("hurt");
+        this.stateManager.hurt = false;
+        
     }
 }
 
@@ -251,14 +289,21 @@ class skellyDeath {
     constructor(stateManager) {
         Object.assign(this, {stateManager});
         this.name = 5;
+        this.duration = 3;
+        this.elaspedTime = 0;
     }
     onEnter() {
         
     }
+
     update(TICK) {
+        this.elaspedTime+=TICK;
+        if(this.elaspedTime >= this.duration) {
+            return new skellyIdle(this.stateManager);
+        }
         return this.name;
     }
     onExit() {
-
+        this.stateManager.removeFromWorld = true;
     }
 }

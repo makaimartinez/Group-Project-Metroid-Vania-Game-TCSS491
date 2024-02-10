@@ -364,7 +364,7 @@ class mikuLand {
         this.stateManager = stateManager;
         this.name = 5;
 
-        this.landingDuration = 75;
+        this.landingDuration = 0.65;
         this.landingTime = 0;
     }
 
@@ -374,7 +374,7 @@ class mikuLand {
 
     update(game, TICK) {
         // console.log("landing " + this.landingTime);
-        this.landingTime++;
+        this.landingTime+=TICK;
 
         if(game.left || game.right) {
             // let direction = 1;
@@ -400,7 +400,7 @@ class mikuAttack {
         this.stateManager = stateManager;
         this.calledState = calledState;
         this.name = 6;
-        this.attackDuration = 260;
+        this.attackDuration = 1.6;
         this.attackTime = 0;
 
         this.direction = 1;
@@ -418,7 +418,7 @@ class mikuAttack {
     }
 
     update(game, TICK) {
-        this.attackTime++;
+        this.attackTime+=TICK;
 
         const MIN_WALK = 30;
         const MAX_WALK = 160;
@@ -471,7 +471,7 @@ class mikuDance {
     constructor(stateManager) {
         this.stateManager = stateManager;
         this.name = 7;
-        this.danceDuration = 530;
+        this.danceDuration = 3;
         this.danceTime = 0;
     }
 
@@ -480,7 +480,7 @@ class mikuDance {
     }
 
     update(game, TICK) {
-        this.danceTime++;
+        this.danceTime+=TICK;
 
         if(this.danceTime >= this.danceDuration) {
             this.danceTime = 0;
