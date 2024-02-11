@@ -3,7 +3,7 @@ class Player {
         Object.assign(this, { game, x, y, spritesheet});
         
         this.velocity = {x:0, y:0};
-        this.health = 1;
+        this.health = 10;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
         this.BB;
@@ -26,8 +26,8 @@ class Player {
         this.animations[3] = new Animator(this.spritesheet, 0, 216, 23, 35, 3, 0.5, 2, false, true);//3= jump
         this.animations[4] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 1, 0.15, 2, false, true);//4= falling 
         this.animations[5] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 3, 0.15, 2, false, true);//5= landing 
-        this.animations[6] = new Animator(this.spritesheet, 0, 71, 62, 40, 5, 0.15, 0, false, true)//6= attacking //down cut
-        this.animations[7] = new Animator(this.spritesheet, 0, 112, 64, 40, 6, 0.15, 0, false, true);//7= attacking //up cit
+        this.animations[6] = new Animator(this.spritesheet, 0, 71, 62, 40, 5, 0.16, 0, false, true)//6= attacking //down cut
+        this.animations[7] = new Animator(this.spritesheet, 0, 112, 64, 40, 6, 0.16, 0, false, true);//7= attacking //up cit
         this.animations[8] = new Animator(this.spritesheet, 0, 252, 22, 30, 3, 0.2, 2, false, true);//8= hurt
         this.animations[9] = new Animator(this.spritesheet, 0, 144, 45, 41, 5, 0.35, 2, false, true); //defeat
         this.animations[10] = new Animator(this.spritesheet, (45 + 2) * 4, 144, 45, 41, 1, 0.5, 2, false, true); //very very dead
@@ -438,7 +438,7 @@ class playerAttackDown {
         this.stateManager = stateManager;
         this.calledState = calledState;
         this.name = 6;
-        this.duration = this.stateManager.animations[this.name].totalTime; //measured in seconds
+        this.duration = this.stateManager.animations[this.name].totalTime -0.01; //measured in seconds
         this.elaspedTime = 0;
         this.direction = 1;
     }
@@ -447,14 +447,11 @@ class playerAttackDown {
         this.stateManager.velocity.x =0;
         if(this.stateManager.facing) {//facing left
             this.direction = -1;
-        }
-
-        // if(Math.abs(this.stateManager.velocity.x) > 0) this.stateManager.velocity.x +=5 * -1 * this.direction; 
+        } 
     }
 
     update(game,TICK) {
         this.elaspedTime+=TICK;
-        // console.log(this.stateManager.animations[this.name].currentFrame());
         if(this.stateManager.animations[this.name].currentFrame() == 3) {
             let x = this.stateManager.x;
             let y = this.stateManager.y    

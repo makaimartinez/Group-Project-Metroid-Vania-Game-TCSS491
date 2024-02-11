@@ -34,7 +34,7 @@ class skelly {
         this.animations[1] = new Animator(this.spritesheet, 1, 0, 21, 32, 13, 0.12, 1, false, true); //1 = walk
         this.animations[2] = new Animator(this.spritesheet, 0, 66, 22.9, 32, 1, 0.2, 1.1, false, true); //2 = fall
         this.animations[3] = new Animator(this.spritesheet, 0, 165, 42, 38, 10, 0.2, 1, false, true); //3 = attack
-        this.animations[4] = new Animator(this.spritesheet, 0, 99, 29, 32, 8, 0.25, 1, false, true); //4 = hurt
+        this.animations[4] = new Animator(this.spritesheet, 0, 99, 29, 32, 8, 0.15, 1, false, true); //4 = hurt
         this.animations[5] = new Animator(this.spritesheet, 0, 132, 32, 32, 15, 0.2, 1, false, true); //5 =death
     }
 
@@ -259,7 +259,7 @@ class skellyHurt {
     constructor(stateManager) {
         Object.assign(this, {stateManager});
         this.name = 4;
-        this.duration = 2;
+        this.duration = this.stateManager.animations[this.name].totalTime;
         this.elaspedTime = 0;
     }
 
