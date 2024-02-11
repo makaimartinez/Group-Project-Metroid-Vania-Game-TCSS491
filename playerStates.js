@@ -3,7 +3,7 @@ class Player {
         Object.assign(this, { game, x, y, spritesheet});
         
         this.velocity = {x:0, y:0};
-
+        this.health = 1;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
         this.BB;
@@ -21,15 +21,16 @@ class Player {
         }
         //spritesheet, xStart, yStart, width, height, frameCount, frameDuration, framePadding, reverse, loop
         this.animations[0] = new Animator(this.spritesheet, 0 + 22 * 4 + 1, 283, 21, 32, 2, 0.6, 1, false, true); //0 = idle
-        this.animations[1] = new Animator(this.spritesheet, 0, 0, 20, 32, 6, 0.25, 2, false, true); //1 = walking
-        this.animations[2] = new Animator(this.spritesheet, 0, 34, 28, 36, 6, 0.4, 2, false, true);//2 = running
-        this.animations[3] = new Animator(this.spritesheet, 0, 216, 23, 35, 3, 0.9, 2, false, true);//3= jump
-        this.animations[4] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 1, 0.4, 2, false, true);//4= falling 
-        this.animations[5] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 3, 0.4, 2, false, true);//5= landing 
-        this.animations[6] = new Animator(this.spritesheet, 0, 71, 62, 40, 5, 0.25, 0, false, true)//6= attacking //down cut
-        this.animations[7] = new Animator(this.spritesheet, 0, 112, 64, 40, 6, 0.25, 0, false, true);//7= attacking //up cit
+        this.animations[1] = new Animator(this.spritesheet, 0, 0, 20, 32, 6, 0.2, 2, false, true); //1 = walking
+        this.animations[2] = new Animator(this.spritesheet, 0, 34, 28, 36, 6, 0.15, 2, false, true);//2 = running
+        this.animations[3] = new Animator(this.spritesheet, 0, 216, 23, 35, 3, 0.5, 2, false, true);//3= jump
+        this.animations[4] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 1, 0.15, 2, false, true);//4= falling 
+        this.animations[5] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 3, 0.15, 2, false, true);//5= landing 
+        this.animations[6] = new Animator(this.spritesheet, 0, 71, 62, 40, 5, 0.15, 0, false, true)//6= attacking //down cut
+        this.animations[7] = new Animator(this.spritesheet, 0, 112, 64, 40, 6, 0.15, 0, false, true);//7= attacking //up cit
         this.animations[8] = new Animator(this.spritesheet, 0, 252, 22, 30, 3, 0.2, 2, false, true);//8= hurt
-        this.animations[9] = new Animator(this.spritesheet, 0, 144, 45, 41, 5, 0.5, 2, false, true); //defeat
+        this.animations[9] = new Animator(this.spritesheet, 0, 144, 45, 41, 5, 0.35, 2, false, true); //defeat
+        this.animations[10] = new Animator(this.spritesheet, (45 + 2) * 4, 144, 45, 41, 1, 0.5, 2, false, true); //very very dead
     }
 
     adjustSpritePosition(ctx, scale) {
@@ -79,6 +80,7 @@ class Player {
                 alignY = -10;
                 break;
             case 9:
+            case 10:
                 disjointX = 5;
                 alignX = 25;
                 alignY = 20;
@@ -112,24 +114,28 @@ class Player {
             // console.log(newState.name);
             this.state = this.newState.name;
             this.currentState.onExit();
-            delete this.currentState;
+            // delete this.currentState;
             this.currentState = this.newState;
             this.currentState.onEnter();
         }
     }
     
     update() {
-        this.updateloop();
+        if(this.state != 10) this.updateloop();
     }
 
     draw(ctx) {
         this.adjustSpritePosition(ctx, 3);
         if(PARAMS.DEBUG) {
             ctx.strokeRect(this.x + 20, this.y + 10, 42, 86);
+            ctx.font = "15px serif";
+            ctx.fillStyle = "Black";
+            ctx.textAlign = "right";
+            ctx.fillText("HP " + this.health, this.x + 55, this.y + 0);
             // ctx.beginPath();
             // ctx.arc(this.x + 20 + 21, this.y + 5 + 43, 200, 0, 2 * Math.PI);
             // ctx.stroke();
-        // ctx.strokeRect(this.x + 20, this.y + 10 - 100, 42, 86);
+            // ctx.strokeRect(this.x + 20, this.y + 10 - 100, 42, 86);
         }   
     }
 
@@ -167,15 +173,15 @@ class Player {
                     }
                 }
                 if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
-                    // console.log("hurt");
-                    if(that.state != 8) that.newState = new playerHurt(that, entity);
+                    if(!entity.dead){
+                        if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity);
+                    }
                 }
             }
             // if(that.dmgBB && entity.BB && entity.BB.name == "skelly")
             // console.log(that.dmgBB.name + " " + entity.BB.name + " " + that.dmgBB.collide(entity.BB))
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
                 if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
-                    // console.log("hurt");
                     entity.hit();
                     // if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
@@ -396,7 +402,7 @@ class playerLand {
         this.stateManager = stateManager;
         this.name = 5;
 
-        this.duration = 0.15; //measured in seconds
+        this.duration = this.stateManager.animations[this.name].totalTime; //measured in seconds
         this.elaspedTime = 0;
     }
 
@@ -428,38 +434,38 @@ class playerLand {
 }
 
 class playerAttackDown {
-    constructor(statemanager, calledState) {
-        this.statemanager = statemanager;
+    constructor(stateManager, calledState) {
+        this.stateManager = stateManager;
         this.calledState = calledState;
         this.name = 6;
-        this.duration = 1.25; //measured in seconds
+        this.duration = this.stateManager.animations[this.name].totalTime; //measured in seconds
         this.elaspedTime = 0;
         this.direction = 1;
     }
 
     onEnter() {
-        this.statemanager.velocity.x =0;
-        if(this.statemanager.facing) {//facing left
+        this.stateManager.velocity.x =0;
+        if(this.stateManager.facing) {//facing left
             this.direction = -1;
         }
 
-        // if(Math.abs(this.statemanager.velocity.x) > 0) this.statemanager.velocity.x +=5 * -1 * this.direction; 
+        // if(Math.abs(this.stateManager.velocity.x) > 0) this.stateManager.velocity.x +=5 * -1 * this.direction; 
     }
 
     update(game,TICK) {
         this.elaspedTime+=TICK;
-        // console.log(this.statemanager.animations[this.name].currentFrame());
-        if(this.statemanager.animations[this.name].currentFrame() == 3) {
-            let x = this.statemanager.x;
-            let y = this.statemanager.y    
-            this.statemanager.dmgBB = new BoundingBox(x - 50, y - 15, 180, 105, "player attack down");
+        // console.log(this.stateManager.animations[this.name].currentFrame());
+        if(this.stateManager.animations[this.name].currentFrame() == 3) {
+            let x = this.stateManager.x;
+            let y = this.stateManager.y    
+            this.stateManager.dmgBB = new BoundingBox(x - 50, y - 15, 180, 105, "player attack down");
         } else {
-            this.statemanager.dmgBB = null;
+            this.stateManager.dmgBB = null;
         }
 
         if(this.elaspedTime >= this.duration) {
             // return this.calledState;
-            return new playerIdle(this.statemanager);
+            return new playerIdle(this.stateManager);
         }
         if(game.click) {
             // return attack
@@ -469,7 +475,7 @@ class playerAttackDown {
     }
 
     onExit() {
-        this.statemanager.velocity.x = 0;
+        this.stateManager.velocity.x = 0;
     }
 }
 
@@ -478,33 +484,76 @@ class playerAttackUp {
 }
 
 class playerHurt {
-    constructor(statemanager, dmgSource) {
-        this.statemanager = statemanager;
+    constructor(stateManager, dmgSource) {
+        this.stateManager = stateManager;
         this.dmgSource = dmgSource;
         this.name = 8;
-        this.duration = 0.6; //measured in seconds
+        this.duration = this.stateManager.animations[this.name].totalTime; //measured in seconds
         this.elaspedTime = 0;
     }
 
     onEnter() {
-        let dmgDirection = this.dmgSource.BB.center.x < this.statemanager.x;
-        // console.log(dmgDirection);
-        if(dmgDirection) {
-            this.statemanager.velocity.x = 50;
+        this.stateManager.health -=1;
+        if(this.stateManager.health > 0) {
+            let dmgDirection = this.dmgSource.BB.center.x < this.stateManager.x;
+            // console.log(dmgDirection);
+            if(dmgDirection) {
+            this.stateManager.velocity.x = 50;
         } else {
-            this.statemanager.velocity.x = -50;
+            this.stateManager.velocity.x = -50;
+        }
         }
     }
 
     update(game,TICK) {
         this.elaspedTime+=TICK;
         if(this.elaspedTime >= this.duration) {
-            return new playerIdle(this.statemanager);
+            return new playerIdle(this.stateManager);
+        }
+        if(this.stateManager.health <= 0) {
+            return new playerDeath(this.stateManager,this.dmgSource);
         }
         return this.name;
     }
 
     onExit() {
 
+    }
+}
+
+class playerDeath {
+    constructor(stateManager, dmgSource) {
+        this.stateManager = stateManager;
+        this.dmgSource = dmgSource;
+        this.name = 9;
+        this.duration = this.stateManager.animations[this.name].totalTime -0.1; //measured in seconds
+        this.elaspedTime = 0;
+        this.lastElasped = 0;
+    }
+
+    onEnter() {
+        let dmgDirection = this.dmgSource.BB.center.x < this.stateManager.x;
+        // console.log(dmgDirection);
+        if(dmgDirection) {
+            this.stateManager.velocity.x = 20;
+        } else {
+            this.stateManager.velocity.x = -20;
+        }
+    }
+
+    update(game,TICK) {
+        this.elaspedTime+=TICK;
+        if(this.elaspedTime - this.lastElasped >= 0.5) {
+            this.stateManager.velocity.x /=2;
+        }
+        if(this.elaspedTime >= this.duration) {
+            return new playerIdle(this.stateManager);
+        }
+        return this.name;
+    }
+
+    onExit() {
+        this.stateManager.state = 10;
+        this.stateManager.dead = true;
     }
 }
