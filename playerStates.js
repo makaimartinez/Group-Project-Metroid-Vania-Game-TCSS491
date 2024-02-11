@@ -1,9 +1,10 @@
 class Player {
     constructor(game, x, y, spritesheet) {
         Object.assign(this, { game, x, y, spritesheet});
-        
-        this.velocity = {x:0, y:0};
 
+        this.health = 200;
+
+        this.velocity = {x:0, y:0};
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
         this.BB;
@@ -83,7 +84,7 @@ class Player {
                 alignY = 20;
                 break;
         }
-        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX, this.y - alignY, scale, this.facing);
+        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * -1) - alignX, this.y - alignY, scale, true);
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX, this.y - alignY - 100, scale, false);
     }
@@ -157,15 +158,16 @@ class Player {
                 if(entity.BB.name == "slime" || entity.BB.name == "specter") {
                     // console.log("hurt");
                     if(that.state != 8) that.newState = new playerHurt(that, entity);
+                    this.health -= 50;
                 }
                 if(entity.BB.name == "healthpotion") {
-                    console.log("healthpotion");
                     // increase player health (permanent)
+                    this.health += 50;
                 }
                 if(entity.BB.name == "speedpotion") {
-                    console.log("speedpotion");
                     // increase player speed (temporarily)
-                    // setInterval(function, milliseconds)
+                    // this.elapsed += this.game.clockTick;
+                    //    if (this.elapsed > 100) ...
                 }
             }
         })

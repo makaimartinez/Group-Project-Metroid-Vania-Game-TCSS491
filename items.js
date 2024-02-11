@@ -24,7 +24,7 @@ class Chest {
     };
 }
 
-// speed
+// A class that is used to create, update, and draw speed potions
 class SpeedPotion {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y});
@@ -58,7 +58,7 @@ class SpeedPotion {
 }
 
 
-// health
+// A class that is used to create, update, and draw health potions
 class HealthPotion {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y});
@@ -96,4 +96,4 @@ class HealthPotion {
 
     // sword
 
-// armor
+// armor?
