@@ -57,6 +57,7 @@ class GameEngine {
 
         function mouseListener (e) {
             that.mouse = getXandY(e);
+            
         }
         function mouseClickListener (e) {
             that.click = getXandY(e);

@@ -112,7 +112,7 @@ class SpecterKnight {
     }
 
     updateBB() {
-        this.BB = new BoundingBox(this.x + 10, this.y + 5, 42, 70);
+        this.BB = new BoundingBox(this.x + 50, this.y + 5, 42, 90, "specter");
     }
     updateLastBB() {
         this.lastBB = this.BB;
@@ -126,7 +126,7 @@ class SpecterKnight {
                     // fix bug where "landing" on the side puts character on top
                     that.y = entity.BB.top - 90;
                     if(that.stateName == 4 || that.state == 3) {
-                        // that.newState = new mikuLand(that);
+                       
                     }
                 }
             }
