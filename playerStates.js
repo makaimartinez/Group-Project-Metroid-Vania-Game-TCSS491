@@ -158,6 +158,15 @@ class Player {
                     // console.log("hurt");
                     if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
+                if(entity.BB.name == "healthpotion") {
+                    console.log("healthpotion");
+                    // increase player health (permanent)
+                }
+                if(entity.BB.name == "speedpotion") {
+                    console.log("speedpotion");
+                    // increase player speed (temporarily)
+                    // setInterval(function, milliseconds)
+                }
             }
         })
     }

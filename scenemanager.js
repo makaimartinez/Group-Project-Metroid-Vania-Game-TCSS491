@@ -51,6 +51,11 @@ class SceneManager {
 
         // items
         this.gameEngine.addEntity(new Chest(this.gameEngine, 9, 10));
+        this.gameEngine.addEntity(new HealthPotion(this.gameEngine, 3, 10));
+        this.gameEngine.addEntity(new SpeedPotion(this.gameEngine, 4, 10));
+
+
+
 
 
         // Draw Background last
