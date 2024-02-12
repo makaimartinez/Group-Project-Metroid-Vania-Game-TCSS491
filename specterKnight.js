@@ -140,7 +140,7 @@ class SpecKnightIdle {
         this.stateManager = stateManager;
         this.name = 0;
         
-        this.idleDuration = 500;
+        this.idleDuration = 1.6;
         this.idleTime = 0;
     }
     
@@ -148,8 +148,8 @@ class SpecKnightIdle {
 
     }
 
-    update() {
-        this.idleTime++;
+    update(game,TICK) {
+        this.idleTime+=TICK;
         if(this.idleTime >= this.idleDuration) {
             console.log("forward");
             this.stateManager.facing = !this.stateManager.facing;
@@ -167,7 +167,7 @@ class SpecKnightFoward {
     constructor(stateManager) {
         this.stateManager = stateManager;
         this.name = 1;
-        this.forwardDuration = 500;
+        this.forwardDuration = 1.6;
         this.forwardTime = 0;
     }
     
@@ -175,8 +175,8 @@ class SpecKnightFoward {
 
     }
 
-    update() {
-        this.forwardTime++;
+    update(game,TICK) {
+        this.forwardTime+=TICK;
         this.direction = 1;
         if(this.stateManager.facing) this.direction = -1;
         this.stateManager.x+=0.5 * this.direction;
