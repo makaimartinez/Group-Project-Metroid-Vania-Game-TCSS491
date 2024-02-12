@@ -128,12 +128,12 @@ class SceneManager {
         if (this.title && this.gameEngine.click) {
             if (this.gameEngine.click && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 9.5 * PARAMS.BLOCKWIDTH) {
                 this.title = false;
-                this.player = new player(this.gameEngine, 2.5 * PARAMS.BLOCKWIDTH, 6 * PARAMS.BLOCKWIDTH);
-                this.loadGame(levelOne, 2.5 * PARAMS.BLOCKWIDTH, 10 * PARAMS.BLOCKWIDTH, true); // SETS STARTING POSITION
+                this.player = new Player(this.gameEngine, 2.5 * PARAMS.BLOCKWIDTH, 6 * PARAMS.BLOCKWIDTH);
+                this.loadLevel(levelOne, 2.5 * PARAMS.BLOCKWIDTH, 10 * PARAMS.BLOCKWIDTH, true); // SETS STARTING POSITION
             }
         // } else {
-        //     this.player = new player(this.gameEngine, 2.5 * PARAMS.BLOCKWIDTH, 0 * PARAMS.BLOCKWIDTH);
-        //     this.loadGame(levelOne, 2.5 * PARAMS.BLOCKWIDTH, 0, true);
+        //     this.player = new Player(this.gameEngine, 2.5 * PARAMS.BLOCKWIDTH, 0 * PARAMS.BLOCKWIDTH);
+        //     this.loadLevel(levelOne, 2.5 * PARAMS.BLOCKWIDTH, 0, true);
         }
 
     }
@@ -148,9 +148,7 @@ class SceneManager {
             ctx.drawImage(titlecard, 5.0 * PARAMS.BLOCKWIDTH, 2 * PARAMS.BLOCKWIDTH, width * PARAMS.SCALE, height * PARAMS.SCALE);
             ctx.fillStyle = this.gameEngine.mouse && this.gameEngine.mouse.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 9.5 * PARAMS.BLOCKWIDTH ? "Grey" : "White";
             ctx.fillText("START", 9.25 * PARAMS.BLOCKWIDTH, 9.5 * PARAMS.BLOCKWIDTH);
-        }
-
-        if (PARAMS.DEBUG) {
+        } else if (PARAMS.DEBUG) {
             // let xV = "xV=" + Math.floor(gameEngine.player.x);
             // let yV = "yV=" + Math.floor(gameEngine.player.y);
             // ctx.fillText(xV, 1.5 * PARAMS.BLOCKWIDTH, 2.5 * PARAMS.BLOCKWIDTH);
@@ -192,6 +190,10 @@ class SceneManager {
             ctx.translate(0, 10);
             ctx.strokeStyle = "White";
             ctx.fillStyle = ctx.strokeStyle;
+        } else if (!this.title) {
+            ctx.fillStyle = ctx.strokeStyle;
+            ctx.strokeRect(1 * PARAMS.BLOCKWIDTH, 2 * PARAMS.BLOCKWIDTH, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
         }
+
     }
 };
