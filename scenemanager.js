@@ -11,8 +11,9 @@ class SceneManager {
         this.player = new Player(this.gameEngine, 0, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
 
         this.title = true;
+        this.transition = false;
         this.level = null;
-        this.loadLevel(levelOne, 0, 300, false, this.title);
+        this.loadLevel(levelOne, 0, 300, this.transition, this.title);
     };
 
     clearEntities() {
@@ -29,8 +30,10 @@ class SceneManager {
         this.x = 0;     // reset camera 
 
         if (transition) {
+            this.gameEngine.titleActive = false;
             this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, level, x, y, title, this.loading));
         } else {
+            this.transition = false
             let slime = new Slime(200, 480);
 
             this.gameEngine.addEntity(new skelly(this.gameEngine, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
@@ -149,7 +152,12 @@ class SceneManager {
             ctx.drawImage(titlecard, 5.0 * PARAMS.BLOCKWIDTH, 2 * PARAMS.BLOCKWIDTH, width * PARAMS.SCALE, height * PARAMS.SCALE);
             ctx.fillStyle = this.gameEngine.mouse && this.gameEngine.mouse.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 9.5 * PARAMS.BLOCKWIDTH ? "Grey" : "White";
             ctx.fillText("START", 9 * PARAMS.BLOCKWIDTH, 9.5 * PARAMS.BLOCKWIDTH);
-        } else if (PARAMS.DEBUG) {
+
+
+            
+
+
+        } else if (PARAMS.DEBUG && !this.transition) {
             let xV = "xV=" + Math.floor(this.gameEngine.player.x);
             let yV = "yV=" + Math.floor(this.gameEngine.player.y);
             ctx.fillText(xV, 1.5 * PARAMS.BLOCKWIDTH, 2.5 * PARAMS.BLOCKWIDTH);
@@ -191,12 +199,18 @@ class SceneManager {
             ctx.translate(0, 10);
             ctx.strokeStyle = "White";
             ctx.fillStyle = ctx.strokeStyle;
-        } else if (!this.title) {
+        } else if (!this.title && !this.transition) {
             this.titleActive = false;
 
-            // TESTING A HUD
+            // HUD
+            // Health Bar
+            ctx.fillText("HP", PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+            ctx.strokeStyle = "Green";
             ctx.fillStyle = ctx.strokeStyle;
-            ctx.strokeRect(1 * PARAMS.BLOCKWIDTH, 2 * PARAMS.BLOCKWIDTH, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
+            ctx.fillRect(PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, this.player.health * 10, 0.5 * PARAMS.BLOCKWIDTH + 2);
+            ctx.strokeStyle = "Black";
+            ctx.strokeRect(PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 100, 0.5 * PARAMS.BLOCKWIDTH + 2);
+            
         }
     }
 };
