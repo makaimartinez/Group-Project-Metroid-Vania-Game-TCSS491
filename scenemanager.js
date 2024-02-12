@@ -9,7 +9,16 @@ class SceneManager {
 
         // this.link = new Link();
 
-        this.loadLevel();
+        const lvl1 = new levelOne(this.gameEngine);
+        const lvl2 = new levelTwo(this.gameEngine);
+
+        // build level 1
+        // lvl1.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+
+        // build level 2
+        lvl2.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+
+        //this.loadLevel();
     };
 
     clearEntities() {
