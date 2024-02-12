@@ -3,7 +3,7 @@ class Player {
         Object.assign(this, { game, x, y, spritesheet});
         
         this.velocity = {x:0, y:0};
-        this.health = 5;
+        this.health = 10;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
         this.BB;
@@ -101,7 +101,7 @@ class Player {
         this.newState = this.currentState.update(game,TICK);
 
         //if click, turn off click
-        if(this.game.click) this.game.click = false;        
+        if(this.game.click && !this.game.titleActive) this.game.click = false;        
 
         // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
         this.physics(TICK);
@@ -174,6 +174,16 @@ class Player {
                         if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity);
                     }
                 }
+                if(entity.BB.name == "healthpotion") {
+                    // increase player health (permanent)
+                    this.health += 50;
+                }
+                if(entity.BB.name == "speedpotion") {
+                    // increase player speed (temporarily)
+                    // this.elapsed += this.game.clockTick;
+                    //    if (this.elapsed > 100) ...
+
+                }
             }
             // if(that.dmgBB && entity.BB && entity.BB.name == "skelly")
             // console.log(that.dmgBB.name + " " + entity.BB.name + " " + that.dmgBB.collide(entity.BB))
@@ -183,6 +193,15 @@ class Player {
                     // if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
             }
+            // if(that.dmgBB && entity.BB && entity.BB.name == "skelly")
+            // console.log(that.dmgBB.name + " " + entity.BB.name + " " + that.dmgBB.collide(entity.BB))
+            if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
+                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
+                    entity.hit();
+                    // if(that.state != 8) that.newState = new playerHurt(that, entity);
+                }
+            }
+            
         })
     }
     

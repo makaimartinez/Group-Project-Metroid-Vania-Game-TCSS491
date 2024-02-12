@@ -23,6 +23,8 @@ class GameEngine {
         this.wheel = null;
         this.keys = {};
 
+        this.titleActive = true;
+
         // Options and the Details
         this.options = options || {
             debugging: true,

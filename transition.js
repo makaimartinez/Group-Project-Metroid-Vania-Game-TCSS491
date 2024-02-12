@@ -7,7 +7,7 @@ class TransitionScreen {
 
     update() {
         this.elapsed += this.game.clockTick;
-
+        this.titleActive = false;
         if (this.elapsed > 2) this.game.camera.loadLevel(this.level, this.x, this.y, false, this.gameOver); // after 2 secs load level but false in transition flag to end transition
     };
 
@@ -19,11 +19,11 @@ class TransitionScreen {
         ctx.fillStyle = "White";
 
         if (this.loading) {
-            ctx.fillText("LOADING...", 8.5 * PARAMS.BLOCKWIDTH, 9 * PARAMS.BLOCKWIDTH);
+            ctx.fillText("LOADING...", 8.5 * PARAMS.BLOCKWIDTH, 9.5 * PARAMS.BLOCKWIDTH);
         }
 
         if (this.gameOver) {
-            ctx.fillText("GAME OVER", 8.5 * PARAMS.BLOCKWIDTH, 9 * PARAMS.BLOCKWIDTH);
+            ctx.fillText("GAME OVER", 8.5 * PARAMS.BLOCKWIDTH, 4 * PARAMS.BLOCKWIDTH);
         }
     };
 

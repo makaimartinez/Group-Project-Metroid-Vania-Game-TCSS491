@@ -1,7 +1,7 @@
 class SceneManager {
     constructor(game) {
         this.gameEngine = game;
-        this.gameEngine.camera = this;    // anonymous entity, give it a direct reference by setting camera = to this instance of scene manager        this.x = 0;
+        this.gameEngine.camera = this;
         this.x = 0;
         this.y = 0;
         this.score = 0;
@@ -16,9 +16,9 @@ class SceneManager {
     };
 
     clearEntities() {
-        gameEngine.entities.forEach(function (entity) {
-            entity.removeFromWorld = true;
-        });
+            gameEngine.entities.forEach(function (entity) {
+                entity.removeFromWorld = true;
+            });
     };
 
     loadLevel(level, x, y, transition, title) {
@@ -28,17 +28,18 @@ class SceneManager {
         this.clearEntities();
         this.x = 0;     // reset camera 
 
-
         if (transition) {
             this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, level, x, y, title, this.loading));
         } else {
             let slime = new Slime(200, 480);
-            this.gameEngine.addEntity(new skelly(this.gameEngine, 500, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+
+            this.gameEngine.addEntity(new skelly(this.gameEngine, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
             // this.gameEngine.addEntity(slime);
             // this.gameEngine.addEntity(new SpecterKnight(this.gameEngine, 600, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
             //this.gameEngine.addEntity(new Ground(this.gameEngine, 100, 300, 50));
             //this.gameEngine.addEntity(new Ground(this.gameEngine, 30, 600, 800));
             // this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
+            this.gameEngine.addEntity(new Player(this.gameEngine, 80, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png")));
             // Creating textured environment tiles (X and Y are multiplied by the size defined in each block's class)
             // this.gameEngine.addEntity(new GrassTile(this.gameEngine, 15, 2));
             // this.gameEngine.addEntity(new DirtTile(this.gameEngine, 15, 3));
@@ -66,9 +67,6 @@ class SceneManager {
             this.gameEngine.addEntity(new SpeedPotion(this.gameEngine, 4, 10));
 
 
-
-
-
             // Draw Background last
             this.gameEngine.addEntity(new Background(this.gameEngine, 0));
 
@@ -77,7 +75,7 @@ class SceneManager {
             this.player.y = y;
             this.player.removeFromWorld = false;      // I want player to be persistent after removing him from the world in loadGame()
             // this.player.velocity = { x: 0, y: 0 };    
-            // this.player.state = 0                     // player enters level in right facing state;
+            this.player.state = 0                     // player enters level in right facing state;
 
             var that = this;
             var player = false;
@@ -88,6 +86,7 @@ class SceneManager {
         
             this.gameEngine.camera.paused = false;
         }
+
     };
 
     drawFloor(theType, theStartX, theLength, theLevel) {
@@ -121,9 +120,10 @@ class SceneManager {
     update() {
         PARAMS.DEBUG = document.getElementById("debug").checked;
 
-        let midpointx = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
+        let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
 
-        if (this.x < this.player.x - midpointx) this.x = this.player.x - midpointx;
+        if (this.x < this.player.x - midpoint) this.x = this.player.x - midpoint;
+        // this.x = this.player.x - midpoint;
 
         if (this.title && this.gameEngine.click) {
             if (this.gameEngine.click && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 9.5 * PARAMS.BLOCKWIDTH) {
@@ -142,58 +142,61 @@ class SceneManager {
         ctx.font = PARAMS.BLOCKWIDTH / 2 + 'px "Press Start 2P"';
         ctx.fillStyle = "White";
         if (this.title) {
+            this.gameEngine.titleActive = true;
             var width = 180;
             var height = 90;
             const titlecard = ASSET_MANAGER.getAsset("./assets/title.png");
             ctx.drawImage(titlecard, 5.0 * PARAMS.BLOCKWIDTH, 2 * PARAMS.BLOCKWIDTH, width * PARAMS.SCALE, height * PARAMS.SCALE);
             ctx.fillStyle = this.gameEngine.mouse && this.gameEngine.mouse.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 9.5 * PARAMS.BLOCKWIDTH ? "Grey" : "White";
-            ctx.fillText("START", 9.25 * PARAMS.BLOCKWIDTH, 9.5 * PARAMS.BLOCKWIDTH);
+            ctx.fillText("START", 9 * PARAMS.BLOCKWIDTH, 9.5 * PARAMS.BLOCKWIDTH);
         } else if (PARAMS.DEBUG) {
-            // let xV = "xV=" + Math.floor(gameEngine.player.x);
-            // let yV = "yV=" + Math.floor(gameEngine.player.y);
-            // ctx.fillText(xV, 1.5 * PARAMS.BLOCKWIDTH, 2.5 * PARAMS.BLOCKWIDTH);
-            // ctx.fillText(yV, 1.5 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH);
+            let xV = "xV=" + Math.floor(this.gameEngine.player.x);
+            let yV = "yV=" + Math.floor(this.gameEngine.player.y);
+            ctx.fillText(xV, 1.5 * PARAMS.BLOCKWIDTH, 2.5 * PARAMS.BLOCKWIDTH);
+            ctx.fillText(yV, 1.5 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH);
 
             ctx.translate(0, -10); // hack to move elements up by 10 pixels instead of adding -10 to all y coordinates below
             ctx.strokeStyle = "White";
             ctx.lineWidth = 2;
-            ctx.strokeStyle = gameEngine.left ? "White" : "Grey";
+            ctx.strokeStyle = this.gameEngine.left ? "White" : "Grey";
             ctx.fillStyle = ctx.strokeStyle;
             ctx.strokeRect(6 * PARAMS.BLOCKWIDTH - 2, 2.5 * PARAMS.BLOCKWIDTH - 2, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.fillText("L", 6 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH);
-            ctx.strokeStyle = gameEngine.down ? "White" : "Grey";
+            ctx.fillText("L", 6.5 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH);
+            ctx.strokeStyle = this.gameEngine.down ? "White" : "Grey";
             ctx.fillStyle = ctx.strokeStyle;
             ctx.strokeRect(6.5 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.fillText("D", 6.5 * PARAMS.BLOCKWIDTH + 2, 3.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.strokeStyle = gameEngine.up ? "White" : "Grey";
+            ctx.fillText("D", 7 * PARAMS.BLOCKWIDTH + 2, 3.5 * PARAMS.BLOCKWIDTH + 2);
+            ctx.strokeStyle = this.gameEngine.up ? "White" : "Grey";
             ctx.fillStyle = ctx.strokeStyle;
             ctx.strokeRect(6.5 * PARAMS.BLOCKWIDTH, 2 * PARAMS.BLOCKWIDTH - 4, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.fillText("U", 6.5 * PARAMS.BLOCKWIDTH + 2, 2.5 * PARAMS.BLOCKWIDTH - 2);
-            ctx.strokeStyle = gameEngine.right ? "White" : "Grey";
+            ctx.fillText("U", 7 * PARAMS.BLOCKWIDTH + 2, 2.5 * PARAMS.BLOCKWIDTH - 2);
+            ctx.strokeStyle = this.gameEngine.right ? "White" : "Grey";
             ctx.fillStyle = ctx.strokeStyle;
             ctx.strokeRect(7 * PARAMS.BLOCKWIDTH + 2, 2.5 * PARAMS.BLOCKWIDTH - 2, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.fillText("R", 7 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
+            ctx.fillText("R", 7.5 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
 
-            ctx.strokeStyle = gameEngine.A ? "White" : "Grey";
+            ctx.strokeStyle = this.gameEngine.A ? "White" : "Grey";
             ctx.fillStyle = ctx.strokeStyle;
             ctx.beginPath();
             ctx.arc(8.25 * PARAMS.BLOCKWIDTH + 2, 2.75 * PARAMS.BLOCKWIDTH, 0.25 * PARAMS.BLOCKWIDTH + 4, 0, 2 * Math.PI);
             ctx.stroke();
-            ctx.fillText("A", 8 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
-            ctx.strokeStyle = gameEngine.B ? "White" : "Grey";
+            ctx.fillText("A", 8.5 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
+            ctx.strokeStyle = this.gameEngine.B ? "White" : "Grey";
             ctx.fillStyle = ctx.strokeStyle;
             ctx.beginPath();
             ctx.arc(9 * PARAMS.BLOCKWIDTH + 2, 2.75 * PARAMS.BLOCKWIDTH, 0.25 * PARAMS.BLOCKWIDTH + 4, 0, 2 * Math.PI);
             ctx.stroke();
-            ctx.fillText("B", 8.75 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
+            ctx.fillText("B", 9.25 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
 
             ctx.translate(0, 10);
             ctx.strokeStyle = "White";
             ctx.fillStyle = ctx.strokeStyle;
         } else if (!this.title) {
+            this.titleActive = false;
+
+            // TESTING A HUD
             ctx.fillStyle = ctx.strokeStyle;
             ctx.strokeRect(1 * PARAMS.BLOCKWIDTH, 2 * PARAMS.BLOCKWIDTH, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
         }
-
     }
 };
