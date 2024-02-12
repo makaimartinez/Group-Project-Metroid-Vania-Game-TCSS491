@@ -35,6 +35,8 @@
     <script type="text/javascript" src="./assetmanager.js"></script>
     <script type="text/javascript" src="./timer.js"></script>
     <script type="text/javascript" src="./gameengine.js"></script>
+    <script type="text/javascript" src="./transition.js"></script>
+    <script type="text/javascript" src="./levels.js"></script>
     <script type="text/javascript" src="./animator.js"></script>
     <script type="text/javascript" src="./scenemanager.js"></script>
     <script type="text/javascript" src="./slime.js"></script>
@@ -56,5 +58,11 @@
         <br>Untitled MetroidVania Game <br /> <br>
     </div>
     <canvas id="gameWorld" width="1024" height="640" style="background: rgb(255, 255, 255); border: 3px solid black;" tabindex ="0" autofocus></canvas>    <!-- The Canvas is a HTML5 element -->
+
+    <div>
+        <br />
+        <input type="checkbox" id="debug"> Debug <input type="checkbox" id="mute"> Mute <input type="range" id="volume" min="0" max="1" value="0.05" step = "0.5"> Volume
+    </div>
+
 </body>
 </html>
