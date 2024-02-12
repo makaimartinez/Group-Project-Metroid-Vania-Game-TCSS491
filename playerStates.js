@@ -3,7 +3,7 @@ class Player {
         Object.assign(this, { game, x, y, spritesheet});
         
         this.velocity = {x:0, y:0};
-        this.health = 10;
+        this.health = 5;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
         this.BB;
@@ -153,9 +153,6 @@ class Player {
 
         this.y+= this.velocity.y * TICK * 2;
         this.x+= this.velocity.x * TICK * 2;
-
-        // if (this.velocity.x < 0) this.facing = true;
-        // if (this.velocity.x > 0) this.facing = false;
     }
 
     collide() {
@@ -438,7 +435,7 @@ class playerAttackDown {
         this.stateManager = stateManager;
         this.calledState = calledState;
         this.name = 6;
-        this.duration = this.stateManager.animations[this.name].totalTime -0.01; //measured in seconds
+        this.duration = this.stateManager.animations[this.name].totalTime; //measured in seconds
         this.elaspedTime = 0;
         this.direction = 1;
     }
