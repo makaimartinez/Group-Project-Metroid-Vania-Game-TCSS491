@@ -8,7 +8,7 @@ class SceneManager {
         this.coins = 0;
         this.lives = 3;
 
-        this.player = new Player(this.gameEngine, 10, 100, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
+        this.player = new Player(this.gameEngine, 10, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
 
         this.title = true;
         this.transition = false;
@@ -91,7 +91,6 @@ class SceneManager {
             });
             if(!player) this.gameEngine.addEntity(this.player);           // if player is not there add him.
     
-
             console.log("# of player: " + count);
             this.gameEngine.camera.paused = false;
         }
@@ -132,12 +131,11 @@ class SceneManager {
         let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
 
         if (this.x < this.player.x - midpoint) this.x = this.player.x - midpoint;
-        // this.x = this.player.x - midpoint;
-
+        
         if (this.title && this.gameEngine.click) {
             if (this.gameEngine.click && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 9.5 * PARAMS.BLOCKWIDTH) {
                 this.title = false;
-                // this.player = new Player(this.gameEngine, 2.5 * PARAMS.BLOCKWIDTH, 6 * PARAMS.BLOCKWIDTH,ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
+                this.player = new Player(this.gameEngine, 2.5 * PARAMS.BLOCKWIDTH, 10 * PARAMS.BLOCKWIDTH, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
                 this.loadLevel(levelOne, 2.5 * PARAMS.BLOCKWIDTH, 1 * PARAMS.BLOCKWIDTH, true); // SETS STARTING POSITION
             }
         // } else {
