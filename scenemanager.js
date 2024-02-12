@@ -17,9 +17,9 @@ class SceneManager {
     };
 
     clearEntities() {
-            gameEngine.entities.forEach(function (entity) {
-                entity.removeFromWorld = true;
-            });
+        gameEngine.entities.forEach(function (entity) {
+            entity.removeFromWorld = true;
+        });
     };
 
     loadLevel(level, x, y, transition, title) {
@@ -83,7 +83,7 @@ class SceneManager {
             var that = this;
             var player = false;
             this.gameEngine.entities.forEach(function(entity) {       // if player is there dont add him in
-                if(that.player === entity) player = true;
+                if(entity instanceof Player) player = true;
             });
             if(!player) this.gameEngine.addEntity(this.player);           // if player is not there add him.
         
@@ -158,47 +158,47 @@ class SceneManager {
 
 
         } else if (PARAMS.DEBUG && !this.transition) {
-            let xV = "xV=" + Math.floor(this.gameEngine.player.x);
-            let yV = "yV=" + Math.floor(this.gameEngine.player.y);
-            ctx.fillText(xV, 1.5 * PARAMS.BLOCKWIDTH, 2.5 * PARAMS.BLOCKWIDTH);
-            ctx.fillText(yV, 1.5 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH);
+            let xV = "xV=" + Math.floor(this.player.x);
+            let yV = "yV=" + Math.floor(this.player.y);
+            ctx.fillText(xV, 1.5 * PARAMS.BLOCKWIDTH + 20, 2.5 * PARAMS.BLOCKWIDTH);
+            ctx.fillText(yV, 1.5 * PARAMS.BLOCKWIDTH + 20, 3 * PARAMS.BLOCKWIDTH);
 
-            ctx.translate(0, -10); // hack to move elements up by 10 pixels instead of adding -10 to all y coordinates below
-            ctx.strokeStyle = "White";
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = this.gameEngine.left ? "White" : "Grey";
-            ctx.fillStyle = ctx.strokeStyle;
-            ctx.strokeRect(6 * PARAMS.BLOCKWIDTH - 2, 2.5 * PARAMS.BLOCKWIDTH - 2, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.fillText("L", 6.5 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH);
-            ctx.strokeStyle = this.gameEngine.down ? "White" : "Grey";
-            ctx.fillStyle = ctx.strokeStyle;
-            ctx.strokeRect(6.5 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.fillText("D", 7 * PARAMS.BLOCKWIDTH + 2, 3.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.strokeStyle = this.gameEngine.up ? "White" : "Grey";
-            ctx.fillStyle = ctx.strokeStyle;
-            ctx.strokeRect(6.5 * PARAMS.BLOCKWIDTH, 2 * PARAMS.BLOCKWIDTH - 4, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.fillText("U", 7 * PARAMS.BLOCKWIDTH + 2, 2.5 * PARAMS.BLOCKWIDTH - 2);
-            ctx.strokeStyle = this.gameEngine.right ? "White" : "Grey";
-            ctx.fillStyle = ctx.strokeStyle;
-            ctx.strokeRect(7 * PARAMS.BLOCKWIDTH + 2, 2.5 * PARAMS.BLOCKWIDTH - 2, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
-            ctx.fillText("R", 7.5 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
+            // ctx.translate(0, -10); // hack to move elements up by 10 pixels instead of adding -10 to all y coordinates below
+            // ctx.strokeStyle = "White";
+            // ctx.lineWidth = 2;
+            // ctx.strokeStyle = this.gameEngine.left ? "White" : "Grey";
+            // ctx.fillStyle = ctx.strokeStyle;
+            // ctx.strokeRect(6 * PARAMS.BLOCKWIDTH - 2, 2.5 * PARAMS.BLOCKWIDTH - 2, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
+            // ctx.fillText("L", 6.5 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH);
+            // ctx.strokeStyle = this.gameEngine.down ? "White" : "Grey";
+            // ctx.fillStyle = ctx.strokeStyle;
+            // ctx.strokeRect(6.5 * PARAMS.BLOCKWIDTH, 3 * PARAMS.BLOCKWIDTH, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
+            // ctx.fillText("D", 7 * PARAMS.BLOCKWIDTH + 2, 3.5 * PARAMS.BLOCKWIDTH + 2);
+            // ctx.strokeStyle = this.gameEngine.up ? "White" : "Grey";
+            // ctx.fillStyle = ctx.strokeStyle;
+            // ctx.strokeRect(6.5 * PARAMS.BLOCKWIDTH, 2 * PARAMS.BLOCKWIDTH - 4, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
+            // ctx.fillText("U", 7 * PARAMS.BLOCKWIDTH + 2, 2.5 * PARAMS.BLOCKWIDTH - 2);
+            // ctx.strokeStyle = this.gameEngine.right ? "White" : "Grey";
+            // ctx.fillStyle = ctx.strokeStyle;
+            // ctx.strokeRect(7 * PARAMS.BLOCKWIDTH + 2, 2.5 * PARAMS.BLOCKWIDTH - 2, 0.5 * PARAMS.BLOCKWIDTH + 2, 0.5 * PARAMS.BLOCKWIDTH + 2);
+            // ctx.fillText("R", 7.5 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
 
-            ctx.strokeStyle = this.gameEngine.A ? "White" : "Grey";
-            ctx.fillStyle = ctx.strokeStyle;
-            ctx.beginPath();
-            ctx.arc(8.25 * PARAMS.BLOCKWIDTH + 2, 2.75 * PARAMS.BLOCKWIDTH, 0.25 * PARAMS.BLOCKWIDTH + 4, 0, 2 * Math.PI);
-            ctx.stroke();
-            ctx.fillText("A", 8.5 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
-            ctx.strokeStyle = this.gameEngine.B ? "White" : "Grey";
-            ctx.fillStyle = ctx.strokeStyle;
-            ctx.beginPath();
-            ctx.arc(9 * PARAMS.BLOCKWIDTH + 2, 2.75 * PARAMS.BLOCKWIDTH, 0.25 * PARAMS.BLOCKWIDTH + 4, 0, 2 * Math.PI);
-            ctx.stroke();
-            ctx.fillText("B", 9.25 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
+            // ctx.strokeStyle = this.gameEngine.A ? "White" : "Grey";
+            // ctx.fillStyle = ctx.strokeStyle;
+            // ctx.beginPath();
+            // ctx.arc(8.25 * PARAMS.BLOCKWIDTH + 2, 2.75 * PARAMS.BLOCKWIDTH, 0.25 * PARAMS.BLOCKWIDTH + 4, 0, 2 * Math.PI);
+            // ctx.stroke();
+            // ctx.fillText("A", 8.5 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
+            // ctx.strokeStyle = this.gameEngine.B ? "White" : "Grey";
+            // ctx.fillStyle = ctx.strokeStyle;
+            // ctx.beginPath();
+            // ctx.arc(9 * PARAMS.BLOCKWIDTH + 2, 2.75 * PARAMS.BLOCKWIDTH, 0.25 * PARAMS.BLOCKWIDTH + 4, 0, 2 * Math.PI);
+            // ctx.stroke();
+            // ctx.fillText("B", 9.25 * PARAMS.BLOCKWIDTH + 4, 3 * PARAMS.BLOCKWIDTH);
 
-            ctx.translate(0, 10);
-            ctx.strokeStyle = "White";
-            ctx.fillStyle = ctx.strokeStyle;
+            // ctx.translate(0, 10);
+            // ctx.strokeStyle = "White";
+            // ctx.fillStyle = ctx.strokeStyle;
         } else if (!this.title && !this.transition) {
             this.titleActive = false;
 

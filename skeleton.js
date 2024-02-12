@@ -96,7 +96,6 @@ class skelly {
             this.currentState = this.newState;
             this.currentState.onEnter();
         }
-        // console.log(this.x + " " + this.y);
     }
 
     draw(ctx) {
@@ -266,7 +265,6 @@ class skellyHurt {
 
     update(TICK) {
         this.elaspedTime+=TICK;
-        // console.log(this.elaspedTime);
         if(this.elaspedTime >= this.duration) {
             return new skellyIdle(this.stateManager);
         }
@@ -275,9 +273,7 @@ class skellyHurt {
     }
 
     onExit() {
-        console.log("hurt");
         this.stateManager.hurt = false;
-        
     }
 }
 
@@ -289,7 +285,6 @@ class skellyDeath {
         this.elaspedTime = 0;
     }
     onEnter() {
-        console.log("enter");
         this.stateManager.dead = true;
         this.stateManager.BBName = "defeatedEnemy";
     }

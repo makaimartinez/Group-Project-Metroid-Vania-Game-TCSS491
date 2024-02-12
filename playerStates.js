@@ -3,6 +3,7 @@ class Player {
         Object.assign(this, { game, x, y, spritesheet});
         
         this.velocity = {x:0, y:0};
+        this.maxHealth = 100;
         this.health = 10;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
@@ -132,6 +133,7 @@ class Player {
             ctx.fillStyle = "Black";
             ctx.textAlign = "right";
             ctx.fillText("HP " + this.health, this.x + 55, this.y + 0);
+            ctx.fillText("x " + Math.round(this.x) + "\ty "+ Math.round(this.y), this.x + 55, this.y - 20);
             // ctx.beginPath();
             // ctx.arc(this.x + 20 + 21, this.y + 5 + 43, 200, 0, 2 * Math.PI);
             // ctx.stroke();
@@ -176,21 +178,13 @@ class Player {
                 }
                 if(entity.BB.name == "healthpotion") {
                     // increase player health (permanent)
-                    this.health += 50;
+                    that.health += 5;
                 }
                 if(entity.BB.name == "speedpotion") {
                     // increase player speed (temporarily)
                     // this.elapsed += this.game.clockTick;
                     //    if (this.elapsed > 100) ...
 
-                }
-            }
-            // if(that.dmgBB && entity.BB && entity.BB.name == "skelly")
-            // console.log(that.dmgBB.name + " " + entity.BB.name + " " + that.dmgBB.collide(entity.BB))
-            if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
-                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
-                    entity.hit();
-                    // if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
             }
             // if(that.dmgBB && entity.BB && entity.BB.name == "skelly")
@@ -336,6 +330,7 @@ class playerJump {
         //air physics
         const MAX_WALK = 160;
         const ACC_WALK = 40;
+        const ACC_RUN = 60;
 
         let stateManager = this.stateManager;
         // horizontal physics
@@ -506,7 +501,9 @@ class playerHurt {
     }
 
     onEnter() {
-        this.stateManager.health -=1;
+        let healthLost = 1;
+        if(this.dmgSource.name == "skelly") healthLost = 2;
+        this.stateManager.health -=healthLost;
         if(this.stateManager.health > 0) {
             let dmgDirection = this.dmgSource.BB.center.x < this.stateManager.x;
             // console.log(dmgDirection);
