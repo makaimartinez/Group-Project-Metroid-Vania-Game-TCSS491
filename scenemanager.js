@@ -8,7 +8,7 @@ class SceneManager {
         this.coins = 0;
         this.lives = 3;
 
-        this.player = new Player(this.gameEngine, 0, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
+        this.player = new Player(this.gameEngine, 10, 100, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
 
         this.title = true;
         this.transition = false;
@@ -42,7 +42,7 @@ class SceneManager {
             //this.gameEngine.addEntity(new Ground(this.gameEngine, 100, 300, 50));
             //this.gameEngine.addEntity(new Ground(this.gameEngine, 30, 600, 800));
             // this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
-            this.gameEngine.addEntity(new Player(this.gameEngine, 80, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png")));
+            this.gameEngine.addEntity(this.player);
             // Creating textured environment tiles (X and Y are multiplied by the size defined in each block's class)
             // this.gameEngine.addEntity(new GrassTile(this.gameEngine, 15, 2));
             // this.gameEngine.addEntity(new DirtTile(this.gameEngine, 15, 3));
@@ -82,11 +82,17 @@ class SceneManager {
 
             var that = this;
             var player = false;
+            let count = 0;
             this.gameEngine.entities.forEach(function(entity) {       // if player is there dont add him in
-                if(entity instanceof Player) player = true;
+                if(entity instanceof Player)  {
+                    player = true;
+                    count++;
+                }
             });
             if(!player) this.gameEngine.addEntity(this.player);           // if player is not there add him.
-        
+    
+
+            console.log("# of player: " + count);
             this.gameEngine.camera.paused = false;
         }
 
@@ -131,8 +137,8 @@ class SceneManager {
         if (this.title && this.gameEngine.click) {
             if (this.gameEngine.click && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 9.5 * PARAMS.BLOCKWIDTH) {
                 this.title = false;
-                this.player = new Player(this.gameEngine, 2.5 * PARAMS.BLOCKWIDTH, 6 * PARAMS.BLOCKWIDTH);
-                this.loadLevel(levelOne, 2.5 * PARAMS.BLOCKWIDTH, 10 * PARAMS.BLOCKWIDTH, true); // SETS STARTING POSITION
+                // this.player = new Player(this.gameEngine, 2.5 * PARAMS.BLOCKWIDTH, 6 * PARAMS.BLOCKWIDTH,ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
+                this.loadLevel(levelOne, 2.5 * PARAMS.BLOCKWIDTH, 1 * PARAMS.BLOCKWIDTH, true); // SETS STARTING POSITION
             }
         // } else {
         //     this.player = new Player(this.gameEngine, 2.5 * PARAMS.BLOCKWIDTH, 0 * PARAMS.BLOCKWIDTH);
