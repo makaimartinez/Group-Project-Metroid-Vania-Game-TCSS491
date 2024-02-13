@@ -4,6 +4,8 @@ class Player {
         
         this.velocity = {x:0, y:0};
         this.health = 5;
+        this.scale = 3;
+
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
         this.BB;
@@ -13,6 +15,8 @@ class Player {
         this.newState;
         this.animations = [];
         this.loadAnimations();
+        this.updateBB();
+        this.updateLastBB();
     }
 
     loadAnimations() {
@@ -43,47 +47,46 @@ class Player {
         let alignY = 0;
         switch(this.state) {
             case 0:
-                disjointX = -1;
-                alignX = -10;
-                alignY = -8;
+                disjointX = -2;
+                alignX = 10;
+                alignY = 5;
                 break;
             case 1:
-                disjointX = 4;
-                alignX = -10;
-                alignY = -5;
+                disjointX = 5;
+                alignX = 8;
+                alignY = 8;
                 break;
             case 2:
-                disjointX = -4;
-                alignX = -2;
-                alignY = 5;
+                disjointX = -5;
+                alignX = 20;
+                alignY = 15;
                 break;
             case 3:
             case 4:
             case 5:
-                disjointX = 2;
-                alignX = -8;
-                alignY = -2;
+                disjointX = 5;
+                alignX = 10;
+                alignY = 12;
                 break;
             case 6:
-                disjointX = 3;
-                alignX = 51;
-                alignY = 15;
+                disjointX = 0;
+                alignX = 72;
+                alignY = 30;
                 break;
             case 7:
-                disjointX = -16;
-                alignX = 54;
-                alignY = -10;
+                disjointX = -20;
+                alignX = 75;
+                alignY = 5;
                 break;
             case 8:
-                disjointX = 0;
-                alignX = -8;
-                alignY = -10;
+                disjointX = 5;
+                alignX = 15;
+                // alignY = -10;
                 break;
             case 9:
             case 10:
-                disjointX = 5;
-                alignX = 25;
-                alignY = 20;
+                alignX = 40;
+                alignY = 35;
                 break;
         }
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX, this.y - alignY, scale, this.facing);
@@ -91,7 +94,7 @@ class Player {
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX, this.y - alignY - 100, scale, false);
 
         if(PARAMS.DEBUG && this.state == 6 && this.animations[this.state].currentFrame() == 3) {    
-            ctx.strokeRect(this.x - 50, this.y - 15, 180, 105);
+            ctx.strokeRect(this.x - 50, this.y - 20, 180, 105);
         }
     }
 
@@ -104,10 +107,15 @@ class Player {
         if(this.game.click) this.game.click = false;        
 
         // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
-        this.physics(TICK);
+        this.physics(TICK);        
         this.updateLastBB();
         this.updateBB();
+        
         this.collide();
+        // if(this.velocity.x != 0 || this.velocity.y != 0) {
+            this.updateLastBB();
+            this.updateBB();
+        // } 
 
         //if it's a new state, switch to that state
         if(this.newState != this.state) {
@@ -125,13 +133,13 @@ class Player {
     }
 
     draw(ctx) {
-        this.adjustSpritePosition(ctx, 3);
+        this.adjustSpritePosition(ctx, this.scale);
         if(PARAMS.DEBUG) {
-            ctx.strokeRect(this.x + 20, this.y + 10, 42, 86);
+            this.BB.draw(ctx);
             ctx.font = "15px serif";
             ctx.fillStyle = "Black";
             ctx.textAlign = "right";
-            ctx.fillText("HP " + this.health, this.x + 55, this.y + 0);
+            ctx.fillText("HP " + this.health, this.x + 30, this.y + 0);
             // ctx.beginPath();
             // ctx.arc(this.x + 20 + 21, this.y + 5 + 43, 200, 0, 2 * Math.PI);
             // ctx.stroke();
@@ -140,7 +148,9 @@ class Player {
     }
 
     updateBB() {
-        this.BB = new BoundingBox(this.x + 20, this.y + 10, 42, 86, "player");
+        // this.BB = new BoundingBox(this.x + 20, this.y + 10, 42, 86, "player");
+        this.BB = new BoundingBox(this.x, this.y, 42, 86, "player");
+        // this.BB = new BoundingBox(this.x, this.y, 21 * this.scale, 32 * this.scale, "player");
     }
 
     updateLastBB() {
@@ -158,11 +168,13 @@ class Player {
     collide() {
         let that = this;
         this.game.entities.forEach(function(entity) {
-            if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
-                if(entity.BB.name == "ground")  {//&& (that.lastBB.bottom) <= entity.BB.top)
-                    // fix bug where "landing" on the side puts character on top
-                    // console.log(that.lastBB.bottom + " " + entity.BB.top)
-                    that.y = entity.BB.top - 96;
+            if(entity.BB && entity != that && that.BB.collide(entity.BB)) {
+                if(entity.BB.name == "ground" && (that.lastBB.bottom) <= entity.BB.top)  {
+                    // console.log(" lastBB " + that.lastBB.bottom + " entity top " + entity.BB.top)
+                    // that.y = entity.BB.top - that.BB.height //-10;//that.BB.top;
+                    // console.log("y " + that.y + " combined " + (entity.BB.top - that.BB.height));
+                    console.log(that.lastBB.bottom + " " + entity.BB.top)
+                    that.y = entity.BB.top - that.BB.height; //that.BB.top;
                     that.velocity.y = 0;
                     if(that.stateName == 4 || that.state == 3) {
                         // console.log(that.y + " " + entity.BB.top)
@@ -184,6 +196,7 @@ class Player {
                 }
             }
         })
+
     }
     
 }
@@ -196,7 +209,7 @@ class playerIdle {
 
     onEnter() {
         this.stateManager.velocity.x = 0;
-        this.stateManager.velocity.y = 0;
+        // this.stateManager.velocity.y = 0;
     }
     
     update(game, TICK) {
@@ -240,6 +253,7 @@ class playerWalk {
     onEnter() {
         const ACC_WALK = 40;
         this.stateManager.velocity.x += this.direction * ACC_WALK;
+        // console.log("velx " + this.stateManager.velocity.x);
     }
 
     update(game, TICK) {

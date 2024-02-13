@@ -139,7 +139,7 @@ class skelly {
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
                 if(entity.BB.name == "ground")  {
-                    that.y = entity.BB.top - 90;
+                    that.y = entity.BB.top - that.BB.height - 25;
                     that.velocity.y = 0;
                     if(that.state == 2) {
                         that.newState = new skellyIdle(that);

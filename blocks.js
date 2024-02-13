@@ -36,7 +36,8 @@ class GrassTile {
     draw(ctx, game) {
         ctx.drawImage(this.spritesheet, 0, 0, 32, 32, this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
         ctx.strokeStyle = "black";
-        //ctx.strokeRect(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+        // ctx.strokeRect(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+        this.BB.draw(ctx);
     };
 }
 
