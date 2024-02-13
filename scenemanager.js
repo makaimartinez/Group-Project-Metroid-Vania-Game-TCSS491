@@ -36,7 +36,7 @@ class SceneManager {
             this.transition = false
             let slime = new Slime(200, 480);
 
-            this.gameEngine.addEntity(new skelly(this.gameEngine, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+            // this.gameEngine.addEntity(new skelly(this.gameEngine, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
             // this.gameEngine.addEntity(slime);
             // this.gameEngine.addEntity(new SpecterKnight(this.gameEngine, 600, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
             //this.gameEngine.addEntity(new Ground(this.gameEngine, 100, 300, 50));
@@ -130,7 +130,8 @@ class SceneManager {
 
         let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
 
-        if (this.x < this.player.x - midpoint) this.x = this.player.x - midpoint;
+        // if (this.x < this.player.x - midpoint) this.x = this.player.x - midpoint;
+        this.x = this.player.x - midpoint;
         
         if (this.title && this.gameEngine.click) {
             if (this.gameEngine.click && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 9.5 * PARAMS.BLOCKWIDTH) {

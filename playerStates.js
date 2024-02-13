@@ -14,6 +14,7 @@ class Player {
         this.newState;
         this.animations = [];
         this.loadAnimations();
+        this.updateBB();
     }
 
     loadAnimations() {
@@ -88,6 +89,7 @@ class Player {
                 break;
         }
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
+        // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y, scale, this.facing);
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * -1) - alignX, this.y - alignY, scale, true);
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX, this.y - alignY - 100, scale, false);
 
@@ -128,7 +130,8 @@ class Player {
     draw(ctx) {
         this.adjustSpritePosition(ctx, 3);
         if(PARAMS.DEBUG) {
-            ctx.strokeRect(this.x + 20, this.y + 10, 42, 86);
+            // ctx.strokeRect(this.x + 20, this.y + 10, 42, 86);
+            ctx.strokeRect(this.BB.x, this.BB.y, 42, 86);
             ctx.font = "15px serif";
             ctx.fillStyle = "Black";
             ctx.textAlign = "right";
@@ -500,10 +503,21 @@ class playerHurt {
         this.elaspedTime = 0;
     }
 
+    RandomOnEnter() {
+        //randomAngle between 45 and 135 degrees
+        //radii vs radians
+        //chest position
+        //vely= -sin(randomAngle)
+        //velx= cos(randomAngle)
+
+        //hit ground stop velx vely
+    }
+
     onEnter() {
         let healthLost = 1;
         if(this.dmgSource.name == "skelly") healthLost = 2;
         this.stateManager.health -=healthLost;
+
         if(this.stateManager.health > 0) {
             let dmgDirection = this.dmgSource.BB.center.x < this.stateManager.x;
             // console.log(dmgDirection);
