@@ -16,6 +16,7 @@ ASSET_MANAGER.queueDownload("./assets/Skeleton_spritesheet.png");
 ASSET_MANAGER.queueDownload("./assets/bg_groundTiles.png");
 
 ASSET_MANAGER.queueDownload("./assets/chest.png");
+ASSET_MANAGER.queueDownload("./assets/openchest.png");
 ASSET_MANAGER.queueDownload("./assets/healthpotion.png");
 ASSET_MANAGER.queueDownload("./assets/speedpotion.png");
 

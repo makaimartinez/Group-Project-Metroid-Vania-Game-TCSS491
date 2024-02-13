@@ -179,7 +179,7 @@ class Player {
                 }
                 if(entity.BB.name == "healthpotion") {
                     // increase player health (permanent)
-                    this.health += 50;
+                    that.health += 50;
                 }
                 if(entity.BB.name == "speedpotion") {
                     // increase player speed (temporarily)
