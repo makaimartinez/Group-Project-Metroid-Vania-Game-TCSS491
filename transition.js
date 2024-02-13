@@ -8,7 +8,7 @@ class TransitionScreen {
     update() {
         this.elapsed += this.game.clockTick;
         this.titleActive = false;
-        if (this.elapsed > 2) this.game.camera.loadLevel(this.level, this.x, this.y, false, this.gameOver); // after 2 secs load level but false in transition flag to end transition
+        if (this.elapsed > .5) this.game.camera.loadLevel(this.level, this.x, this.y, false, this.gameOver); // after 2 secs load level but false in transition flag to end transition
     };
 
     draw(ctx) {

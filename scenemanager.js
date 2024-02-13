@@ -34,13 +34,14 @@ class SceneManager {
             this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, level, x, y, title, this.loading));
         } else {
             this.transition = false
+            this.gameEngine.addEntity(new Player(this.gameEngine, 80, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png")));
+
             // this.gameEngine.addEntity(new Slime(200, 480));
             // this.gameEngine.addEntity(new skelly(this.gameEngine, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
             // this.gameEngine.addEntity(new SpecterKnight(this.gameEngine, 600, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
             //this.gameEngine.addEntity(new Ground(this.gameEngine, 100, 300, 50));
             //this.gameEngine.addEntity(new Ground(this.gameEngine, 30, 600, 800));
             // this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
-            this.gameEngine.addEntity(new Player(this.gameEngine, 80, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png")));
             // Creating textured environment tiles (X and Y are multiplied by the size defined in each block's class)
             // this.gameEngine.addEntity(new GrassTile(this.gameEngine, 15, 2));
             // this.gameEngine.addEntity(new DirtTile(this.gameEngine, 15, 3));
@@ -63,12 +64,12 @@ class SceneManager {
             // this.drawFloor(2, 16, 7, 13);
 
             // items
-            this.gameEngine.addEntity(new Chest(this.gameEngine, 9, 10));
+            this.gameEngine.addEntity(new Chest(this.gameEngine, 5, 10));
             this.gameEngine.addEntity(new Potion(this.gameEngine, 3, 10, 0, false));       // Health
             this.gameEngine.addEntity(new Potion(this.gameEngine, 4, 10, 1, false));       // Speed
 
 
-            // Draw Background last
+            // Draw Background last     (edit: i think you meant to say add it last to draw it first?)
             this.gameEngine.addEntity(new Background(this.gameEngine, 0));
 
             // PLAYER
@@ -76,7 +77,7 @@ class SceneManager {
             this.player.y = y;
             this.player.removeFromWorld = false;      // I want player to be persistent after removing him from the world in loadGame()
             // this.player.velocity = { x: 0, y: 0 };    
-            this.player.state = 0                     // player enters level in right facing state;
+            this.player.state = 0                     // player enters level in idle state;
 
             var that = this;
             var player = false;
