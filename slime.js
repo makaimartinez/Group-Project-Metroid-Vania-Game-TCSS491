@@ -81,11 +81,13 @@ class Slime {
         let tick = gameEngine.clockTick;
 
         // left walk
-        this.animations[this.state].drawFrame(tick, ctx, this.x, this.y, 1, false);
+        this.animations[this.state].drawFrame(tick, ctx, this.x - this.game.camera.x, this.y, 1, false);
 
         // temp box
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(this.x, this.y, this.width, 48);
+        if(PARAMS.DEBUG) {
+            ctx.strokeStyle = "black";
+            this.BB.draw(ctx, this.game.camera);
+        }
 
     }
 

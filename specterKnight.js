@@ -81,7 +81,7 @@ class SpecterKnight {
                 break;
         }
         
-        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX, this.y - alignY, scale, this.facing);
+        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
     }
 
     update() {
@@ -108,7 +108,7 @@ class SpecterKnight {
 
     draw(ctx) {
         this.adjustSpritePosition(ctx,1.5);
-        ctx.strokeRect(this.x + 50, this.y + 5, 42, 90);
+        this.BB.draw(ctx, this.game.camera);
     }
 
     updateBB() {
