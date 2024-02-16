@@ -80,22 +80,14 @@ class skelly {
         this.hurt = true;
     }
 
-    receive() {
-        if(this.hurt && this.health <= 0 && this.state != 5) {
-            this.newState = new skellyDeath(this);
-        } else if(this.hurt && (this.state != 4 && this.state != 5)) {
-            this.newState = new skellyHurt(this);
-        } 
-    }
-
     update() {
         const TICK = this.game.clockTick;
         this.newState = this.currentState.update(TICK);
 
-        this.receive();
         this.physics();
         this.updateBB();
         this.collide();
+        this.receive();
         
         //if it's a new state, switch to that state
         if(this.newState != this.state) {
@@ -125,9 +117,13 @@ class skelly {
         this.BB = new BoundingBox(this.x, this.y + 25, 44, 65,"skelly");
     }
 
-    // updateLastBB() {
-    //     // this.lastBB = this.BB;
-    // }
+    receive() {
+        if(this.hurt && this.health <= 0 && this.state != 5) {
+            this.newState = new skellyDeath(this);
+        } else if(this.hurt && (this.state != 4 && this.state != 5)) {
+            this.newState = new skellyHurt(this);
+        } 
+    }
 
     physics() {
         const TICK = this.game.clockTick;
@@ -143,7 +139,7 @@ class skelly {
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
                 if(entity.BB.name == "ground")  {
-                    that.y = entity.BB.top - 90;
+                    that.y = entity.BB.top - that.BB.height - 25;
                     that.velocity.y = 0;
                     if(that.state == 2) {
                         that.newState = new skellyIdle(that);
@@ -259,7 +255,7 @@ class skellyHurt {
     constructor(stateManager) {
         Object.assign(this, {stateManager});
         this.name = 4;
-        this.duration = this.stateManager.animations[this.name].totalTime;
+        this.duration = this.stateManager.animations[this.name].totalTime - 0.01;
         this.elaspedTime = 0;
     }
 
@@ -289,7 +285,7 @@ class skellyDeath {
     constructor(stateManager) {
         Object.assign(this, {stateManager});
         this.name = 5;
-        this.duration = 3;
+        this.duration = this.stateManager.animations[this.name].totalTime - 0.1;
         this.elaspedTime = 0;
     }
     onEnter() {
