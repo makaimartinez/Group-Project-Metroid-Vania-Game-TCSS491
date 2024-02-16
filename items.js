@@ -116,8 +116,8 @@ class Potion {
             // update position
             this.y = xt;
             this.x = yt;
-            this.BB.x = xt;
-            this.BB.y = yt;
+            // this.BB.x = xt;
+            // this.BB.y = yt;
 
         }
 

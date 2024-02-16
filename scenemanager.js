@@ -70,7 +70,7 @@ class SceneManager {
 
 
             // Draw Background last     (edit: i think you meant to say add it last to draw it first?)
-            this.gameEngine.addEntity(new Background(this.gameEngine, 0));
+            // this.gameEngine.addEntity(new Background(this.gameEngine, 0));
 
             // PLAYER
             this.player.x = x;
