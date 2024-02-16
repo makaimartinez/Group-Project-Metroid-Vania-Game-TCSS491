@@ -5,7 +5,7 @@ class Player {
         this.velocity = {x:0, y:0};
         this.health = 5;
         this.scale = 3;
-
+        this.dead = false;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
         this.BB;
@@ -130,6 +130,7 @@ class Player {
     
     update() {
         if(this.state != 10) this.updateloop();
+        //if outside screen the screen or if dead, trigger death screen
     }
 
     draw(ctx) {
