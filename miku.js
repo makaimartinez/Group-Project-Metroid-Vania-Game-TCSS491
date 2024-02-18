@@ -71,7 +71,7 @@ class Miku {
                 alignX = 15;
                 break;
         }
-        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX, this.y - alignY, scale, this.facing);
+        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
     }
 
     update() {
@@ -102,7 +102,7 @@ class Miku {
     draw(ctx) {
         this.adjustSpritePosition(ctx, 1.5);
         ctx.strokeStyle = "rgb(225,40,133)";
-        ctx.strokeRect(this.x + 25, this.y, 42, 86);
+        this.BB.draw(ctx, this.game.camera);
     }
 
     updateBB() {

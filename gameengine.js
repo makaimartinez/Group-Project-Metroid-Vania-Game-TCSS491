@@ -24,6 +24,8 @@ class GameEngine {
         this.wheel = null;
         this.keys = {};
 
+        this.titleActive = true;
+
         // Options and the Details
         this.options = options || {
             debugging: true,
@@ -40,11 +42,11 @@ class GameEngine {
 
     start() {
         this.running = true;
-        const gameLoop = () => {                         // simulate continuous time with little slivers of discrete time (ticks)
+        const gameLoop = () => {                            // simulate continuous time with little slivers of discrete time (ticks)
             this.loop();
             requestAnimFrame(gameLoop, this.ctx.canvas);     // recursive call
         };
-        gameLoop();//define function then immediately call it
+        gameLoop();                                         //define function then immediately call it
     };
 
     startInput() {
@@ -72,7 +74,7 @@ class GameEngine {
         }
 
         function wheelListener (e) {
-            e.preventDefault(); // Prevent Scrolling
+            e.preventDefault();                             // Prevent Scrolling
             that.wheel = e.deltaY;
         }
 
@@ -178,7 +180,8 @@ class GameEngine {
             this.entities[i].draw(this.ctx, this);
         }
 
-        // this.camera.draw(this.ctx);
+        // prioritize the camera and draw after everything
+        this.camera.draw(this.ctx);
     };
 
     update() {
@@ -194,7 +197,7 @@ class GameEngine {
             }
         }
 
-        // this.camera.update();
+        this.camera.update();                           // prioritize the camera and update after everything
 
         // counts backwards like we are removing as we iterate, doesn't miss any elements
         for (let i = this.entities.length - 1; i >= 0; --i) {
@@ -212,5 +215,3 @@ class GameEngine {
     };
 
 }
-
-// KV Le was here :)

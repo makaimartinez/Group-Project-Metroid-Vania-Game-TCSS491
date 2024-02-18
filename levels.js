@@ -1,7 +1,5 @@
 class levelFunctions {
-    constructor() {
-
-    }
+    constructor() {}
 
     buildFloor(theType, theStartX, theLength, theLevel, theArray) {
         
@@ -28,16 +26,18 @@ class levelFunctions {
 }
 
 class levelOne {
-    constructor(theGame) {
+    constructor(theGame, thePlayer) {
         this.functions = new levelFunctions;
         this.assets = [];
-        this.build(theGame);
+        this.build(theGame, thePlayer);
     }
 
-    build(theGame) {
+    build(theGame, thePlayer) {
+        theGame.camera.x = 0;     // reset camera 
 
         this.assets.push(new skelly(theGame, 500, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
-        this.assets.push(new Player(theGame, 0, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png")));
+        console.log("PLAYER: " + thePlayer);
+        this.assets.push(thePlayer);
 
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the X start position
@@ -64,7 +64,7 @@ class levelOne {
         this.assets.push(new Chest(theGame, 9, 10));
 
         // Draw Background last
-        this.assets.push(new Background(theGame, 0));
+        this.assets.push(new Background(theGame, 200));
     }
 
     getAssets() {
@@ -75,17 +75,17 @@ class levelOne {
 
 // not quite different enough from level one, it's currently a placeholder
 class levelTwo {
-    constructor(theGame) {
+    constructor(theGame, thePlayer) {
         this.functions = new levelFunctions;
         this.assets = [];
-        this.build(theGame);
+        this.build(theGame, thePlayer);
     }
 
-    build(theGame) {
+    build(theGame, thePlayer) {
 
         this.assets.push(new skelly(theGame, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         this.assets.push(new SpecterKnight(theGame, 300, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
-        this.assets.push(new Player(theGame, 0, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png")));
+        this.assets.push(thePlayer);
 
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the X start position

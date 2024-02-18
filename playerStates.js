@@ -8,7 +8,7 @@ class Player {
         this.dead = false;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
-        this.BB;
+        this.BB = new BoundingBox(this.x, this.y, 42, 86, "player");
         this.lastBB;
         this.dmgBB;
         this.state = 0; //0 = idle, 1 = walk, 2 = run, 3= jump, 4= fall, 5= land, 6= attackDown, 7= attackUp, 8 = hurt, 9 = defeat
@@ -20,6 +20,7 @@ class Player {
     }
 
     loadAnimations() {
+
         for (let i = 0; i < 10; i++) { //9 total animations
             this.animations.push([]);
         }
@@ -89,12 +90,12 @@ class Player {
                 alignY = 35;
                 break;
         }
-        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX, this.y - alignY, scale, this.facing);
+        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * -1) - alignX, this.y - alignY, scale, true);
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX, this.y - alignY - 100, scale, false);
 
         if(PARAMS.DEBUG && this.state == 6 && this.animations[this.state].currentFrame() == 3) {    
-            ctx.strokeRect(this.x - 50, this.y - 20, 180, 105);
+            ctx.strokeRect(this.x - 50 - this.game.camera.x, this.y - 20, 180, 105);
         }
     }
 
@@ -114,10 +115,8 @@ class Player {
         this.updateBB();
         
         this.collide();
-        // if(this.velocity.x != 0 || this.velocity.y != 0) {
         this.updateLastBB();
         this.updateBB();
-        // } 
 
         //if it's a new state, switch to that state
         if(this.newState != this.state) {
@@ -138,11 +137,11 @@ class Player {
     draw(ctx) {
         this.adjustSpritePosition(ctx, this.scale);
         if(PARAMS.DEBUG) {
-            this.BB.draw(ctx);
+            this.BB.draw(ctx, this.game.camera);
             ctx.font = "15px serif";
             ctx.fillStyle = "Black";
             ctx.textAlign = "right";
-            ctx.fillText("HP " + this.health, this.x + 30, this.y + 0);
+            ctx.fillText("HP " + this.health, this.x + 30 - this.game.camera.x, this.y + 0);
             // ctx.beginPath();
             // ctx.arc(this.x + 20 + 21, this.y + 5 + 43, 200, 0, 2 * Math.PI);
             // ctx.stroke();
@@ -178,6 +177,9 @@ class Player {
                     // console.log("y " + that.y + " combined " + (entity.BB.top - that.BB.height));
                     console.log(that.lastBB.bottom + " " + entity.BB.top)
                     that.y = entity.BB.top - that.BB.height; //that.BB.top;
+                    // that.x = entity.BB.left - that.BB.width;
+                    // that.y = entity.BB.top + that.BB.height;
+
                     that.velocity.y = 0;
                     if(that.stateName == 4 || that.state == 3) {
                         // console.log(that.y + " " + entity.BB.top)

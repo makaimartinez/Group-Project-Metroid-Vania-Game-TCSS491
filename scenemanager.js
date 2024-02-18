@@ -1,15 +1,16 @@
 class SceneManager {
     constructor(game) {
         this.gameEngine = game;
-        // this.gameEngine.camera = this;
+        this.gameEngine.camera = this;
         this.x = 0;
         this.score = 0;
         this.coins = 0;
         this.lives = 3;
 
-        // this.link = new Link();
+        this.player = new Player(this.gameEngine, 100, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
 
-        const lvl1 = new levelOne(this.gameEngine);
+
+        const lvl1 = new levelOne(this.gameEngine, this.player);
         const lvl2 = new levelTwo(this.gameEngine);
 
         // build level 1
@@ -18,7 +19,6 @@ class SceneManager {
         // build level 2
         // lvl2.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
-        //this.loadLevel();
     };
 
     clearEntities() {
@@ -27,84 +27,14 @@ class SceneManager {
         });
     };
 
-    loadLevel() {
-        let slime = new Slime(200, 480);
-
-        this.gameEngine.addEntity(new skelly(this.gameEngine, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
-	    // this.gameEngine.addEntity(slime);
-        // this.gameEngine.addEntity(new SpecterKnight(this.gameEngine, 600, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
-        //this.gameEngine.addEntity(new Ground(this.gameEngine, 100, 300, 50));
-        //this.gameEngine.addEntity(new Ground(this.gameEngine, 30, 600, 800));
-	    // this.gameEngine.addEntity(new Miku(this.gameEngine, 50, 50, ASSET_MANAGER.getAsset("./assets/miku spritesheet.png")));
-        this.gameEngine.addEntity(new Player(this.gameEngine, 100, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png")));
-        // Creating textured environment tiles (X and Y are multiplied by the size defined in each block's class)
-        // this.gameEngine.addEntity(new GrassTile(this.gameEngine, 15, 2));
-        // this.gameEngine.addEntity(new DirtTile(this.gameEngine, 15, 3));
-        // this.gameEngine.addEntity(new StoneTile(this.gameEngine, 16, 2));
-        // this.gameEngine.addEntity(new DevTile(this.gameEngine, 16, 3));
-        // this.gameEngine.addEntity(new GrassTile(this.gameEngine, 4, 9));
-        // this.gameEngine.addEntity(new GrassTile(this.gameEngine, 6, 7));
-        // this.gameEngine.addEntity(new GrassTile(this.gameEngine, 9, 7));
-        // this.gameEngine.addEntity(new GrassTile(this.gameEngine, 10, 7));
-        // this.gameEngine.addEntity(new GrassTile(this.gameEngine, 11, 7));
-
-        // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
-        // Second argument is the total length in blocks
-        this.drawFloor(0, 0, 13, 11);
-        this.drawFloor(2, 0, 13, 12);
-        this.drawFloor(2, 0, 13, 13);
-
-        this.drawFloor(0, 16, 7, 11);
-        this.drawFloor(2, 16, 7, 12);
-        this.drawFloor(2, 16, 7, 13);
-
-        // items
-        this.gameEngine.addEntity(new Chest(this.gameEngine, 9, 10));
-
-
-        // Draw Background last
-        this.gameEngine.addEntity(new Background(this.gameEngine, 0));
-
-    };
-
-    drawFloor(theType, theStartX, theLength, theLevel) {
-        
-        // if(PARAMS.DEBUG) console.log(theType);
-
-        if (theType == '0') {
-            for (var i = 0; i < theLength; i++) {
-                this.gameEngine.addEntity(new GrassTile(this.gameEngine, theStartX + i, theLevel));
-            };
-        } else if (theType == '1') {
-            for (var i = 0; i < theLength; i++) {
-                this.gameEngine.addEntity(new StoneTile(this.gameEngine, theStartX + i, theLevel));
-            }
-        } else if (theType == '2') {
-            for (var i = 0; i < theLength; i++) {
-                this.gameEngine.addEntity(new DirtTile(this.gameEngine, theStartX + i, theLevel));
-            }
-        } else {
-            for (var i = 0; i < theLength; i++) {
-                this.gameEngine.addEntity(new DevTile(this.gameEngine, theStartX + i, theLevel));
-            }
-        };
-    };
-
     update() {
-        // PARAMS.DEBUG = document.getElementById("debug").checked;
+        PARAMS.DEBUG = document.getElementById("debug").checked;
 
         let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
+        
+        this.x = this.player.x - midpoint;
 
-        // if (this.x < this.link.x - midpoint) this.x = this.link.x - midpoint;
-        // this.x = this.link.x - midpoint;
 
-        // NOTE: THIS FOLLOWING CODE HAS A BUG WHERE CANVAS COLOR WON'T CHANGE BACK TO BLUE.
-        // var canvas = document.getElementById("gameWorld");
-        // if (this.underground) {
-        //     canvas.style.backgroundColor = "black";
-        // } else {
-        //     canvas.style.backgroundColor = "#049cd8";
-        // }
     }
 
     draw(ctx) {
