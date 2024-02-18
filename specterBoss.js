@@ -1,9 +1,8 @@
-class SpecterKnight {
+class SpecterBoss {
     constructor(game, x, y, spritesheet) {
         Object.assign(this, { game, x, y, spritesheet});
         this.facing = false;
-        this.currentState = new SpecKnightIdle(this);
-        this.hurt = false;
+        this.currentState = new SpecBossIdle(this);
 
         this.BB = new BoundingBox(this.x + 50, this.y + 5, 42, 90, "specter");
         this.lastBB;
@@ -87,11 +86,6 @@ class SpecterKnight {
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
     }
 
-    hit() {
-        this.hurt = true;
-    }
-    //need to define more states
-
     update() {
         const TICK = this.game.clockTick;
         let game = this.game;
@@ -140,11 +134,11 @@ class SpecterKnight {
 
 }
 
-class SpecKnightIdle {
+class SpecBossIdle {
     constructor(stateManager) {
         this.stateManager = stateManager;
         this.name = 0;
-        
+
         this.idleDuration = 1.6;
         this.idleTime = 0;
     }
@@ -158,7 +152,7 @@ class SpecKnightIdle {
         if(this.idleTime >= this.idleDuration) {
             console.log("forward");
             this.stateManager.facing = !this.stateManager.facing;
-            return new SpecKnightFoward(this.stateManager);
+            return new SpecBossFoward(this.stateManager);
         }
         return this.name;
     }
@@ -168,7 +162,7 @@ class SpecKnightIdle {
     }
 }
 
-class SpecKnightFoward {
+class SpecBossFoward {
     constructor(stateManager) {
         this.stateManager = stateManager;
         this.name = 1;
@@ -187,7 +181,7 @@ class SpecKnightFoward {
         this.stateManager.x+=0.5 * this.direction;
 
         if(this.forwardTime >= this.forwardDuration) {
-            return new SpecKnightIdle(this.stateManager);
+            return new SpecBossIdle(this.stateManager);
         }
         return this.name;
     }

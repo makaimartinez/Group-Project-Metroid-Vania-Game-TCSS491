@@ -172,26 +172,26 @@ class Player {
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity != that && that.BB.collide(entity.BB)) {
                 if(entity.BB.name == "ground" && (that.lastBB.bottom) <= entity.BB.top)  {
-                    // console.log(" lastBB " + that.lastBB.bottom + " entity top " + entity.BB.top)
-                    // that.y = entity.BB.top - that.BB.height //-10;//that.BB.top;
-                    // console.log("y " + that.y + " combined " + (entity.BB.top - that.BB.height));
-                    console.log(that.lastBB.bottom + " " + entity.BB.top)
-                    that.y = entity.BB.top - that.BB.height; //that.BB.top;
-                    // that.x = entity.BB.left - that.BB.width;
-                    // that.y = entity.BB.top + that.BB.height;
+                    that.y = entity.BB.top - that.BB.height; 
 
                     that.velocity.y = 0;
                     if(that.stateName == 4 || that.state == 3) {
                         // console.log(that.y + " " + entity.BB.top)
                         that.newState = new playerLand(that);
                     }
+                } else if(entity.BB.name == "ground" && (that.lastBB.right) <= entity.BB.left)  {
+                    that.x = entity.BB.left - that.BB.width; 
+                    that.velocity.x = 0;
+                } else if(entity.BB.name == "ground" && (that.lastBB.left) <= entity.BB.right)  {
+                    that.x = entity.BB.right; 
+                    that.velocity.x = 0;
                 }
                 if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
                     if(!entity.dead){
                         if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity);
                     }
                 }
-                if(entity.BB.name == "healthpotion") {
+                if(entity.BB.name == "healthpotion" && entity.visible == true) {
                     // increase player health (permanent)
                     that.health += 50;
                 }
@@ -233,10 +233,13 @@ class playerIdle {
         if(game.left || game.right) {
             let direction = 1;
             if(game.left) direction = -1;
+            const ACC_WALK = 40;
+            this.stateManager.velocity.x += direction * ACC_WALK;
             return new playerWalk(this.stateManager, direction);
         }
         if(this.stateManager.velocity.y > 0) {
             // return fall
+            
             return new playerFall(this.stateManager);
         }
         if(game.up) {
@@ -267,17 +270,16 @@ class playerWalk {
     }
 
     onEnter() {
-        const ACC_WALK = 40;
-        this.stateManager.velocity.x += this.direction * ACC_WALK;
+        
         // console.log("velx " + this.stateManager.velocity.x);
     }
 
     update(game, TICK) {
         const MIN_WALK = 30;
-        const MAX_WALK = 160;
+        const MAX_WALK = 120;
         const ACC_WALK = 40;
         const DEC_SKID = 200;
-        const DEC_REL = 70;
+        const DEC_REL = 100;
 
         let stateManager = this.stateManager;
         if(!stateManager.facing) {
@@ -305,6 +307,9 @@ class playerWalk {
         if (stateManager.velocity.x > 0) stateManager.facing = false;
 
         // condition to leave
+        if(Math.abs(stateManager.velocity.x) == MAX_WALK) {
+            return new playerRun(stateManager,this.direction);
+        }
         if(Math.abs(stateManager.velocity.x) <= MIN_WALK) {
             return new playerIdle(stateManager);
         }
@@ -330,7 +335,75 @@ class playerWalk {
 }
 
 class playerRun {
+    constructor(stateManager, direction) {
+        this.stateManager = stateManager;
+        this.name = 2;
 
+        this.direction = direction;
+    }
+
+    onEnter() {
+        const ACC_WALK = 40;
+        this.stateManager.velocity.x += this.direction * ACC_WALK;
+        // console.log("velx " + this.stateManager.velocity.x);
+    }
+
+    update(game, TICK) {
+        const MIN_WALK = 30;
+        const MAX_RUN = 130;
+        const MAX_WALK = 120;
+        const ACC_WALK = 40;
+        const DEC_SKID = 200;
+        const DEC_REL = 100;
+
+        let stateManager = this.stateManager;
+        if(!stateManager.facing) {
+            if (game.right && !game.left && !game.down) {
+                console.log("increasing");
+                stateManager.velocity.x += ACC_WALK * TICK;
+            } else if (game.left && !game.right && !game.down) {
+                stateManager.velocity.x -= DEC_SKID * TICK;
+            } else {
+                stateManager.velocity.x -= DEC_REL * TICK;
+            }
+        } else {
+            if (game.left && !game.right && !game.down) {
+                stateManager.velocity.x -= ACC_WALK * TICK;
+            } else if (game.right && !game.left && !game.down) {
+                stateManager.velocity.x += DEC_SKID * TICK;
+            } else {
+                stateManager.velocity.x += DEC_REL * TICK;
+            }
+        }
+
+        // if (stateManager.velocity.x >= MAX_RUN) stateManager.velocity.x = MAX_RUN;
+        // if (stateManager.velocity.x <= -1 * MAX_RUN) stateManager.velocity.x = -MAX_RUN;
+
+        // if (stateManager.velocity.x < 0) stateManager.facing = true;
+        // if (stateManager.velocity.x > 0) stateManager.facing = false;
+
+        // condition to leave
+        if(Math.abs(stateManager.velocity.x) < MAX_WALK) {
+            return new playerWalk(stateManager,this.direction);
+        }
+        if(game.up) {
+            // return "jump";
+            return new playerJump(this.stateManager);
+        }
+        // if(game.leftclick) {
+        //     // return attack
+        //     return new playerAttackDown(this.stateManager, this);
+        // }
+        if(this.stateManager.velocity.y > 0) {
+            // return "fall";
+            return new playerFall(this.stateManager);
+        }
+        return this.name;
+    }
+
+    onExit() {
+
+    }
 }
 
 class playerJump {
@@ -340,7 +413,7 @@ class playerJump {
     }
 
     onEnter() {
-        this.stateManager.velocity.y = -80;
+        this.stateManager.velocity.y = -100;
     }
 
     update(game, TICK) {

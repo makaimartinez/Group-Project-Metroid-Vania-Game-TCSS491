@@ -11,13 +11,17 @@ class SceneManager {
 
 
         const lvl1 = new levelOne(this.gameEngine, this.player);
-        const lvl2 = new levelTwo(this.gameEngine);
+        const lvl2 = new levelTwo(this.gameEngine, this.player);
+        const lvl3 = new bossLevel(this.gameEngine, this.player);
 
         // build level 1
-        lvl1.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+        // lvl1.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
         // build level 2
         // lvl2.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+
+        
+        lvl3.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
     };
 

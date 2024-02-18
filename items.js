@@ -180,7 +180,7 @@ class Potion {
                         that.removeFromWorld = true;
                     }
                 }
-                if(entity.BB.name == "groun1d")  {
+                if(entity.BB.name == "ground")  {
                     that.velocity.y = 0;
                     that.onGround = true;
                 }

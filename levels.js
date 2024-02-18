@@ -120,3 +120,53 @@ class levelTwo {
         return this.assets;
     }
 }
+
+//currently a practice world that includes a specterBoss
+class bossLevel {
+    constructor(theGame, thePlayer) {
+        this.functions = new levelFunctions;
+        this.assets = [];
+        this.build(theGame, thePlayer);
+    }
+
+    build(theGame, thePlayer) {
+
+        this.assets.push(new SpecterKnight(theGame, 300, 400, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterBoss(theGame, 100, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        // this.assets.push(new skelly(theGame, 300, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        this.assets.push(thePlayer);
+
+        // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
+        // Second argument is the X start position
+        // Third argument is the total length in blocks
+        // Fourth argument is the Y level
+        // Fifth argument is the array to store assets
+        this.functions.buildFloor(1, 0, 100, 11, this.assets);
+        this.functions.buildFloor(1, 0, 9, 12, this.assets);
+        this.functions.buildFloor(1, 0, 7, 13, this.assets);
+        
+        this.assets.push(new StoneTile(theGame, 0, 9));
+        this.assets.push(new StoneTile(theGame, 0, 10));
+        this.assets.push(new StoneTile(theGame, 0, 8));
+
+        this.assets.push(new StoneTile(theGame, 100, 9));
+        this.assets.push(new StoneTile(theGame, 100, 10));
+        this.assets.push(new StoneTile(theGame, 100, 8));
+        this.functions.buildFloor(1, 0, 30, 0, this.assets);
+
+        // this.assets.push(new StoneTile(theGame, 10, 1));
+        // this.assets.push(new StoneTile(theGame, 11, 1));
+        // this.assets.push(new StoneTile(theGame, 11, 2));
+        // this.assets.push(new StoneTile(theGame, 11, 3));
+
+        // items
+        // this.assets.push(new Chest(theGame, 4, 10));
+        
+        // Draw Background last
+        this.assets.push(new Background(theGame, 0));
+    }
+
+    getAssets() {
+        return this.assets;
+    }
+}
