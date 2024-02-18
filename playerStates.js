@@ -104,7 +104,9 @@ class Player {
         this.newState = this.currentState.update(game,TICK);
 
         //if click, turn off click
-        if(this.game.click) this.game.click = false;        
+        if(this.game.leftclick) console.log("potato");
+        if(this.game.leftclick) this.game.leftclick = false;
+        // if(this.game.leftclick && !this.game.titleActive) this.game.leftclick = false;        
 
         // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
         this.physics(TICK);        
@@ -113,8 +115,8 @@ class Player {
         
         this.collide();
         // if(this.velocity.x != 0 || this.velocity.y != 0) {
-            this.updateLastBB();
-            this.updateBB();
+        this.updateLastBB();
+        this.updateBB();
         // } 
 
         //if it's a new state, switch to that state
@@ -130,7 +132,7 @@ class Player {
     
     update() {
         if(this.state != 10) this.updateloop();
-        //if outside screen the screen or if dead, trigger death screen
+         //if outside screen the screen or if dead, trigger death screen
     }
 
     draw(ctx) {
@@ -187,6 +189,16 @@ class Player {
                         if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity);
                     }
                 }
+                if(entity.BB.name == "healthpotion") {
+                    // increase player health (permanent)
+                    that.health += 50;
+                }
+                if(entity.BB.name == "speedpotion") {
+                    // increase player speed (temporarily)
+                    // this.elapsed += this.game.clockTick;
+                    //    if (this.elapsed > 100) ...
+    
+                }
             }
             // if(that.dmgBB && entity.BB && entity.BB.name == "skelly")
             // console.log(that.dmgBB.name + " " + entity.BB.name + " " + that.dmgBB.collide(entity.BB))
@@ -196,6 +208,7 @@ class Player {
                     // if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
             }
+            
         })
 
     }
@@ -231,7 +244,7 @@ class playerIdle {
         if(game.Z) {
             // return new playerDance(this.stateManager);
         }
-        if(game.click) {
+        if(game.leftclick) {
             // return attack
             return new playerAttackDown(this.stateManager, this);
         }
@@ -297,7 +310,7 @@ class playerWalk {
             // return "jump";
             return new playerJump(this.stateManager);
         }
-        if(game.click) {
+        if(game.leftclick) {
             // return attack
             return new playerAttackDown(this.stateManager, this);
         }
@@ -476,7 +489,7 @@ class playerAttackDown {
             // return this.calledState;
             return new playerIdle(this.stateManager);
         }
-        if(game.click) {
+        if(game.leftclick) {
             // return attack
             // return new playerAttackUp(this.stateManager, this);
         }
