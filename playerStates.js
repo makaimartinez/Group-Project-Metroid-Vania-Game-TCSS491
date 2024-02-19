@@ -3,9 +3,12 @@ class Player {
         Object.assign(this, { game, x, y, spritesheet});
         
         this.velocity = {x:0, y:0};
+        this.overchargeHealth = 20;
+        this.maxHealth = 10;
         this.health = 5;
         this.scale = 3;
         this.dead = false;
+        this.respawn = false;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
         this.BB = new BoundingBox(this.x, this.y, 42, 86, "player");
@@ -17,6 +20,9 @@ class Player {
         this.loadAnimations();
         this.updateBB();
         this.updateLastBB();
+        
+        this.elaspedDeadTime = 0;
+        this.deadDuration = 5;
     }
 
     loadAnimations() {
@@ -105,7 +111,6 @@ class Player {
         this.newState = this.currentState.update(game,TICK);
 
         //if click, turn off click
-        if(this.game.leftclick) console.log("potato");
         if(this.game.leftclick) this.game.leftclick = false;
         // if(this.game.leftclick && !this.game.titleActive) this.game.leftclick = false;        
 
@@ -130,8 +135,16 @@ class Player {
     }
     
     update() {
-        if(this.state != 10) this.updateloop();
-         //if outside screen the screen or if dead, trigger death screen
+        if(this.state != 10 && !this.dead) this.updateloop();
+         //if outside the screen or if dead, trigger death screen
+         if(this.y > 640 + 50) this.dead = true;
+         if(this.dead)  { //then talk to scenemanager
+            this.elaspedDeadTime+=this.game.TICK;
+            if(this.elaspedDeadTime >= this.deadDuration) {
+                this.respawn = true;
+                this.removeFromWorld = true;
+            }  
+         }
     }
 
     draw(ctx) {
@@ -147,6 +160,15 @@ class Player {
             // ctx.stroke();
             // ctx.strokeRect(this.x + 20, this.y + 10 - 100, 42, 86);
         }   
+    }
+
+    resetPlayer(startX, startY) {
+        this.x = startX;
+        this.y= startY;
+        this.health = 5
+        this.dead = false;
+        this.currentState = new playerIdle(this);
+        this.state = 0;
     }
 
     updateBB() {
@@ -191,9 +213,11 @@ class Player {
                         if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity);
                     }
                 }
-                if(entity.BB.name == "healthpotion" && entity.visible == true) {
+                if(entity.BB.name == "healthpotion" && entity.visible == true && (that.health < that.overchargeHealth)) {
                     // increase player health (permanent)
-                    that.health += 50;
+                    entity.collect();
+                    that.health += 5;
+                    if(that.health > that.overchargeHealth) that.health = that.overchargeHealth;
                 }
                 if(entity.BB.name == "speedpotion") {
                     // increase player speed (temporarily)
@@ -205,7 +229,7 @@ class Player {
             // if(that.dmgBB && entity.BB && entity.BB.name == "skelly")
             // console.log(that.dmgBB.name + " " + entity.BB.name + " " + that.dmgBB.collide(entity.BB))
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
-                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
+                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly" || entity.BB.name == "chest") {
                     entity.hit();
                     // if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
@@ -270,8 +294,7 @@ class playerWalk {
     }
 
     onEnter() {
-        
-        // console.log("velx " + this.stateManager.velocity.x);
+
     }
 
     update(game, TICK) {
@@ -420,6 +443,7 @@ class playerJump {
         //air physics
         const MAX_WALK = 160;
         const ACC_WALK = 40;
+        const ACC_RUN = 50;
 
         let stateManager = this.stateManager;
         // horizontal physics

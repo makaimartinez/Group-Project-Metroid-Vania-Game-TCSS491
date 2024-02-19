@@ -11,6 +11,7 @@ ASSET_MANAGER.queueDownload("./assets/slime.png");
 ASSET_MANAGER.queueDownload("./assets/pack_loreon_char_free_modified.png");
 ASSET_MANAGER.queueDownload("./assets/miku spritesheet.png");
 ASSET_MANAGER.queueDownload("./assets/specter knight.png");
+ASSET_MANAGER.queueDownload("./assets/playerHead.png")
 ASSET_MANAGER.queueDownload("./assets/Skeleton_spritesheet.png");
 // items and environment
 ASSET_MANAGER.queueDownload("./assets/bg_groundTiles.png");

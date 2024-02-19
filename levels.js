@@ -110,7 +110,8 @@ class levelTwo {
         this.assets.push(new StoneTile(theGame, 11, 3));
 
         // items
-        this.assets.push(new Chest(theGame, 13, 10));
+        this.chest1 = new Chest(theGame, 13, 10);
+        this.assets.push(this.chest1);
         
         // Draw Background last
         this.assets.push(new Background(theGame, 0));
@@ -134,7 +135,7 @@ class bossLevel {
         this.assets.push(new SpecterKnight(theGame, 0, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new SpecterBoss(theGame, 100, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new skelly(theGame, 300, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
-        // thePlayer.x = 0;
+        // thePlayer.x = 500;
         // thePlayer.y = 0;
         this.assets.push(thePlayer);
 
