@@ -65,13 +65,13 @@ class skelly {
             case 4:
                 disjointX = -6;
                 alignX = 18;                
-                break
+                break;
             case 5:
                 disjointX = -2;
                 alignX = 22;                
                 break
         }
-        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX, this.y - alignY, scale, this.facing);
+        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * -1) - alignX, this.y - alignY, scale, true);
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX, this.y - alignY - 100, scale, false);
     }
@@ -106,9 +106,9 @@ class skelly {
             ctx.fillStyle = "Black";
             ctx.textAlign = "right";
             if(!this.dead) {
-                ctx.strokeRect(this.x, this.y + 25, 44, 65);    
+                this.BB.draw(ctx, this.game.camera);
             }
-            ctx.fillText("HP " + this.health, this.x + 30, this.y + 20);
+            ctx.fillText("HP " + this.health, this.x + 30 - this.game.camera.x, this.y + 20);
         }
     }
 
