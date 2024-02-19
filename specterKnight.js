@@ -4,10 +4,12 @@ class SpecterKnight {
         this.facing = false;
         this.currentState = new SpecKnightIdle(this);
         this.hurt = false;
+        this.sightRange = 20;
 
-        this.BB = new BoundingBox(this.x + 50, this.y + 5, 42, 90, "specter");
-        this.lastBB;
+        this.BB = new BoundingBox(this.x + 25, this.y, 55, 100, "specter");
+        this.lastBB = this.BB;
         this.state = 0;
+        this.animation = 0;
         this.animations = []; //0 = idle, 1 = foward, 2= backward, 3 = attack, 4 = spawn, 5 = death;
         this.loadAnimations();
     }
@@ -17,12 +19,12 @@ class SpecterKnight {
             this.animations.push([]);
         }
 
-        this.animations[0] = new Animator(this.spritesheet, 2, 68, 68, 69, 4, 0.2, 2, false, true); //weapon idle
-        this.animations[1] = new Animator(this.spritesheet, 2, 139, 71, 72, 4, 0.2, 2, false, true); // forward
-        this.animations[2] = new Animator(this.spritesheet, 2, 212, 78, 72, 4, 0.2, 2, false, true); // backward
-        this.animations[3] = new Animator(this.spritesheet, 2, 478, 161, 82, 3, 0.28, 2, false, true); //slash
-        this.animations[4] = new Animator(this.spritesheet, 2, 348, 74, 62, 7, 0.128, 2, false, true); //appear
-        this.animations[5] = new Animator(this.spritesheet, 2, 285, 64, 62, 10, 0.14, 2, false, true); //dissappear
+        this.animations[0] = new Animator(this.spritesheet, 2, 68, 68, 69, 4, 0.25, 2, false, true); //weapon idle
+        this.animations[1] = new Animator(this.spritesheet, 2, 139, 71, 72, 4, 0.25, 2, false, true); // forward
+        this.animations[2] = new Animator(this.spritesheet, 2, 212, 78, 72, 4, 0.25, 2, false, true); // backward
+        this.animations[3] = new Animator(this.spritesheet, 2, 478, 161, 82, 3, 0.32, 2, false, true); //slash
+        this.animations[4] = new Animator(this.spritesheet, 2, 348, 74, 62, 7, 0.3, 2, false, true); //appear
+        this.animations[5] = new Animator(this.spritesheet, 2, 285, 64, 62, 10, 0.3, 2, false, true); //dissappear
         
         this.animations[6] = new Animator(this.spritesheet, 2, 2, 41, 64, 4, 0.2, 2, false, true); //idle
         this.animations[7] = new Animator(this.spritesheet, 2, 412, 68, 64, 4, 0.285, 2, false, true); //prepare slash
@@ -31,68 +33,63 @@ class SpecterKnight {
     }
 
     adjustSpritePosition(ctx, scale) {
-        // this.adjustTime++;
-        // if(this.adjustTime >= this.adjustDuration) {
-        //     this.state++;
-        //     this.adjustTime = 0;
-        //     if(this.state == 6) this.state = 0;
-        // }
-
+        // this.animation = 7;
         let direction = 1;
         if(this.facing) direction = -1;
 
         let disjointX = 0;
         let alignX = 0;
         let alignY = 0;
-        switch(this.state) {
+        switch(this.animation) {
             case 0:
                 disjointX = 18;
-                alignX = -20;
-                alignY = 0;
                 break;
             case 1:
-                disjointX = 15;
-                alignX = -17;
-                alignY = 0;
+                // alignX = -17;
+                // alignY = 0;
+                disjointX = 20;
                 break;
             case 2:
-                disjointX = 18;
-                alignX = -13;
-                alignY = 0;
+                alignX = 5;
+                disjointX = 19;
                 break;
             case 3:
-                disjointX = -40;
-                alignX = 50;
-                alignY = 0;
+                // disjointX = -40;
+                alignX = 65;
+                alignY = 20;
+                disjointX = -38;
                 break;
             case 4:
-                disjointX = 9;
-                alignX = 10;
-                alignY = 50;
+                // disjointX = 9;
+                // alignX = 10;
+                // alignY = 50;
+                disjointX = -5;
                 break;
             case 5:
-                disjointX = 0;
-                alignX = 15;
-                alignY = 50;
+                // disjointX = 0;
+                alignX = -5;
+                alignY = -10;
+                // disjointX = -20;
                 break;
             case 6:
-                disjointX = 20;
-                alignX = 18;
+                // disjointX = 20;
+                alignX = -20;
                 break;
             case 7:
-                alignX - 15;
+                disjointX = 3;
+                alignX = -2;
                 break;
         }
         
-        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
+        this.animations[this.animation].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
+        // this.animations[this.animation].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * -1) - alignX - this.game.camera.x, this.y - alignY, scale, true);
+        // this.animations[this.animation].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX - this.game.camera.x, this.y - alignY + 100, scale, false);
     }
 
     hit() {
         this.hurt = true;
     }
-    //need to define more states
-
-    update() {
+    updateloop() {
         const TICK = this.game.clockTick;
         let game = this.game;
         this.newState = this.currentState.update(game,TICK);
@@ -103,9 +100,11 @@ class SpecterKnight {
         this.updateBB();
 
         //if it's a new state, switch to that state
+        //change the current animation
         if(this.newState != this.state) {
             // console.log(newState.name);
             this.state = this.newState.name;
+            this.animation = this.newState.animation;
             this.currentState.onExit();
             delete this.currentState;
             this.currentState = this.newState;
@@ -113,26 +112,39 @@ class SpecterKnight {
         }
     }
 
+    //need to define more states
+    update() {
+        this.updateloop();
+    }
+
     draw(ctx) {
         this.adjustSpritePosition(ctx,1.5);
-        this.BB.draw(ctx, this.game.camera);
+        if(PARAMS.DEBUG) {
+            this.BB.draw(ctx, this.game.camera);
+            // ctx.strokeRect(this.x + 25 - this.game.camera.x, this.y + 100, 55, 100)
+            // console.log(this.x - this.game.camera.x+ " " + this.y);
+            // ctx.setLineDash([5, 5]);
+            // ctx.beginPath();
+            // ctx.arc(this.x - this.game.camera.x, this.y, this.sightRange, 0, 2 * Math.PI);
+            // ctx.stroke();
+            ctx.setLineDash([]);
+        }
     }
 
     updateBB() {
         this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.x + 50, this.y + 5, 42, 90, "specter");
+        // this.BB = new BoundingBox(this.x + 50, this.y + 5, 42, 90, "specter");
+        this.BB = new BoundingBox(this.x + 25, this.y, 55, 100, "specter");
     }
 
+    //specter is allowed to pass through terrain
+    //if target is within...
     collide() {
         let that = this;
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
                 if(entity.BB.name == "ground" && (that.lastBB.bottom) <= entity.BB.top) {//&& (that.lastBB.bot) <= entity.BB.top
-                    // fix bug where "landing" on the side puts character on top
-                    that.y = entity.BB.top - 90;
-                    if(that.stateName == 4 || that.state == 3) {
-                       
-                    }
+                    
                 }
             }
         })
@@ -144,7 +156,8 @@ class SpecKnightIdle {
     constructor(stateManager) {
         this.stateManager = stateManager;
         this.name = 0;
-        
+        this.animation = 0;
+        //wander
         this.idleDuration = 1.6;
         this.idleTime = 0;
     }
@@ -156,7 +169,6 @@ class SpecKnightIdle {
     update(game,TICK) {
         this.idleTime+=TICK;
         if(this.idleTime >= this.idleDuration) {
-            console.log("forward");
             this.stateManager.facing = !this.stateManager.facing;
             return new SpecKnightFoward(this.stateManager);
         }
@@ -172,10 +184,40 @@ class SpecKnightFoward {
     constructor(stateManager) {
         this.stateManager = stateManager;
         this.name = 1;
+        this.animation = 1;
         this.forwardDuration = 1.6;
         this.forwardTime = 0;
     }
     
+    onEnter() {
+
+    }
+
+    update(game,TICK) {
+        this.forwardTime+=TICK;
+        this.direction = 1;
+        if(this.stateManager.facing) this.direction = -1;
+        this.stateManager.x+=0.5 * this.direction;
+
+        if(this.forwardTime >= this.forwardDuration) {
+            return new SpecKnightIdle(this.stateManager);
+        }
+        return this.name;
+    }
+
+    onExit() {
+
+    }
+}
+
+class SpecKnightFollow {
+    constructor() {
+        this.stateManager = stateManager;
+        this.name = 2;
+        this.animation = 1;
+        
+    }
+
     onEnter() {
 
     }

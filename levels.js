@@ -131,9 +131,11 @@ class bossLevel {
 
     build(theGame, thePlayer) {
 
-        this.assets.push(new SpecterKnight(theGame, 300, 400, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
-        this.assets.push(new SpecterBoss(theGame, 100, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 0, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        // this.assets.push(new SpecterBoss(theGame, 100, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new skelly(theGame, 300, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        // thePlayer.x = 0;
+        // thePlayer.y = 0;
         this.assets.push(thePlayer);
 
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
@@ -152,7 +154,7 @@ class bossLevel {
         this.assets.push(new StoneTile(theGame, 100, 9));
         this.assets.push(new StoneTile(theGame, 100, 10));
         this.assets.push(new StoneTile(theGame, 100, 8));
-        this.functions.buildFloor(1, 0, 30, 0, this.assets);
+        // this.functions.buildFloor(1, 0, 30, 0, this.assets);
 
         // this.assets.push(new StoneTile(theGame, 10, 1));
         // this.assets.push(new StoneTile(theGame, 11, 1));
