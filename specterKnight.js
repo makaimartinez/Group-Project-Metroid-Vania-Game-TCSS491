@@ -143,7 +143,7 @@ class SpecterKnight {
         let that = this;
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
-                if(entity.BB.name == "ground" && (that.lastBB.bottom) <= entity.BB.top) {//&& (that.lastBB.bot) <= entity.BB.top
+                if(entity.BB.name == "player" && getDistance(entity.BB.center, that)) {//&& (that.lastBB.bot) <= entity.BB.top
                     
                 }
             }
