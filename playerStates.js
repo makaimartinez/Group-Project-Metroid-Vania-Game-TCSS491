@@ -420,6 +420,7 @@ class playerJump {
         //air physics
         const MAX_WALK = 160;
         const ACC_WALK = 40;
+        const ACC_RUN = 60;
 
         let stateManager = this.stateManager;
         // horizontal physics
