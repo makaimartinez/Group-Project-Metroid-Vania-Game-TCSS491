@@ -322,6 +322,7 @@ class SpecKnightAttack {
         if(this.stateManager.animations[this.name].currentFrame() == 1) {
             let x = this.stateManager.x;
             let y = this.stateManager.y;
+
             if(this.stateManager.facing) this.stateManager.dmgBB = new BoundingBox(x - 101, y + 15, 237, 69, "specter slash");
             if(!this.stateManager.facing) this.stateManager.dmgBB = new BoundingBox(x - 25, y + 15, 237, 69, "specter slash");
             // if(this.facing) ctx.strokeRect(this.x - 101 - this.game.camera.x, this.y + 15, 237, 69);
@@ -338,7 +339,7 @@ class SpecKnightAttack {
     }
 
     onExit() {
-        // console.log("exiting");
+
     }
 }
 
@@ -367,9 +368,7 @@ class SpecKnightHurt {
     }
 
     onExit() {
-        console.log("hurt");
         this.stateManager.hurt = false;
-        
     }
 }
 
@@ -382,7 +381,6 @@ class SpecKnightDeath {
         this.elaspedTime = 0;
     }
     onEnter() {
-        console.log("enter");
         this.stateManager.dead = true;
         this.stateManager.BBName = "defeatedEnemy";
     }

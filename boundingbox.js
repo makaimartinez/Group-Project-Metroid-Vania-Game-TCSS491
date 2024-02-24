@@ -20,6 +20,11 @@ class BoundingBox {
         return false;
     }
 
+    //for enemy detection range
+    circleCollide(other) {
+        return getDistance(this, other) < this.radius + other.radius;
+    };
+
     overlap(oth) {
         let a_half = {x: this.width / 2, y: this.height / 2};
         let b_half = {x: oth.width / 2, y: oth.height / 2};

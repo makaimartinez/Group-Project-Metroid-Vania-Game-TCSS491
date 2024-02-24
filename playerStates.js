@@ -143,9 +143,11 @@ class Player {
             ctx.fillStyle = "Black";
             ctx.textAlign = "right";
             ctx.fillText("HP " + this.health, this.x + 30 - this.game.camera.x, this.y + 0);
-            // ctx.beginPath();
-            // ctx.arc(this.x + 20 + 21, this.y + 5 + 43, 200, 0, 2 * Math.PI);
-            // ctx.stroke();
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, 60, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.setLineDash([]);
             // ctx.strokeRect(this.x + 20, this.y + 10 - 100, 42, 86);
         }   
     }
@@ -275,7 +277,6 @@ class playerWalk {
 
     onEnter() {
         
-        // console.log("velx " + this.stateManager.velocity.x);
     }
 
     update(game, TICK) {
@@ -349,7 +350,6 @@ class playerRun {
     onEnter() {
         const ACC_WALK = 40;
         this.stateManager.velocity.x += this.direction * ACC_WALK;
-        // console.log("velx " + this.stateManager.velocity.x);
     }
 
     update(game, TICK) {
@@ -363,7 +363,6 @@ class playerRun {
         let stateManager = this.stateManager;
         if(!stateManager.facing) {
             if (game.right && !game.left && !game.down) {
-                console.log("increasing");
                 stateManager.velocity.x += ACC_WALK * TICK;
             } else if (game.left && !game.right && !game.down) {
                 stateManager.velocity.x -= DEC_SKID * TICK;
@@ -516,7 +515,6 @@ class playerLand {
     }
 
     update(game, TICK) {
-        // console.log("landing " + this.elaspedTime);
         this.elaspedTime+=TICK;
 
         if(game.left || game.right) {
@@ -596,7 +594,6 @@ class playerHurt {
     }
 
     onEnter() {
-        console.log(this.dmgSource.name + " " +  this.stateManager.BB.left)
         let dmgRecieved = 1;
         if(this.dmgSource.name == "specter slash") dmgRecieved = 2;
         this.stateManager.health -=dmgRecieved;
@@ -637,6 +634,7 @@ class playerDeath {
     }
 
     onEnter() {
+        console.log("death by " + this.dmgSource.name)
         let dmgDirection = this.dmgSource.center.x < this.stateManager.x;
         if(dmgDirection) {
             this.stateManager.velocity.x = 20;
