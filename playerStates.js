@@ -106,7 +106,6 @@ class Player {
         this.newState = this.currentState.update(game,TICK);
 
         //if click, turn off click
-        if(this.game.leftclick) console.log("potato");
         if(this.game.leftclick) this.game.leftclick = false;
         // if(this.game.leftclick && !this.game.titleActive) this.game.leftclick = false;        
 
@@ -139,7 +138,6 @@ class Player {
         this.adjustSpritePosition(ctx, this.scale);
         if(PARAMS.DEBUG) {
             // ctx.strokeRect(this.x - this.game.camera.x - 70, this.y - 30, 180, 105);
-
             this.BB.draw(ctx, this.game.camera);
             ctx.font = "15px serif";
             ctx.fillStyle = "Black";
@@ -179,7 +177,6 @@ class Player {
 
                     that.velocity.y = 0;
                     if(that.stateName == 4 || that.state == 3) {
-                        // console.log(that.y + " " + entity.BB.top)
                         that.newState = new playerLand(that);
                     }
                 } else if(entity.BB.name == "ground" && (that.lastBB.right) <= entity.BB.left)  {
@@ -191,7 +188,7 @@ class Player {
                 }
                 if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
                     if(!entity.dead){
-                        if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity);
+                        if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity.BB);
                     }
                 }
                 if(entity.BB.name == "healthpotion" && entity.visible == true) {
@@ -205,15 +202,19 @@ class Player {
     
                 }
             }
-            // if(that.dmgBB && entity.BB && entity.BB.name == "skelly")
-            // console.log(that.dmgBB.name + " " + entity.BB.name + " " + that.dmgBB.collide(entity.BB))
+
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
                 if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
                     entity.hit();
                     // if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
             }
-            
+
+            if(entity.dmgBB && that.BB.collide(entity.dmgBB) && entity.dmgBB.name == "specter slash") {
+                if(!entity.dead){
+                    if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity.dmgBB);
+                }
+            }
         })
 
     }
@@ -559,7 +560,7 @@ class playerAttackDown {
         if(this.stateManager.animations[this.name].currentFrame() == 3) {
             let x = this.stateManager.x;
             let y = this.stateManager.y    
-            this.stateManager.dmgBB = new BoundingBox(x - game.camera.x - 70, y - 30, 180, 105, "player attack down");
+            this.stateManager.dmgBB = new BoundingBox(x - 70, y - 30, 180, 105, "player attack down");
             // if(PARAMS.DEBUG) this.stateManager.dmgBB.draw(ctx) 
         } else {
             this.stateManager.dmgBB = null;
@@ -595,15 +596,17 @@ class playerHurt {
     }
 
     onEnter() {
-        this.stateManager.health -=1;
+        console.log(this.dmgSource.name + " " +  this.stateManager.BB.left)
+        let dmgRecieved = 1;
+        if(this.dmgSource.name == "specter slash") dmgRecieved = 2;
+        this.stateManager.health -=dmgRecieved;
         if(this.stateManager.health > 0) {
-            let dmgDirection = this.dmgSource.BB.center.x < this.stateManager.x;
-            // console.log(dmgDirection);
+            let dmgDirection = this.dmgSource.center.x < this.stateManager.x;
             if(dmgDirection) {
-            this.stateManager.velocity.x = 50;
-        } else {
-            this.stateManager.velocity.x = -50;
-        }
+                this.stateManager.velocity.x = 50;
+            } else {
+                this.stateManager.velocity.x = -50;
+            }
         }
     }
 
@@ -619,7 +622,7 @@ class playerHurt {
     }
 
     onExit() {
-
+        if(this.stateManager.health < 0) this.stateManager.health = 0;
     }
 }
 
@@ -634,8 +637,7 @@ class playerDeath {
     }
 
     onEnter() {
-        let dmgDirection = this.dmgSource.BB.center.x < this.stateManager.x;
-        // console.log(dmgDirection);
+        let dmgDirection = this.dmgSource.center.x < this.stateManager.x;
         if(dmgDirection) {
             this.stateManager.velocity.x = 20;
         } else {

@@ -14,8 +14,6 @@ class BoundingBox {
 
     //checking for collision with other
     collide(oth) {
-        // if(this.name == "player attack down" && oth.name == "skelly")
-        //     console.log(this.name + " " + this.right + " collided " + oth.name + " " + oth.left);
         if (this.right > oth.left && this.left < oth.right && this.top < oth.bottom && this.bottom > oth.top) {
             return true;
         }

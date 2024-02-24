@@ -4,7 +4,7 @@ class SpecterKnight {
 
         this.velocity = {x:0, y:0};
 
-        this.facing = true;
+        this.facing = false;
         this.hurt = false;
         this.sightRange = 300;
         this.attackRange = 100;
@@ -12,11 +12,12 @@ class SpecterKnight {
 
         this.BB = new BoundingBox(this.x + 25, this.y, 55, 100, "specter");
         this.lastBB = this.BB;
+        this.dmgBB = null;
         this.animations = []; //0 = idle, 1 = foward, 2= backward, 3 = attack, 4 = spawn, 5 = death;
         this.loadAnimations();
 
-        // this.currentState = new SpecKnightIdle(this);
-        this.currentState = new SpecKnightAttack(this);
+        this.currentState = new SpecKnightIdle(this);
+        // this.currentState = new SpecKnightAttack(this);
         this.animation = this.currentState.animation;
         this.state = this.currentState.name; //idle, forward, follow, attack, hurt, death
     }
@@ -32,6 +33,7 @@ class SpecterKnight {
         this.animations[1] = new Animator(this.spritesheet, 2, 139, 71, 72, 4, 0.25, 2, false, true); // forward
         this.animations[2] = new Animator(this.spritesheet, 2, 212, 78, 72, 4, 0.25, 2, false, true); // backward
         this.animations[3] = new Animator(this.spritesheet, 2, 478, 161, 82, 3, 0.32, 2, false, true); //slash
+        // this.animations[3] = new Animator(this.spritesheet, 2 + 162 * 1, 478, 161, 82, 1, 0.32, 2, false, true); //slash
         this.animations[4] = new Animator(this.spritesheet, 2, 348, 74, 62, 7, 0.3, 2, false, true); //appear
         this.animations[5] = new Animator(this.spritesheet, 2, 285, 64, 62, 10, 0.3, 2, false, true); //dissappear
         
@@ -84,8 +86,8 @@ class SpecterKnight {
         // this.animations[this.animation].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * -1) - alignX - this.game.camera.x, this.y - alignY, scale, true);
         // this.animations[this.animation].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX - this.game.camera.x, this.y - alignY + 100, scale, false);
         if(PARAMS.DEBUG && this.state == 3 && this.animations[this.state].currentFrame() == 1) {    
-            // console.log("draw");
-            ctx.strokeRect(this.x - this.game.camera.x, this.y - 20, 180, 105);
+            if(this.facing) ctx.strokeRect(this.x - 101 - this.game.camera.x, this.y + 15, 237, 69);
+            if(!this.facing) ctx.strokeRect(this.x - 25 - this.game.camera.x, this.y + 15, 237, 69);
         }
     }
 
@@ -125,7 +127,7 @@ class SpecterKnight {
         if(PARAMS.DEBUG) {
             this.BB.draw(ctx, this.game.camera);
             // ctx.strokeRect(this.x + 25 - this.game.camera.x, this.y + 100, 55, 100)
-            // console.log(this.x - this.game.camera.x+ " " + this.y);
+            // ctx.strokeRect(this.x - 101 - this.game.camera.x, this.y + 15, 237, 69)
             ctx.setLineDash([5, 5]);
             ctx.beginPath();
             ctx.arc(this.BB.center.x - this.game.camera.x, this.BB.center.y, this.sightRange, 0, 2 * Math.PI);
@@ -156,7 +158,6 @@ class SpecterKnight {
             if(entity.BB && entity.BB != that){
                 if(that.state != 2 && that.state != 3) {
                     if(entity.BB.name == "player" && getDistance(entity.BB.center, that.BB.center) <= that.sightRange) {
-                        console.log("following");
                         that.target = entity;
                         that.newState = new SpecKnightFollow(that);
                     }   
@@ -254,14 +255,12 @@ class SpecKnightFollow {
         var dist = getDistance(this.stateManager, this.target);
         var difX = (this.target.x - this.stateManager.x) / dist;
         var difY = (this.target.y - this.stateManager.y) / dist;
-        console.log(difX + " " + difY);
 
         if(this.target != null) {
-            console.log("target spotted");
+            // console.log("target spotted, following");
         } else {
-            console.log("error, target unknown");
+            // console.log("error, target unknown");
         }
-        console.log("following");
     }
 
     update(game,TICK) {
@@ -286,12 +285,10 @@ class SpecKnightFollow {
         if (manager.velocity.x > 0) manager.facing = false;
 
         if(getDistance(manager,manager.target) > manager.sightRange) {
-            console.log("leave");
             return new SpecKnightIdle(manager);
         }
 
         if(getDistance(manager,manager.target) <= manager.attackRange) {
-            console.log("leave");
             return new SpecKnightAttack(manager);
         }
 
@@ -299,7 +296,6 @@ class SpecKnightFollow {
     }
 
     onExit() {
-        // console.log("exiting");
     }
 }
 
@@ -316,11 +312,28 @@ class SpecKnightAttack {
     onEnter() {
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
-        // console.log("attack");
+        // if(this.facing) ctx.strokeRect(this.x - 101 - this.game.camera.x, this.y + 15, 237, 69);
+        // if(!this.facing) ctx.strokeRect(this.x - 25 - this.game.camera.x, this.y + 15, 237, 69);
     }
 
     update(game,TICK) {
-        
+        this.elaspedTime+=TICK;
+
+        if(this.stateManager.animations[this.name].currentFrame() == 1) {
+            let x = this.stateManager.x;
+            let y = this.stateManager.y;
+            if(this.stateManager.facing) this.stateManager.dmgBB = new BoundingBox(x - 101, y + 15, 237, 69, "specter slash");
+            if(!this.stateManager.facing) this.stateManager.dmgBB = new BoundingBox(x - 25, y + 15, 237, 69, "specter slash");
+            // if(this.facing) ctx.strokeRect(this.x - 101 - this.game.camera.x, this.y + 15, 237, 69);
+            // if(!this.facing) ctx.strokeRect(this.x - 25 - this.game.camera.x, this.y + 15, 237, 69); 
+        } else {
+            this.stateManager.dmgBB = null;
+        }
+
+        if(this.elaspedTime >= this.duration) {
+            return new SpecKnightIdle(this.stateManager)
+        }
+
         return this.name;
     }
 
@@ -345,9 +358,9 @@ class SpecKnightHurt {
         //flicker for duration
 
         this.elaspedTime+=TICK;
-        // console.log(this.elaspedTime);
+        
         if(this.elaspedTime >= this.duration) {
-            return new skellyIdle(this.stateManager);
+            return new SpecKnightIdle(this.stateManager);
         }
 
         return this.name;

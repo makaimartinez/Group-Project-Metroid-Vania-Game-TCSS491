@@ -131,9 +131,9 @@ class bossLevel {
 
     build(theGame, thePlayer) {
 
-        this.assets.push(new SpecterKnight(theGame, 50, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 500, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new SpecterBoss(theGame, 100, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
-        // this.assets.push(new skelly(theGame, 300, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        // this.assets.push(new skelly(theGame, 500, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         // thePlayer.x = 0;
         // thePlayer.y = 0;
         this.assets.push(thePlayer);
