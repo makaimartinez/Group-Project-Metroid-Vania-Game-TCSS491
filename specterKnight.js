@@ -5,7 +5,6 @@ class SpecterKnight {
         this.velocity = {x:0, y:0};
 
         this.facing = true;
-        this.currentState = new SpecKnightIdle(this);
         this.hurt = false;
         this.sightRange = 300;
         this.attackRange = 100;
@@ -13,10 +12,13 @@ class SpecterKnight {
 
         this.BB = new BoundingBox(this.x + 25, this.y, 55, 100, "specter");
         this.lastBB = this.BB;
-        this.state = 0; //idle, forward, follow, attack, hurt, death
-        this.animation = 0;
         this.animations = []; //0 = idle, 1 = foward, 2= backward, 3 = attack, 4 = spawn, 5 = death;
         this.loadAnimations();
+
+        // this.currentState = new SpecKnightIdle(this);
+        this.currentState = new SpecKnightAttack(this);
+        this.animation = this.currentState.animation;
+        this.state = this.currentState.name; //idle, forward, follow, attack, hurt, death
     }
 
     loadAnimations() {
@@ -52,8 +54,6 @@ class SpecterKnight {
                 disjointX = 18;
                 break;
             case 1:
-                // alignX = -17;
-                // alignY = 0;
                 disjointX = 20;
                 break;
             case 2:
@@ -61,25 +61,18 @@ class SpecterKnight {
                 disjointX = 19;
                 break;
             case 3:
-                // disjointX = -40;
                 alignX = 65;
                 alignY = 20;
                 disjointX = -38;
                 break;
             case 4:
-                // disjointX = 9;
-                // alignX = 10;
-                // alignY = 50;
                 disjointX = -5;
                 break;
             case 5:
-                // disjointX = 0;
                 alignX = -5;
                 alignY = -10;
-                // disjointX = -20;
                 break;
             case 6:
-                // disjointX = 20;
                 alignX = -20;
                 break;
             case 7:
@@ -87,10 +80,13 @@ class SpecterKnight {
                 alignX = -2;
                 break;
         }
-        
         this.animations[this.animation].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * direction) - alignX - this.game.camera.x, this.y - alignY, scale, this.facing);
         // this.animations[this.animation].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * -1) - alignX - this.game.camera.x, this.y - alignY, scale, true);
         // this.animations[this.animation].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX - this.game.camera.x, this.y - alignY + 100, scale, false);
+        if(PARAMS.DEBUG && this.state == 3 && this.animations[this.state].currentFrame() == 1) {    
+            // console.log("draw");
+            ctx.strokeRect(this.x - this.game.camera.x, this.y - 20, 180, 105);
+        }
     }
 
     hit() {
@@ -109,7 +105,7 @@ class SpecterKnight {
         //if it's a new state, switch to that state
         //change the current animation
         if(this.newState != this.state) {
-            // console.log(this.newState.name);
+            // console.log(this.newState);
             this.state = this.newState.name;
             this.animation = this.newState.animation;
             this.currentState.onExit();
@@ -312,13 +308,15 @@ class SpecKnightAttack {
         this.stateManager = stateManager;
         this.name = 3;
         this.animation = 3;
-        this.target = stateManager.target
+        
+        this.duration = this.stateManager.animations[this.name].totalTime - 0.1;
+        this.elaspedTime = 0;
     }
 
     onEnter() {
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
-        console.log("attack");
+        // console.log("attack");
     }
 
     update(game,TICK) {

@@ -11,7 +11,7 @@ class Player {
         this.BB = new BoundingBox(this.x, this.y, 42, 86, "player");
         this.lastBB;
         this.dmgBB;
-        this.state = 0; //0 = idle, 1 = walk, 2 = run, 3= jump, 4= fall, 5= land, 6= attackDown, 7= attackUp, 8 = hurt, 9 = defeat
+        this.state = this.currentState.name; //0 = idle, 1 = walk, 2 = run, 3= jump, 4= fall, 5= land, 6= attackDown, 7= attackUp, 8 = hurt, 9 = defeat
         this.newState;
         this.animations = [];
         this.loadAnimations();
@@ -32,6 +32,7 @@ class Player {
         this.animations[4] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 1, 0.15, 2, false, true);//4= falling 
         this.animations[5] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 3, 0.15, 2, false, true);//5= landing 
         this.animations[6] = new Animator(this.spritesheet, 0, 71, 62, 40, 5, 0.16, 0, false, true)//6= attacking //down cut
+        // this.animations[6] = new Animator(this.spritesheet, 0 + 62 * 3, 71, 62, 40, 1, 0.16, 0, false, true)//6= attacking //down cut
         this.animations[7] = new Animator(this.spritesheet, 0, 112, 64, 40, 6, 0.16, 0, false, true);//7= attacking //up cit
         this.animations[8] = new Animator(this.spritesheet, 0, 252, 22, 30, 3, 0.2, 2, false, true);//8= hurt
         this.animations[9] = new Animator(this.spritesheet, 0, 144, 45, 41, 5, 0.35, 2, false, true); //defeat
@@ -95,7 +96,7 @@ class Player {
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX, this.y - alignY - 100, scale, false);
 
         if(PARAMS.DEBUG && this.state == 6 && this.animations[this.state].currentFrame() == 3) {    
-            ctx.strokeRect(this.x - 50 - this.game.camera.x, this.y - 20, 180, 105);
+            ctx.strokeRect(this.x - 70 - this.game.camera.x, this.y - 30, 180, 105);
         }
     }
 
@@ -137,6 +138,8 @@ class Player {
     draw(ctx) {
         this.adjustSpritePosition(ctx, this.scale);
         if(PARAMS.DEBUG) {
+            // ctx.strokeRect(this.x - this.game.camera.x - 70, this.y - 30, 180, 105);
+
             this.BB.draw(ctx, this.game.camera);
             ctx.font = "15px serif";
             ctx.fillStyle = "Black";
@@ -556,7 +559,8 @@ class playerAttackDown {
         if(this.stateManager.animations[this.name].currentFrame() == 3) {
             let x = this.stateManager.x;
             let y = this.stateManager.y    
-            this.stateManager.dmgBB = new BoundingBox(x - 50, y - 15, 180, 105, "player attack down");
+            this.stateManager.dmgBB = new BoundingBox(x - game.camera.x - 70, y - 30, 180, 105, "player attack down");
+            // if(PARAMS.DEBUG) this.stateManager.dmgBB.draw(ctx) 
         } else {
             this.stateManager.dmgBB = null;
         }
