@@ -132,10 +132,10 @@ class bossLevel {
 
     build(theGame, thePlayer) {
 
-        this.assets.push(new SpecterKnight(theGame, 0, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 500, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new SpecterBoss(theGame, 100, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
-        // this.assets.push(new skelly(theGame, 300, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
-        // thePlayer.x = 500;
+        // this.assets.push(new skelly(theGame, 500, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        // thePlayer.x = 0;
         // thePlayer.y = 0;
         this.assets.push(thePlayer);
 
@@ -169,7 +169,19 @@ class bossLevel {
         this.assets.push(new Background(theGame, 0));
     }
 
+    assetsToString() {
+        console.log("assets");
+        let held = "";
+        for (let i = 0; i < this.assets.length; i++) {
+            let item = this.assets[i];
+            if(item.BB && item.BB.name) held = held + ", " + item.BB.name; 
+            
+        }
+        console.log(held);
+    }
+
     getAssets() {
+        // this.assetsToString();
         return this.assets;
     }
 }

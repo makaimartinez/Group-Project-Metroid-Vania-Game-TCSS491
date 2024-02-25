@@ -7,7 +7,7 @@ class SceneManager {
         this.coins = 0;
         this.lives = 1;
 
-        this.player = new Player(this.gameEngine, 100, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
+        this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
 
 
         const lvl1 = new levelOne(this.gameEngine, this.player);
