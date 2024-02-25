@@ -6,20 +6,29 @@ class SceneManager {
         this.score = 0;
         this.coins = 0;
         this.lives = 3;
+        this.level = 1;
 
         this.player = new Player(this.gameEngine, 100, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
 
 
-        const lvl1 = new levelOne(this.gameEngine, this.player);
-        const lvl2 = new levelTwo(this.gameEngine);
+        const currentLevel = this.checkLevel(this.level);
 
         // build level 1
-        lvl1.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+        currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
         // build level 2
         // lvl2.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
     };
+
+    checkLevel(theVal) {
+        if (theVal == 1) {
+            return new levelOne(this.gameEngine, this.player);
+        }
+        if (theVal == 2) {
+            return new levelTwo(this.gameEngine, this.player);
+        }
+    }
 
     clearEntities() {
             gameEngine.entities.forEach(function (entity) {
