@@ -24,8 +24,11 @@ class NextLevelDoor {
         Object.assign(this, { game, x, y });
         this.x *= PARAMS.BLOCKWIDTH;
         this.y *= PARAMS.BLOCKWIDTH;
+        this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_door.png");
 
-        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, "none");
+        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH*2, "door");
+        // this.leftBB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH * 2)
+        // this.rightBB = new BoundingBox(this.x + this.w - PARAMS.BLOCKWIDTH, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH * 2)
     };
 
     update() {
@@ -33,8 +36,11 @@ class NextLevelDoor {
     };
 
     draw(ctx, game) {
+        ctx.drawImage(this.spritesheet, 0, 0, 32, 64,
+            this.x - game.camera.x, this.y,
+            PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH*2);
         if (PARAMS.DEBUG) {
-            ctx.strokeStyle = "black";
+            ctx.strokeStyle = "blue";
             this.BB.draw(ctx, game.camera);
         }
     };
@@ -45,7 +51,7 @@ class GrassTile {
         Object.assign(this, { game, x, y });
         this.x *= PARAMS.BLOCKWIDTH;
         this.y *= PARAMS.BLOCKWIDTH;
-        this.moe = 3;
+        this.moe = 1;
         this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_groundTiles.png");
 
         this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, "ground");
@@ -100,7 +106,7 @@ class DirtTile {
         Object.assign(this, { game, x, y });
         this.x *= PARAMS.BLOCKWIDTH;
         this.y *= PARAMS.BLOCKWIDTH;
-        this.moe = 3;
+        this.moe = 1;
         this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_groundTiles.png");
 
         this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, "ground");
@@ -143,6 +149,33 @@ class DevTile {
     draw(ctx, game) {
         ctx.drawImage(this.spritesheet, 96, 0, 32, 32,
             this.x - game.camera.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+
+        if (PARAMS.DEBUG) {
+            ctx.strokeStyle = "black";
+            this.BB.draw(ctx, game.camera);
+        }
+    };
+}
+
+class InvWallTile {
+    constructor(game, x, y) {
+        Object.assign(this, { game, x, y });
+        this.x *= PARAMS.BLOCKWIDTH;
+        this.y *= PARAMS.BLOCKWIDTH;
+        this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_groundTiles.png");
+
+        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, "ground");
+        // this.leftBB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH * 2)
+        // this.rightBB = new BoundingBox(this.x + this.w - PARAMS.BLOCKWIDTH, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH * 2)
+    };
+
+    update() {
+
+    };
+
+    draw(ctx, game) {
+        // ctx.drawImage(this.spritesheet, 96, 0, 32, 32,
+        //     this.x - game.camera.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
 
         if (PARAMS.DEBUG) {
             ctx.strokeStyle = "black";

@@ -14,6 +14,7 @@ ASSET_MANAGER.queueDownload("./assets/specter knight.png");
 ASSET_MANAGER.queueDownload("./assets/Skeleton_spritesheet.png");
 // items and environment
 ASSET_MANAGER.queueDownload("./assets/bg_groundTiles.png");
+ASSET_MANAGER.queueDownload("./assets/bg_door.png");
 
 ASSET_MANAGER.queueDownload("./assets/chest.png");
 ASSET_MANAGER.queueDownload("./assets/openchest.png");

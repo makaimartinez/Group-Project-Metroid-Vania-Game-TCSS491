@@ -23,6 +23,13 @@ class levelFunctions {
             }
         };
     };
+
+    invisibleWall(theStartX, theArray) {
+        for (var i = 0; i < 15; i++) {
+            theArray.push(new InvWallTile(this.gameEngine, theStartX, i));
+        };
+    }
+
 }
 
 class levelOne {
@@ -52,6 +59,9 @@ class levelOne {
         this.functions.buildFloor(2, 16, 7, 12, this.assets);
         this.functions.buildFloor(2, 16, 7, 13, this.assets);
 
+        // Invisible wall to left of player start
+        this.functions.invisibleWall(-1, this.assets);
+
         this.assets.push(new GrassTile(theGame, 9, 7));
         this.assets.push(new GrassTile(theGame, 10, 7));
         this.assets.push(new GrassTile(theGame, 11, 6));
@@ -59,12 +69,14 @@ class levelOne {
         this.assets.push(new DirtTile(theGame, 10, 8));
         this.assets.push(new DirtTile(theGame, 11, 7));
         this.assets.push(new DirtTile(theGame, 11, 8));
-
+        
+        
         // items
         this.assets.push(new Chest(theGame, 9, 10));
+        this.assets.push(new NextLevelDoor(theGame, 7, 9));
 
         // Draw Background last
-        this.assets.push(new Background(theGame, 200));
+        this.assets.push(new Background(theGame, 260));
     }
 
     getAssets() {
