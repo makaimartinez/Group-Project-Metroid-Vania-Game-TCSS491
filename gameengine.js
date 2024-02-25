@@ -19,6 +19,7 @@ class GameEngine {
         this.Z = false;         // Z for emoting
 
         this.click = null;
+        this.leftclick = null;
         this.mouse = null;
         this.wheel = null;
         this.keys = {};
@@ -61,11 +62,17 @@ class GameEngine {
             that.mouse = getXandY(e);
             
         }
+
         function mouseClickListener (e) {
             that.click = getXandY(e);
-
             if (PARAMS.DEBUG) console.log(that.click);
         }
+
+        function mouseLeftClickListener (e) {
+            if(e.button == 0) that.leftclick = true;
+            if (PARAMS.DEBUG) console.log("leftclick is clicked");
+        }
+
         function wheelListener (e) {
             e.preventDefault();                             // Prevent Scrolling
             that.wheel = e.deltaY;
@@ -140,12 +147,15 @@ class GameEngine {
         // this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
         // this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
         that.mousemove = mouseListener;
-        that.leftclick = mouseClickListener;
+        that.click = mouseClickListener;
+        that.leftclick = mouseLeftClickListener;
         that.wheelscroll = wheelListener;
         that.keydown = keydownListener;
         that.keyup = keyUpListener;
 
         this.ctx.canvas.addEventListener("mousemove", that.mousemove, false);
+
+        this.ctx.canvas.addEventListener("click", that.click, false);
 
         this.ctx.canvas.addEventListener("click", that.leftclick, false);
 

@@ -87,6 +87,7 @@ class skelly {
         this.physics();
         this.updateBB();
         this.collide();
+        this.updateBB();
         this.receive();
         
         //if it's a new state, switch to that state
@@ -138,7 +139,7 @@ class skelly {
         let that = this;
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that && that.BB.collide(entity.BB)) {
-                if(entity.BB.name == "ground")  {
+                if(entity.BB.name == "ground" && (that.lastBB.bottom) <= entity.BB.top)  {
                     that.y = entity.BB.top - that.BB.height - 25;
                     that.velocity.y = 0;
                     if(that.state == 2) {

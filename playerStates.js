@@ -11,7 +11,7 @@ class Player {
         this.BB = new BoundingBox(this.x, this.y, 42, 86, "player");
         this.lastBB;
         this.dmgBB;
-        this.state = 0; //0 = idle, 1 = walk, 2 = run, 3= jump, 4= fall, 5= land, 6= attackDown, 7= attackUp, 8 = hurt, 9 = defeat
+        this.state = this.currentState.name; //0 = idle, 1 = walk, 2 = run, 3= jump, 4= fall, 5= land, 6= attackDown, 7= attackUp, 8 = hurt, 9 = defeat
         this.newState;
         this.animations = [];
         this.loadAnimations();
@@ -32,6 +32,7 @@ class Player {
         this.animations[4] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 1, 0.15, 2, false, true);//4= falling 
         this.animations[5] = new Animator(this.spritesheet, 5 + 2 * 23, 216, 23, 35, 3, 0.15, 2, false, true);//5= landing 
         this.animations[6] = new Animator(this.spritesheet, 0, 71, 62, 40, 5, 0.16, 0, false, true)//6= attacking //down cut
+        // this.animations[6] = new Animator(this.spritesheet, 0 + 62 * 3, 71, 62, 40, 1, 0.16, 0, false, true)//6= attacking //down cut
         this.animations[7] = new Animator(this.spritesheet, 0, 112, 64, 40, 6, 0.16, 0, false, true);//7= attacking //up cit
         this.animations[8] = new Animator(this.spritesheet, 0, 252, 22, 30, 3, 0.2, 2, false, true);//8= hurt
         this.animations[9] = new Animator(this.spritesheet, 0, 144, 45, 41, 5, 0.35, 2, false, true); //defeat
@@ -95,7 +96,7 @@ class Player {
         // this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.x - (disjointX * 1) - alignX, this.y - alignY - 100, scale, false);
 
         if(PARAMS.DEBUG && this.state == 6 && this.animations[this.state].currentFrame() == 3) {    
-            ctx.strokeRect(this.x - 50 - this.game.camera.x, this.y - 20, 180, 105);
+            ctx.strokeRect(this.x - 70 - this.game.camera.x, this.y - 30, 180, 105);
         }
     }
 
@@ -105,8 +106,8 @@ class Player {
         this.newState = this.currentState.update(game,TICK);
 
         //if click, turn off click
-        // if(this.game.click && !this.game.titleActive) this.game.click = false;
-        if(this.game.click) this.game.click = false;        
+        if(this.game.leftclick) this.game.leftclick = false;
+        // if(this.game.leftclick && !this.game.titleActive) this.game.leftclick = false;        
 
         // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
         this.physics(TICK);        
@@ -130,20 +131,23 @@ class Player {
     
     update() {
         if(this.state != 10) this.updateloop();
-        //if outside screen the screen or if dead, trigger death screen
+         //if outside screen the screen or if dead, trigger death screen
     }
 
     draw(ctx) {
         this.adjustSpritePosition(ctx, this.scale);
         if(PARAMS.DEBUG) {
+            // ctx.strokeRect(this.x - this.game.camera.x - 70, this.y - 30, 180, 105);
             this.BB.draw(ctx, this.game.camera);
             ctx.font = "15px serif";
             ctx.fillStyle = "Black";
             ctx.textAlign = "right";
             ctx.fillText("HP " + this.health, this.x + 30 - this.game.camera.x, this.y + 0);
-            // ctx.beginPath();
-            // ctx.arc(this.x + 20 + 21, this.y + 5 + 43, 200, 0, 2 * Math.PI);
-            // ctx.stroke();
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, 60, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.setLineDash([]);
             // ctx.strokeRect(this.x + 20, this.y + 10 - 100, 42, 86);
         }   
     }
@@ -171,26 +175,25 @@ class Player {
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity != that && that.BB.collide(entity.BB)) {
                 if(entity.BB.name == "ground" && (that.lastBB.bottom) <= entity.BB.top)  {
-                    // console.log(" lastBB " + that.lastBB.bottom + " entity top " + entity.BB.top)
-                    // that.y = entity.BB.top - that.BB.height //-10;//that.BB.top;
-                    // console.log("y " + that.y + " combined " + (entity.BB.top - that.BB.height));
-                    console.log(that.lastBB.bottom + " " + entity.BB.top)
-                    that.y = entity.BB.top - that.BB.height; //that.BB.top;
-                    // that.x = entity.BB.left - that.BB.width;
-                    // that.y = entity.BB.top + that.BB.height;
+                    that.y = entity.BB.top - that.BB.height; 
 
                     that.velocity.y = 0;
                     if(that.stateName == 4 || that.state == 3) {
-                        // console.log(that.y + " " + entity.BB.top)
                         that.newState = new playerLand(that);
                     }
+                } else if(entity.BB.name == "ground" && (that.lastBB.right) <= entity.BB.left)  {
+                    that.x = entity.BB.left - that.BB.width; 
+                    that.velocity.x = 0;
+                } else if(entity.BB.name == "ground" && (that.lastBB.left) <= entity.BB.right)  {
+                    that.x = entity.BB.right; 
+                    that.velocity.x = 0;
                 }
                 if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
                     if(!entity.dead){
-                        if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity);
+                        if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity.BB);
                     }
                 }
-                if(entity.BB.name == "healthpotion") {
+                if(entity.BB.name == "healthpotion" && entity.visible == true) {
                     // increase player health (permanent)
                     that.health += 50;
                 }
@@ -201,15 +204,19 @@ class Player {
     
                 }
             }
-            // if(that.dmgBB && entity.BB && entity.BB.name == "skelly")
-            // console.log(that.dmgBB.name + " " + entity.BB.name + " " + that.dmgBB.collide(entity.BB))
+
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
                 if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
                     entity.hit();
                     // if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
             }
-            
+
+            if(entity.dmgBB && that.BB.collide(entity.dmgBB) && entity.dmgBB.name == "specter slash") {
+                if(!entity.dead){
+                    if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity.dmgBB);
+                }
+            }
         })
 
     }
@@ -232,10 +239,13 @@ class playerIdle {
         if(game.left || game.right) {
             let direction = 1;
             if(game.left) direction = -1;
+            const ACC_WALK = 40;
+            this.stateManager.velocity.x += direction * ACC_WALK;
             return new playerWalk(this.stateManager, direction);
         }
         if(this.stateManager.velocity.y > 0) {
             // return fall
+            
             return new playerFall(this.stateManager);
         }
         if(game.up) {
@@ -245,7 +255,7 @@ class playerIdle {
         if(game.Z) {
             // return new playerDance(this.stateManager);
         }
-        if(game.click) {
+        if(game.leftclick) {
             // return attack
             return new playerAttackDown(this.stateManager, this);
         }
@@ -266,17 +276,15 @@ class playerWalk {
     }
 
     onEnter() {
-        const ACC_WALK = 40;
-        this.stateManager.velocity.x += this.direction * ACC_WALK;
-        // console.log("velx " + this.stateManager.velocity.x);
+        
     }
 
     update(game, TICK) {
         const MIN_WALK = 30;
-        const MAX_WALK = 160;
+        const MAX_WALK = 120;
         const ACC_WALK = 40;
         const DEC_SKID = 200;
-        const DEC_REL = 70;
+        const DEC_REL = 100;
 
         let stateManager = this.stateManager;
         if(!stateManager.facing) {
@@ -304,6 +312,9 @@ class playerWalk {
         if (stateManager.velocity.x > 0) stateManager.facing = false;
 
         // condition to leave
+        if(Math.abs(stateManager.velocity.x) == MAX_WALK) {
+            return new playerRun(stateManager,this.direction);
+        }
         if(Math.abs(stateManager.velocity.x) <= MIN_WALK) {
             return new playerIdle(stateManager);
         }
@@ -311,7 +322,7 @@ class playerWalk {
             // return "jump";
             return new playerJump(this.stateManager);
         }
-        if(game.click) {
+        if(game.leftclick) {
             // return attack
             return new playerAttackDown(this.stateManager, this);
         }
@@ -329,7 +340,73 @@ class playerWalk {
 }
 
 class playerRun {
+    constructor(stateManager, direction) {
+        this.stateManager = stateManager;
+        this.name = 2;
 
+        this.direction = direction;
+    }
+
+    onEnter() {
+        const ACC_WALK = 40;
+        this.stateManager.velocity.x += this.direction * ACC_WALK;
+    }
+
+    update(game, TICK) {
+        const MIN_WALK = 30;
+        const MAX_RUN = 130;
+        const MAX_WALK = 120;
+        const ACC_WALK = 40;
+        const DEC_SKID = 200;
+        const DEC_REL = 100;
+
+        let stateManager = this.stateManager;
+        if(!stateManager.facing) {
+            if (game.right && !game.left && !game.down) {
+                stateManager.velocity.x += ACC_WALK * TICK;
+            } else if (game.left && !game.right && !game.down) {
+                stateManager.velocity.x -= DEC_SKID * TICK;
+            } else {
+                stateManager.velocity.x -= DEC_REL * TICK;
+            }
+        } else {
+            if (game.left && !game.right && !game.down) {
+                stateManager.velocity.x -= ACC_WALK * TICK;
+            } else if (game.right && !game.left && !game.down) {
+                stateManager.velocity.x += DEC_SKID * TICK;
+            } else {
+                stateManager.velocity.x += DEC_REL * TICK;
+            }
+        }
+
+        // if (stateManager.velocity.x >= MAX_RUN) stateManager.velocity.x = MAX_RUN;
+        // if (stateManager.velocity.x <= -1 * MAX_RUN) stateManager.velocity.x = -MAX_RUN;
+
+        // if (stateManager.velocity.x < 0) stateManager.facing = true;
+        // if (stateManager.velocity.x > 0) stateManager.facing = false;
+
+        // condition to leave
+        if(Math.abs(stateManager.velocity.x) < MAX_WALK) {
+            return new playerWalk(stateManager,this.direction);
+        }
+        if(game.up) {
+            // return "jump";
+            return new playerJump(this.stateManager);
+        }
+        // if(game.leftclick) {
+        //     // return attack
+        //     return new playerAttackDown(this.stateManager, this);
+        // }
+        if(this.stateManager.velocity.y > 0) {
+            // return "fall";
+            return new playerFall(this.stateManager);
+        }
+        return this.name;
+    }
+
+    onExit() {
+
+    }
 }
 
 class playerJump {
@@ -339,13 +416,14 @@ class playerJump {
     }
 
     onEnter() {
-        this.stateManager.velocity.y = -80;
+        this.stateManager.velocity.y = -100;
     }
 
     update(game, TICK) {
         //air physics
         const MAX_WALK = 160;
         const ACC_WALK = 40;
+        const ACC_RUN = 60;
 
         let stateManager = this.stateManager;
         // horizontal physics
@@ -437,7 +515,6 @@ class playerLand {
     }
 
     update(game, TICK) {
-        // console.log("landing " + this.elaspedTime);
         this.elaspedTime+=TICK;
 
         if(game.left || game.right) {
@@ -481,7 +558,8 @@ class playerAttackDown {
         if(this.stateManager.animations[this.name].currentFrame() == 3) {
             let x = this.stateManager.x;
             let y = this.stateManager.y    
-            this.stateManager.dmgBB = new BoundingBox(x - 50, y - 15, 180, 105, "player attack down");
+            this.stateManager.dmgBB = new BoundingBox(x - 70, y - 30, 180, 105, "player attack down");
+            // if(PARAMS.DEBUG) this.stateManager.dmgBB.draw(ctx) 
         } else {
             this.stateManager.dmgBB = null;
         }
@@ -490,7 +568,7 @@ class playerAttackDown {
             // return this.calledState;
             return new playerIdle(this.stateManager);
         }
-        if(game.click) {
+        if(game.leftclick) {
             // return attack
             // return new playerAttackUp(this.stateManager, this);
         }
@@ -516,15 +594,16 @@ class playerHurt {
     }
 
     onEnter() {
-        this.stateManager.health -=1;
+        let dmgRecieved = 1;
+        if(this.dmgSource.name == "specter slash") dmgRecieved = 2;
+        this.stateManager.health -=dmgRecieved;
         if(this.stateManager.health > 0) {
-            let dmgDirection = this.dmgSource.BB.center.x < this.stateManager.x;
-            // console.log(dmgDirection);
+            let dmgDirection = this.dmgSource.center.x < this.stateManager.x;
             if(dmgDirection) {
-            this.stateManager.velocity.x = 50;
-        } else {
-            this.stateManager.velocity.x = -50;
-        }
+                this.stateManager.velocity.x = 50;
+            } else {
+                this.stateManager.velocity.x = -50;
+            }
         }
     }
 
@@ -540,7 +619,7 @@ class playerHurt {
     }
 
     onExit() {
-
+        if(this.stateManager.health < 0) this.stateManager.health = 0;
     }
 }
 
@@ -555,8 +634,8 @@ class playerDeath {
     }
 
     onEnter() {
-        let dmgDirection = this.dmgSource.BB.center.x < this.stateManager.x;
-        // console.log(dmgDirection);
+        console.log("death by " + this.dmgSource.name)
+        let dmgDirection = this.dmgSource.center.x < this.stateManager.x;
         if(dmgDirection) {
             this.stateManager.velocity.x = 20;
         } else {

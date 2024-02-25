@@ -14,13 +14,16 @@ class BoundingBox {
 
     //checking for collision with other
     collide(oth) {
-        // if(this.name == "player attack down" && oth.name == "skelly")
-        //     console.log(this.name + " " + this.right + " collided " + oth.name + " " + oth.left);
         if (this.right > oth.left && this.left < oth.right && this.top < oth.bottom && this.bottom > oth.top) {
             return true;
         }
         return false;
     }
+
+    //for enemy detection range
+    circleCollide(other) {
+        return getDistance(this, other) < this.radius + other.radius;
+    };
 
     overlap(oth) {
         let a_half = {x: this.width / 2, y: this.height / 2};
