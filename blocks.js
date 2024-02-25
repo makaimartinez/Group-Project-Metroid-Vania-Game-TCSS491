@@ -24,6 +24,7 @@ class NextLevelDoor {
         Object.assign(this, { game, x, y });
         this.x *= PARAMS.BLOCKWIDTH;
         this.y *= PARAMS.BLOCKWIDTH;
+        this.useable = true;
         this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_door.png");
 
         this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH*2, "door");
@@ -36,14 +37,21 @@ class NextLevelDoor {
     };
 
     draw(ctx, game) {
-        ctx.drawImage(this.spritesheet, 0, 0, 32, 64,
-            this.x - game.camera.x, this.y,
-            PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH*2);
-        if (PARAMS.DEBUG) {
-            ctx.strokeStyle = "blue";
-            this.BB.draw(ctx, game.camera);
+        if (this.useable){
+            ctx.drawImage(this.spritesheet, 0, 0, 32, 64,
+                this.x - game.camera.x, this.y,
+                PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH*2);
+            if (PARAMS.DEBUG) {
+                ctx.strokeStyle = "blue";
+                this.BB.draw(ctx, game.camera);
+            }
         }
     };
+
+    use() {
+        this.useable = false;
+    };
+
 }
 
 class GrassTile {
@@ -184,14 +192,11 @@ class InvWallTile {
     };
 }
 
-class Background {
+class Background_Day {
     constructor(game, x) {
         Object.assign(this, { game, x });
         this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_background.png");
         this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, "none");
-
-        // this.leftBB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH * 2)
-        // this.rightBB = new BoundingBox(this.x + this.w - PARAMS.BLOCKWIDTH, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH * 2)
     };
 
     update() {
@@ -199,7 +204,33 @@ class Background {
     };
 
     draw(ctx, game) {
-        ctx.drawImage(this.spritesheet, this.x + (game.camera.x / 2), 0,
+        ctx.drawImage(this.spritesheet, this.x + (game.camera.x / 4), 0,
             PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2, 0, 0, PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2);
+        ctx.drawImage(this.spritesheet, this.x + (game.camera.x / 2), 640,
+            PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2, 0, 0, PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2);
+    };
+}
+
+
+class Background_Cave {
+    constructor(game, x) {
+        Object.assign(this, { game, x });
+        this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_backgroundUG.png");
+        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, "none");
+    };
+
+    update() {
+
+    };
+
+    draw(ctx, game) {
+        ctx.drawImage(this.spritesheet, this.x + (game.camera.x / 8), 0,
+            PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2, 0, 0, PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2);
+            ctx.drawImage(this.spritesheet, this.x + (game.camera.x / 6), 1280,
+                PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2, 0, 0, PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2);
+            ctx.drawImage(this.spritesheet, this.x + (game.camera.x / 4), 1920,
+                PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2, 0, 0, PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2);
+            ctx.drawImage(this.spritesheet, this.x + (game.camera.x / 2), 640,
+                PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2, 0, 0, PARAMS.CANVAS_WIDTH*2, PARAMS.CANVAS_HEIGHT*2);
     };
 }

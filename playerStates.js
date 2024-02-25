@@ -114,7 +114,7 @@ class Player {
         this.updateLastBB();
         this.updateBB();
         
-        this.collide();
+        this.collide(game);
         this.updateLastBB();
         this.updateBB();
 
@@ -170,7 +170,7 @@ class Player {
         this.x+= this.velocity.x * TICK * 2;
     }
 
-    collide() {
+    collide(theGame) {
         let that = this;
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity != that && that.BB.collide(entity.BB)) {
@@ -203,6 +203,11 @@ class Player {
                     //    if (this.elapsed > 100) ...
     
                 }
+
+                if (entity.BB.name == "door") {
+                    theGame.levelAdvance();
+                }
+
             }
 
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
