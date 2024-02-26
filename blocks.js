@@ -59,7 +59,7 @@ class GrassTile {
         Object.assign(this, { game, x, y });
         this.x *= PARAMS.BLOCKWIDTH;
         this.y *= PARAMS.BLOCKWIDTH;
-        this.moe = 1;
+        this.moe = 3;
         this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_groundTiles.png");
 
         this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, "ground");
@@ -72,7 +72,7 @@ class GrassTile {
     };
 
     draw(ctx, game) {
-        ctx.drawImage(this.spritesheet, 0, 0, 32, 32,
+        ctx.drawImage(this.spritesheet, 0, 0, 31, 32,
             this.x - game.camera.x-this.moe, this.y-this.moe,
             PARAMS.BLOCKWIDTH+(this.moe*2), PARAMS.BLOCKWIDTH+(this.moe*2));
         if (PARAMS.DEBUG) {
@@ -87,6 +87,7 @@ class StoneTile {
         Object.assign(this, { game, x, y });
         this.x *= PARAMS.BLOCKWIDTH;
         this.y *= PARAMS.BLOCKWIDTH;
+        this.moe = 2;
         this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_groundTiles.png");
 
         this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, "ground");
@@ -99,9 +100,9 @@ class StoneTile {
     };
 
     draw(ctx, game) {
-        ctx.drawImage(this.spritesheet, 32, 0, 32, 32,
-            this.x - game.camera.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
-
+        ctx.drawImage(this.spritesheet, 32, 0, 31, 32,
+            this.x - game.camera.x-this.moe, this.y-this.moe,
+            PARAMS.BLOCKWIDTH+(this.moe*2), PARAMS.BLOCKWIDTH+(this.moe*2));
         if (PARAMS.DEBUG) {
             ctx.strokeStyle = "black";
             this.BB.draw(ctx, game.camera);
@@ -114,7 +115,7 @@ class DirtTile {
         Object.assign(this, { game, x, y });
         this.x *= PARAMS.BLOCKWIDTH;
         this.y *= PARAMS.BLOCKWIDTH;
-        this.moe = 1;
+        this.moe = 3;
         this.spritesheet = ASSET_MANAGER.getAsset("./assets/bg_groundTiles.png");
 
         this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, "ground");
@@ -127,7 +128,7 @@ class DirtTile {
     };
 
     draw(ctx, game) {
-        ctx.drawImage(this.spritesheet, 64, 0, 32, 32,
+        ctx.drawImage(this.spritesheet, 64, 0, 31, 32,
             this.x - game.camera.x-this.moe, this.y-this.moe,
             PARAMS.BLOCKWIDTH+(this.moe*2), PARAMS.BLOCKWIDTH+(this.moe*2));
 
