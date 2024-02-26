@@ -8,6 +8,7 @@ class Player {
         this.dead = false;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
+        this.radius = 60;
         this.BB = new BoundingBox(this.x, this.y, 42, 86, "player");
         this.lastBB;
         this.dmgBB;
@@ -188,7 +189,7 @@ class Player {
                     that.x = entity.BB.right; 
                     that.velocity.x = 0;
                 }
-                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
+                if(entity.BB.name == "slime" || entity.BB.name == "" || entity.BB.name == "skelly") {
                     if(!entity.dead){
                         if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity.BB);
                     }
