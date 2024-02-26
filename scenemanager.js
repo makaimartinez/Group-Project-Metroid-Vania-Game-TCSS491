@@ -21,7 +21,6 @@ class SceneManager {
         console.log(this.levels);
         this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
-        this.currentLevel = lvl1;
 
         // build level 1
         // build level 2
