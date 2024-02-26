@@ -42,7 +42,7 @@ class GameEngine {
         this.surfaceHeight = this.ctx.canvas.height;
         this.startInput();
         this.timer = new Timer();
-        this.scene = new SceneManager(gameEngine, this.levelNum);
+        this.scene = new SceneManager(this, this.levelNum);
         this.addEntity(this.scene);
     };
 
@@ -56,9 +56,10 @@ class GameEngine {
     };
 
     levelAdvance() {
+        //get preserved player values
         this.levelNum++;
         this.scene.clearEntities();
-        this.scene = new SceneManager(gameEngine, this.levelNum);
+        this.scene = new SceneManager(this, this.levelNum);
     }
 
     startInput() {
