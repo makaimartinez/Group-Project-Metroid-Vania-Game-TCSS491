@@ -662,6 +662,7 @@ class playerDeath {
         this.duration = this.stateManager.animations[this.name].totalTime -0.1; //measured in seconds
         this.elaspedTime = 0;
         this.lastElasped = 0;
+        this.game = stateManager.game;
     }
 
     onEnter() {
@@ -675,6 +676,7 @@ class playerDeath {
     }
 
     update(game,TICK) {
+
         this.elaspedTime+=TICK;
         if(this.elaspedTime - this.lastElasped >= 0.5) {
             this.stateManager.velocity.x /=2;
@@ -688,5 +690,6 @@ class playerDeath {
     onExit() {
         this.stateManager.state = 10;
         this.stateManager.dead = true;
+        this.game.respawnRestart();
     }
 }

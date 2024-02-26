@@ -27,6 +27,7 @@ class GameEngine {
 
         // Controls what level the player is on (0 is currently level 1)
         this.levelNum = 0;
+        this.playerLives = 3;
 
         this.titleActive = true;
 
@@ -58,6 +59,13 @@ class GameEngine {
     levelAdvance() {
         //get preserved player values
         this.levelNum++;
+        this.scene.clearEntities();
+        this.scene = new SceneManager(this, this.levelNum);
+    }
+ 
+    respawnRestart() {
+        //get preserved player values
+        this.playerLives--;
         this.scene.clearEntities();
         this.scene = new SceneManager(this, this.levelNum);
     }

@@ -5,7 +5,6 @@ class SceneManager {
         this.x = 0;
         this.score = 0;
         this.coins = 0;
-        this.lives = 3;
         this.levelNum = theLevel;
 
         this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
@@ -119,7 +118,7 @@ class SceneManager {
             ctx.strokeStyle = "White";
             ctx.fillStyle = ctx.strokeStyle;
             ctx.fillText("Lives", 5 * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH - 10);
-            for (let i = 0; i < this.lives; i++) {
+            for (let i = 0; i < this.gameEngine.playerLives; i++) {
                 let padding = 10; 
                 let imgWidth = 25;
                 ctx.drawImage(this.headImage, 0, 0, 5, 7,  5 * PARAMS.BLOCKWIDTH + (padding + imgWidth) * i, PARAMS.BLOCKWIDTH, 5 * 5, 7 * 5);
