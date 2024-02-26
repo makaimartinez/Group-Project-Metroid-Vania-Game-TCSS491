@@ -5,6 +5,7 @@ class GameEngine {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
+        this.scene = null;
 
         // Everything that will be updated and drawn each frame
         this.entities = [];
@@ -24,6 +25,9 @@ class GameEngine {
         this.wheel = null;
         this.keys = {};
 
+        // Controls what level the player is on (0 is currently level 1)
+        this.levelNum = 0;
+
         this.titleActive = true;
 
         // Options and the Details
@@ -38,6 +42,8 @@ class GameEngine {
         this.surfaceHeight = this.ctx.canvas.height;
         this.startInput();
         this.timer = new Timer();
+        this.scene = new SceneManager(gameEngine, this.levelNum);
+        this.addEntity(this.scene);
     };
 
     start() {
@@ -48,6 +54,12 @@ class GameEngine {
         };
         gameLoop();                                         //define function then immediately call it
     };
+
+    levelAdvance() {
+        this.levelNum++;
+        this.scene.clearEntities();
+        this.scene = new SceneManager(gameEngine, this.levelNum);
+    }
 
     startInput() {
         this.keyboardActive = false;
