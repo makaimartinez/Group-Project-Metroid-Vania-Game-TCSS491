@@ -145,6 +145,12 @@ class skelly {
                     if(that.state == 2) {
                         that.newState = new skellyIdle(that);
                     }
+                } else if(entity.BB.name == "ground" && (that.lastBB.right) <= entity.BB.left)  {
+                    that.x = entity.BB.left - that.BB.width; 
+                    that.velocity.x = 0;
+                } else if(entity.BB.name == "ground" && (that.lastBB.left) <= entity.BB.right)  {
+                    that.x = entity.BB.right; 
+                    that.velocity.x = 0;
                 }
             }
         })

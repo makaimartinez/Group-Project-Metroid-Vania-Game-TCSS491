@@ -21,8 +21,8 @@ class BoundingBox {
     }
 
     //for enemy detection range
-    circleCollide(other) {
-        return getDistance(this, other) < this.radius + other.radius;
+    circleCollide(other, thisR, othR) {
+        return getDistance(this.center, other.center) < thisR + othR;
     };
 
     overlap(oth) {
@@ -40,5 +40,10 @@ class BoundingBox {
     
     draw(ctx, camera) {
         ctx.strokeRect(this.x - camera.x, this.y, this.width, this.height);
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.arc(this.center.x - camera.x, this.center.y, this.sightRange, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.setLineDash([]);
     }
 }

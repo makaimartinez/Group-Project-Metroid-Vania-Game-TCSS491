@@ -11,6 +11,7 @@ class Player {
         this.respawn = false;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
+        this.radius = 60;
         this.BB = new BoundingBox(this.x, this.y, 42, 86, "player");
         this.lastBB;
         this.dmgBB;
@@ -120,7 +121,7 @@ class Player {
         this.updateLastBB();
         this.updateBB();
         
-        this.collide();
+        this.collide(game);
         this.updateLastBB();
         this.updateBB();
 
@@ -193,7 +194,7 @@ class Player {
         this.x+= this.velocity.x * TICK * 2;
     }
 
-    collide() {
+    collide(theGame) {
         let that = this;
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity != that && that.BB.collide(entity.BB)) {
@@ -211,7 +212,7 @@ class Player {
                     that.x = entity.BB.right; 
                     that.velocity.x = 0;
                 }
-                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly") {
+                if(entity.BB.name == "slime" || entity.BB.name == "" || entity.BB.name == "skelly") {
                     if(!entity.dead){
                         if(that.state != 8 && that.state != 9) that.newState = new playerHurt(that, entity.BB);
                     }
@@ -228,6 +229,11 @@ class Player {
                     //    if (this.elapsed > 100) ...
     
                 }
+
+                if (entity.BB.name == "door") {
+                    theGame.levelAdvance();
+                }
+
             }
 
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {

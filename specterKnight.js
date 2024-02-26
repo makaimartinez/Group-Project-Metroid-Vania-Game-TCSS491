@@ -7,7 +7,7 @@ class SpecterKnight {
         this.facing = false;
         this.hurt = false;
         this.sightRange = 300;
-        this.attackRange = 100;
+        this.attackRange = 99;
         this.target = null;
 
         this.BB = new BoundingBox(this.x + 25, this.y, 55, 100, "specter");
@@ -23,8 +23,6 @@ class SpecterKnight {
     }
 
     loadAnimations() {
-        
-
         for (let i = 0; i < 9; i++) { //9 total animations//0-5 states, unused 6-9
             this.animations.push([]);
         }
@@ -33,7 +31,6 @@ class SpecterKnight {
         this.animations[1] = new Animator(this.spritesheet, 2, 139, 71, 72, 4, 0.25, 2, false, true); // forward
         this.animations[2] = new Animator(this.spritesheet, 2, 212, 78, 72, 4, 0.25, 2, false, true); // backward
         this.animations[3] = new Animator(this.spritesheet, 2, 478, 161, 82, 3, 0.32, 2, false, true); //slash
-        // this.animations[3] = new Animator(this.spritesheet, 2 + 162 * 1, 478, 161, 82, 1, 0.32, 2, false, true); //slash
         this.animations[4] = new Animator(this.spritesheet, 2, 348, 74, 62, 7, 0.3, 2, false, true); //appear
         this.animations[5] = new Animator(this.spritesheet, 2, 285, 64, 62, 10, 0.3, 2, false, true); //dissappear
         
@@ -141,7 +138,6 @@ class SpecterKnight {
 
     updateBB() {
         this.lastBB = this.BB;
-        // this.BB = new BoundingBox(this.x + 50, this.y + 5, 42, 90, "specter");
         this.BB = new BoundingBox(this.x + 25, this.y, 55, 100, "specter");
     }
 
@@ -151,20 +147,25 @@ class SpecterKnight {
     }
 
     //specter is allowed to pass through terrain
-    //if target is within...
+    //changes state depending on closeness with player
     collide() {
         let that = this;
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that){
-                if(that.state != 2 && that.state != 3) {
-                    if(entity.BB.name == "player" && getDistance(entity.BB.center, that.BB.center) <= that.sightRange) {
-                        that.target = entity;
-                        that.newState = new SpecKnightFollow(that);
-                    }   
-                }
-    
-                if(that.BB.collide(entity.BB)) {                
-                    //attack
+                if(entity.BB.name == "player") {
+                    if(that.state != 2 && that.state != 3) {
+                        if(that.BB.circleCollide(entity.BB, that.sightRange, entity.radius)) {
+                            that.target = entity;
+                            that.newState = new SpecKnightFollow(that);
+                        } else {
+                            that.target = null;
+                        }
+                    }
+                    if(that.state != 3) {
+                        if(that.BB.circleCollide(entity.BB, that.attackRange, entity.radius)) {
+                            that.newState = new SpecKnightAttack(that);
+                        }
+                    }
                 }
             }
         })
@@ -247,7 +248,7 @@ class SpecKnightFollow {
     }
 
     onEnter() {
-        //reset velocity
+        //full stop
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
 
@@ -255,16 +256,34 @@ class SpecKnightFollow {
         var dist = getDistance(this.stateManager, this.target);
         var difX = (this.target.x - this.stateManager.x) / dist;
         var difY = (this.target.y - this.stateManager.y) / dist;
+        // this.stateManager.velocity.x += difX * 10000 / (dist * dist);
+        // this.stateManager.velocity.y += difY * 10000 / (dist * dist);
 
         if(this.target != null) {
-            // console.log("target spotted, following");
+            console.log("target spotted, following");
         } else {
-            // console.log("error, target unknown");
+            console.log("error, target unknown");
         }
+
+        //if (Math.abs(this.y - target.y) > 10) {
+            // then change y velocity till it does
+        // } else {
+            // if((Math.abs(this.x - target.x) > 90)  {
+                //chase player *little faster than player's walking speed 
+            // } else {
+                //return new attack
+            // }
+        // }
     }
 
     update(game,TICK) {
-        const verticalSpeed = 30;
+        this.radialChase();
+
+        return this.name;
+    }
+
+    radialChase() {
+        const verticalSpeed = 2000;
         const MAX_VERTICAL = 20000;
         let manager = this.stateManager;
         //close distance
@@ -284,18 +303,22 @@ class SpecKnightFollow {
         if (manager.velocity.x < 0) manager.facing = true;
         if (manager.velocity.x > 0) manager.facing = false;
 
-        if(getDistance(manager,manager.target) > manager.sightRange) {
+        // if(getDistance(manager,manager.target) > manager.sightRange + this.target.radius) {
+            // console.log(manager.target.BB.name)
+        if(!manager.BB.circleCollide(manager.target.BB,manager.sightRange,this.target.radius)) {    
             return new SpecKnightIdle(manager);
         }
-
-        if(getDistance(manager,manager.target) <= manager.attackRange) {
-            return new SpecKnightAttack(manager);
-        }
-
-        return this.name;
+        
+        // if(getDistance(manager,manager.target) <= manager.attackRange + this.target.radius) {
+        // if(manager.BB.circleCollide(manager.target.BB, manager.attackRange, this.target.radius)) {
+            // return new SpecKnightAttack(manager);
+        // }
     }
 
     onExit() {
+        console.log("exit");
+        this.stateManager.velocity.x = 0;
+        this.stateManager.velocity.y = 0;
     }
 }
 
@@ -322,9 +345,25 @@ class SpecKnightAttack {
         if(this.stateManager.animations[this.name].currentFrame() == 1) {
             let x = this.stateManager.x;
             let y = this.stateManager.y;
-
-            if(this.stateManager.facing) this.stateManager.dmgBB = new BoundingBox(x - 101, y + 15, 237, 69, "specter slash");
-            if(!this.stateManager.facing) this.stateManager.dmgBB = new BoundingBox(x - 25, y + 15, 237, 69, "specter slash");
+            let left = 0;
+            let width = 237;
+            let top = y + 15;
+            let height = 69;
+            
+            if(this.stateManager.facing) {
+                left = x - 101;
+            }
+            if(!this.stateManager.facing) { 
+                left = x - 25;
+            }
+            let targetBB = this.stateManager.target.BB
+            if(!this.stateManager.target.dead)
+            console.log("slash position: L" + this.roundD(left,1) + " R" + this.roundD((left + width),1) 
+                    + " T" + this.roundD(top,1) + " B" + this.roundD((top + height),1)
+                    + "\nplayer position: L" + this.roundD(targetBB.left,1) + " R" + this.roundD(targetBB.right,1) 
+                    + " T" + this.roundD(targetBB.top,1) + " B" + this.roundD(targetBB.bottom,1));
+            this.stateManager.dmgBB = new BoundingBox(left, top, width, height, "specter slash");
+            
             // if(this.facing) ctx.strokeRect(this.x - 101 - this.game.camera.x, this.y + 15, 237, 69);
             // if(!this.facing) ctx.strokeRect(this.x - 25 - this.game.camera.x, this.y + 15, 237, 69); 
         } else {
@@ -338,6 +377,9 @@ class SpecKnightAttack {
         return this.name;
     }
 
+    roundD(num, d) {
+        return Math.round(num * Math.pow(10,2))/Math.pow(10,2)
+    }
     onExit() {
 
     }

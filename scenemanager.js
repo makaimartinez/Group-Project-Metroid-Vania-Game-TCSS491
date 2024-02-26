@@ -1,36 +1,38 @@
 class SceneManager {
-    constructor(game) {
+    constructor(game, theLevel) {
         this.gameEngine = game;
         this.gameEngine.camera = this;
         this.x = 0;
         this.score = 0;
         this.coins = 0;
-        this.lives = 1;
+        this.lives = 3;
+        this.levelNum = theLevel;
 
         this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
 
+        this.levels = [
+            new levelOne(this.gameEngine, this.player),
+            new levelTwo(this.gameEngine, this.player),
+            new bossLevel(this.gameEngine, this.player)
+        ];
 
-        const lvl1 = new levelOne(this.gameEngine, this.player);
-        const lvl2 = new levelTwo(this.gameEngine, this.player);
-        const lvl3 = new bossLevel(this.gameEngine, this.player);
+        // this.checkLevel(this.level);
+        this.currentLevel = this.levels[this.levelNum];
+        console.log(this.levels);
+        this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
         this.currentLevel = lvl1;
 
         // build level 1
-        lvl1.getAssets().forEach((element) => this.gameEngine.addEntity(element));
-
         // build level 2
         // lvl2.getAssets().forEach((element) => this.gameEngine.addEntity(element));
-
-        
-        // lvl3.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
     };
 
     clearEntities() {
-        gameEngine.entities.forEach(function (entity) {
-            entity.removeFromWorld = true;
-        });
+            gameEngine.entities.forEach(function (entity) {
+                entity.removeFromWorld = true;
+            });
     };
 
     update() {
