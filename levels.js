@@ -36,6 +36,7 @@ class levelOne {
     constructor(theGame, thePlayer) {
         this.functions = new levelFunctions;
         this.assets = [];
+        this.music = "./assets/music/lvl1.mp3";
         this.build(theGame, thePlayer);
     }
 
@@ -75,6 +76,12 @@ class levelOne {
 
         // Draw Background last
         this.assets.push(new Background_Day(theGame, 260));
+
+        // MUSIC
+        if (this.music) {   // && !this.title
+            ASSET_MANAGER.pauseBackgroundMusic();
+            ASSET_MANAGER.playAsset(this.music);
+        }
     }
 
     getAssets() {
@@ -127,6 +134,7 @@ class levelTwo {
         
         // Draw Background last
         this.assets.push(new Background_Cave(theGame, 260));
+
     }
 
     getAssets() {

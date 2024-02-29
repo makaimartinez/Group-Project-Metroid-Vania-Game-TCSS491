@@ -25,13 +25,12 @@ ASSET_MANAGER.queueDownload("./assets/speedpotion.png");
 
 
 // music
-// ASSET_MANAGER.queueDownload("");		add music in future
-
+ASSET_MANAGER.queueDownload("./assets/music/lvl1.mp3");		
 // sfx
 
 ASSET_MANAGER.downloadAll(function () {
 
-	// ASSET_MANAGER.autoRepeat("");		add music in future
+	ASSET_MANAGER.autoRepeat("./assets/music/lvl1.mp3");		
 
 	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
 	// We access the HTML canvas using the global document variable and the getElementByID function.

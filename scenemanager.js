@@ -33,8 +33,18 @@ class SceneManager {
             });
     };
 
+    // check HTML elements
+    updateAudio() {
+        var mute = document.getElementById("mute").checked;
+        var volume = document.getElementById("volume").value;
+
+        ASSET_MANAGER.muteAudio(mute);
+        ASSET_MANAGER.adjustVolume(volume);
+    }
+
     update() {
         PARAMS.DEBUG = document.getElementById("debug").checked;
+        this.updateAudio();
 
         let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
         
