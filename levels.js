@@ -144,7 +144,7 @@ class bossLevel {
 
     build(theGame, thePlayer) {
 
-        this.assets.push(new SpecterKnight(theGame, 500, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 590, -50, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new SpecterBoss(theGame, 100, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new skelly(theGame, 500, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         // thePlayer.x = 0;
@@ -156,7 +156,10 @@ class bossLevel {
         // Third argument is the total length in blocks
         // Fourth argument is the Y level
         // Fifth argument is the array to store assets
-        this.functions.buildFloor(1, 0, 100, 11, this.assets);
+        this.functions.buildFloor(1, 0, 30, 11, this.assets);
+        this.functions.buildFloor(1, 30, 20, 9, this.assets);
+        this.functions.buildFloor(1, 50, 5, 5, this.assets);
+
         this.functions.buildFloor(1, 0, 9, 12, this.assets);
         this.functions.buildFloor(1, 0, 7, 13, this.assets);
         
@@ -167,6 +170,22 @@ class bossLevel {
         this.assets.push(new StoneTile(theGame, 100, 9));
         this.assets.push(new StoneTile(theGame, 100, 10));
         this.assets.push(new StoneTile(theGame, 100, 8));
+        
+        // this.assets.push(new StoneTile(theGame, 9, 10));
+        this.assets.push(new Chest(theGame, 10, 6));
+        this.functions.buildFloor(1, 9, 4, 7, this.assets);
+        this.functions.buildFloor(1, 8, 4, 8, this.assets);
+        this.functions.buildFloor(1, 7, 4, 9, this.assets);
+        this.assets.push(new StoneTile(theGame, 6, 10));
+        this.assets.push(new StoneTile(theGame, 8, 10));
+        this.assets.push(new StoneTile(theGame, 10, 10));
+
+        this.assets.push(new StoneTile(theGame, 20, 9));
+        this.assets.push(new StoneTile(theGame, 30, 9));
+        this.assets.push(new StoneTile(theGame, 31, 5));
+        this.assets.push(new StoneTile(theGame, 32, 5));
+        
+        this.assets.push(new StoneTile(theGame, 50, 5));
         // this.functions.buildFloor(1, 0, 30, 0, this.assets);
 
         // this.assets.push(new StoneTile(theGame, 10, 1));

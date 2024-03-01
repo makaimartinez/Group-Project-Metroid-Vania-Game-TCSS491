@@ -22,7 +22,7 @@ class BoundingBox {
 
     //for enemy detection range
     circleCollide(other, thisR, othR) {
-        return getDistance(this.center, other.center) < thisR + othR;
+        return getDistance(this.center, other.BB.center) < thisR + othR;
     };
 
     overlap(oth) {

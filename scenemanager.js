@@ -28,9 +28,9 @@ class SceneManager {
     };
 
     clearEntities() {
-            gameEngine.entities.forEach(function (entity) {
-                entity.removeFromWorld = true;
-            });
+        gameEngine.entities.forEach(function (entity) {
+            entity.removeFromWorld = true;
+        });
     };
 
     update() {
