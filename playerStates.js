@@ -152,6 +152,7 @@ class Player {
     draw(ctx) {
         this.adjustSpritePosition(ctx, this.scale);
         if(PARAMS.DEBUG) {
+            ctx.strokeStyle = "orange";
             // ctx.strokeRect(this.x - this.game.camera.x - 70, this.y - 30, 180, 105);
             this.BB.draw(ctx, this.game.camera);
             ctx.font = "15px serif";
@@ -205,11 +206,15 @@ class Player {
                     if(that.stateName == 4 || that.state == 3) {
                         that.newState = new playerLand(that);
                     }
-                } else if(entity.BB.name == "ground" && (that.lastBB.right) <= entity.BB.left)  {
-                    that.x = entity.BB.left - that.BB.width; 
+                } else if (entity.BB.name == "ground" && (that.lastBB.top) >= entity.BB.bottom) {
+                    that.y = entity.BB.bottom;
+                    that.velocity.y = 0; 
+                }else if(entity.BB.name == "ground" && (that.lastBB.right) >= entity.BB.left)  {
+                    that.x = entity.BB.right; 
                     that.velocity.x = 0;
                 } else if(entity.BB.name == "ground" && (that.lastBB.left) <= entity.BB.right)  {
-                    that.x = entity.BB.right; 
+                    console.log("collide");
+                    that.x = entity.BB.left - that.BB.width - 0.1; 
                     that.velocity.x = 0;
                 }
                 if(entity.BB.name == "slime" || entity.BB.name == "" || entity.BB.name == "skelly") {

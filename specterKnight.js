@@ -6,8 +6,11 @@ class SpecterKnight {
 
         this.facing = false;
         this.hurt = false;
-        this.sightRange = 300;
-        this.attackRange = 99;
+        this.engageRange = 240;
+        this.disengageRange = 500;
+        this.attackRange = 110;
+        this.attackCD = 3;
+        this.attackCDCountDown = 0;
         this.target = null;
 
         this.BB = new BoundingBox(this.x + 25, this.y, 55, 100, "specter");
@@ -88,6 +91,10 @@ class SpecterKnight {
         }
     }
 
+    cooldowns(TICK) {
+        this.attackCDCountDown-=TICK;
+    }
+
     hit() {
         this.hurt = true;
     }
@@ -100,6 +107,7 @@ class SpecterKnight {
         this.physics(TICK);
         this.collide();
         this.updateBB();
+        this.cooldowns(TICK);
 
         //if it's a new state, switch to that state
         //change the current animation
@@ -122,12 +130,19 @@ class SpecterKnight {
     draw(ctx) {
         this.adjustSpritePosition(ctx,1.5);
         if(PARAMS.DEBUG) {
+            
             this.BB.draw(ctx, this.game.camera);
             // ctx.strokeRect(this.x + 25 - this.game.camera.x, this.y + 100, 55, 100)
             // ctx.strokeRect(this.x - 101 - this.game.camera.x, this.y + 15, 237, 69)
             ctx.setLineDash([5, 5]);
             ctx.beginPath();
-            ctx.arc(this.BB.center.x - this.game.camera.x, this.BB.center.y, this.sightRange, 0, 2 * Math.PI);
+            ctx.strokeStyle = "orange";
+            if(this.target != null)
+            ctx.arc(this.BB.center.x - this.game.camera.x, this.BB.center.y, this.disengageRange, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.strokeStyle = "skyblue";
+            ctx.beginPath();
+            ctx.arc(this.BB.center.x - this.game.camera.x, this.BB.center.y, this.engageRange, 0, 2 * Math.PI);
             ctx.stroke();
             ctx.beginPath();
             ctx.arc(this.BB.center.x - this.game.camera.x, this.BB.center.y, this.attackRange, 0, 2 * Math.PI);
@@ -148,21 +163,30 @@ class SpecterKnight {
 
     //specter is allowed to pass through terrain
     //changes state depending on closeness with player
+    //player detection based state change
     collide() {
         let that = this;
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that){
                 if(entity.BB.name == "player") {
-                    if(that.state != 2 && that.state != 3) {
-                        if(that.BB.circleCollide(entity.BB, that.sightRange, entity.radius)) {
-                            that.target = entity;
-                            that.newState = new SpecKnightFollow(that);
-                        } else {
-                            that.target = null;
+                    if(that.state == 2 || that.state == 3) {
+                        if(!(that.BB.circleCollide(entity, that.disengageRange, entity.radius))) {
+                            that.target = null
+                            that.newState = new SpecKnightIdle(that);
                         }
                     }
+                    if(that.state != 2 && that.state != 3) {
+                        if(that.BB.circleCollide(entity, that.engageRange, entity.radius)) {
+                            console.log("enter " + that.BB.center.x + " " + entity.BB.center.x);
+                            that.target = entity;
+                            that.newState = new SpecKnightFollow(that);
+                        }
+                        
+                    }
                     if(that.state != 3) {
-                        if(that.BB.circleCollide(entity.BB, that.attackRange, entity.radius)) {
+                        if(that.BB.circleCollide(entity, that.attackRange, entity.radius) && that.attackCDCountDown <= 0) {
+                            // console.log(that.attackCDCountDown + " " + that.attackCD)
+                            that.attackCDCountDown = that.attackCD;
                             that.newState = new SpecKnightAttack(that);
                         }
                     }
@@ -207,7 +231,7 @@ class SpecKnightFoward {
         this.stateManager = stateManager;
         this.name = 1;
         this.animation = 1;
-        this.forwardDuration = 2;
+        this.forwardDuration = 4;
         this.forwardTime = 0;
     }
     
@@ -217,7 +241,8 @@ class SpecKnightFoward {
     }
 
     update(game,TICK) {
-        const wanderSpeed = 40;
+        const wanderSpeed = 15;
+        const maxWanderSpeed = 40
         let manager = this.stateManager;
         // const 
 
@@ -228,8 +253,8 @@ class SpecKnightFoward {
             return new SpecKnightIdle(this.stateManager);
         }
 
-        if (manager.velocity.x >= wanderSpeed) manager.velocity.x = wanderSpeed;
-        if (manager.velocity.x <= -wanderSpeed) manager.velocity.x = -wanderSpeed;
+        if (manager.velocity.x >= maxWanderSpeed) manager.velocity.x = maxWanderSpeed;
+        if (manager.velocity.x <= -maxWanderSpeed) manager.velocity.x = -maxWanderSpeed;
 
         return this.name;
     }
@@ -265,27 +290,87 @@ class SpecKnightFollow {
             console.log("error, target unknown");
         }
 
-        //if (Math.abs(this.y - target.y) > 10) {
-            // then change y velocity till it does
-        // } else {
-            // if((Math.abs(this.x - target.x) > 90)  {
-                //chase player *little faster than player's walking speed 
-            // } else {
-                //return new attack
-            // }
-        // }
+        
     }
 
     update(game,TICK) {
         this.radialChase();
-
+        // this.analogChase();
         return this.name;
+    }
+
+    analogChase() {
+        //diff boundary
+        //xspeed is slightly faster than player's
+        //if target is to the right, move to the right
+        const ACC_X = 2;
+        const ACC_XIFAWAY = 1.2;
+        const ACC_Y = 0.2;
+        const MAX_X = 70;
+        const MAX_Y = 50;
+        const CHASE_RANGE = 150;
+        let manager = this.stateManager;
+        let target = this.target;
+        let xDirection = target.x - manager.x
+        // console.log(direction);
+        //if target is running away
+        if(xDirection > 0) { //if to the right
+            manager.facing = false;
+            if(target.velocity.x > 0) { //running to the right
+                if(xDirection > CHASE_RANGE) manager.velocity.x += ACC_X; //distance away to enage
+            }
+            if(target.velocity.x < 0) { //running to the left
+                // if(xDirection > CHASE_RANGE) manager.velocity.x -= ACC_XIFAWAY; //distance away to disengage
+            }
+            if(target.velocity.x == 0) {
+                manager.velocity.x += ACC_X
+            }
+        }
+        
+        if(Math.abs(xDirection) <= CHASE_RANGE) manager.velocity.x = 0
+
+        if(xDirection < 0) { //if to the left
+            manager.facing = true;
+            if(target.velocity.x < 0) { //running to the left
+                if(xDirection < -CHASE_RANGE) manager.velocity.x -= ACC_X;
+            }
+            if(target.velocity.x > 0) { //running to the right
+                // if(xDirection < -CHASE_RANGE) manager.velocity.x += ACC_XIFAWAY; //distance away to enagage
+            }
+            if(target.velocity.x == 0) {
+                manager.velocity.x += ACC_X
+            }
+        }
+        
+        let yDirection = target.y - manager.y
+
+        if(yDirection > 0) { //if below
+            manager.velocity.y += ACC_Y;
+        }
+        if(Math.abs(yDirection) <= 20) manager.velocity.y /= 1.1;
+        if(yDirection < 0) { //if above
+            manager.velocity.y -= ACC_Y;
+        }
+
+        //this.target.velocity.x
+
+        if(manager.velocity.x >= MAX_X) manager.velocity.x = MAX_X;
+        if(manager.velocity.x <= -MAX_X) manager.velocity.x = -MAX_X;
+        
+        if(manager.velocity.y >= MAX_Y) manager.velocity.y = MAX_Y;
+        if(manager.velocity.y <= -MAX_Y) manager.velocity.y = -MAX_Y;
     }
 
     radialChase() {
         const verticalSpeed = 2000;
         const MAX_VERTICAL = 20000;
+        const MAX_X = 100;
+        const MAX_Y = 50;
+        const CHASE_RANGE = 150;
+        
         let manager = this.stateManager;
+        let target = this.target;
+
         //close distance
         // console.log(this.stateManager.velocity.y);
         // if(manager.y < this.target.y) {
@@ -297,15 +382,23 @@ class SpecKnightFollow {
         manager.velocity.x += difX * MAX_VERTICAL / (dist * dist);
         manager.velocity.y += difY * MAX_VERTICAL / (dist * dist);
 
-        if (manager.velocity.y >= MAX_VERTICAL) manager.velocity.y = MAX_VERTICAL;
-        if (manager.velocity.y <= -MAX_VERTICAL) manager.velocity.y = -MAX_VERTICAL;
+        let xDirection = target.x - manager.x
+        let yDirection = target.y - manager.y
+
+        if(Math.abs(xDirection) <= CHASE_RANGE) manager.velocity.x = 0
+
+        if(manager.velocity.x >= MAX_X) manager.velocity.x = MAX_X;
+        if(manager.velocity.x <= -MAX_X) manager.velocity.x = -MAX_X;
+        
+        if(manager.velocity.y >= MAX_Y) manager.velocity.y = MAX_Y;
+        if(manager.velocity.y <= -MAX_Y) manager.velocity.y = -MAX_Y;
         
         if (manager.velocity.x < 0) manager.facing = true;
         if (manager.velocity.x > 0) manager.facing = false;
 
-        // if(getDistance(manager,manager.target) > manager.sightRange + this.target.radius) {
+        // if(getDistance(manager,manager.target) > manager.engageRange + this.target.radius) {
             // console.log(manager.target.BB.name)
-        if(!manager.BB.circleCollide(manager.target.BB,manager.sightRange,this.target.radius)) {    
+        if(!manager.BB.circleCollide(manager.target,manager.engageRange,this.target.radius)) {    
             return new SpecKnightIdle(manager);
         }
         
@@ -335,6 +428,8 @@ class SpecKnightAttack {
     onEnter() {
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
+        //rest animation frame
+        this.stateManager.animations[this.name].elaspedTime = 0;
         // if(this.facing) ctx.strokeRect(this.x - 101 - this.game.camera.x, this.y + 15, 237, 69);
         // if(!this.facing) ctx.strokeRect(this.x - 25 - this.game.camera.x, this.y + 15, 237, 69);
     }
@@ -358,17 +453,16 @@ class SpecKnightAttack {
             }
             let targetBB = this.stateManager.target.BB
             if(!this.stateManager.target.dead)
-            console.log("slash position: L" + this.roundD(left,1) + " R" + this.roundD((left + width),1) 
-                    + " T" + this.roundD(top,1) + " B" + this.roundD((top + height),1)
-                    + "\nplayer position: L" + this.roundD(targetBB.left,1) + " R" + this.roundD(targetBB.right,1) 
-                    + " T" + this.roundD(targetBB.top,1) + " B" + this.roundD(targetBB.bottom,1));
+            // console.log("slash position: L" + this.roundD(left,1) + " R" + this.roundD((left + width),1) 
+            //         + " T" + this.roundD(top,1) + " B" + this.roundD((top + height),1)
+            //         + "\nplayer position: L" + this.roundD(targetBB.left,1) + " R" + this.roundD(targetBB.right,1) 
+            //         + " T" + this.roundD(targetBB.top,1) + " B" + this.roundD(targetBB.bottom,1));
             this.stateManager.dmgBB = new BoundingBox(left, top, width, height, "specter slash");
             
             // if(this.facing) ctx.strokeRect(this.x - 101 - this.game.camera.x, this.y + 15, 237, 69);
             // if(!this.facing) ctx.strokeRect(this.x - 25 - this.game.camera.x, this.y + 15, 237, 69); 
-        } else {
-            this.stateManager.dmgBB = null;
         }
+        if(this.stateManager.animations[this.name].currentFrame() != 1) this.stateManager.dmgBB = null;
 
         if(this.elaspedTime >= this.duration) {
             return new SpecKnightIdle(this.stateManager)
@@ -381,7 +475,7 @@ class SpecKnightAttack {
         return Math.round(num * Math.pow(10,2))/Math.pow(10,2)
     }
     onExit() {
-
+        this.stateManager.dmgBB = null;
     }
 }
 
