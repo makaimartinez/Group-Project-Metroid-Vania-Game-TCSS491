@@ -7,6 +7,7 @@ let ctx;
 ASSET_MANAGER.queueDownload("./assets/bg_background.png");
 ASSET_MANAGER.queueDownload("./assets/bg_backgroundUG.png");
 ASSET_MANAGER.queueDownload("./assets/title.png");
+ASSET_MANAGER.queueDownload("./assets/title screen.png");
 // player and enemies
 ASSET_MANAGER.queueDownload("./assets/slime.png");
 ASSET_MANAGER.queueDownload("./assets/pack_loreon_char_free_modified.png");

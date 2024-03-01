@@ -102,21 +102,20 @@ class SceneManager {
 
         // TITLE SCREEN DRAW
         if (this.title) {
-            var width = 180;
-            var height = 90;
+            var width = 140;
+            var height = 70;
+            const titlescreen = ASSET_MANAGER.getAsset("./assets/title screen.png");
             const titlecard = ASSET_MANAGER.getAsset("./assets/title.png");
 
-            // testing start screen
-            ctx.fillStyle = "Black";
-            ctx.fillRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
+            ctx.drawImage(titlescreen, 0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
 
-            ctx.font = PARAMS.BLOCKWIDTH / 2 + 'px "Press Start 2P"';
+            ctx.font = PARAMS.BLOCKWIDTH / 1.5 + 'px "Press Start 2P"';
             ctx.fillStyle = "White";
             var titlecardplace = (PARAMS.CANVAS_WIDTH / 2) - (width  * PARAMS.SCALE/ 2);
-            ctx.drawImage(titlecard, titlecardplace, 2 * PARAMS.BLOCKWIDTH, width * PARAMS.SCALE, height * PARAMS.SCALE);
+            ctx.drawImage(titlecard, titlecardplace, 1.5 * PARAMS.BLOCKWIDTH, width * PARAMS.SCALE, height * PARAMS.SCALE);
             // ctx.fillStyle = this.gameEngine.mousemove && this.gameEngine.mousemove.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mousemove.y < 10 * PARAMS.BLOCKWIDTH ? "Grey" : "White";
-            ctx.fillStyle = this.gameEngine.mousemove && this.gameEngine.mousemove.y > 430 && this.gameEngine.mousemove.y < 460 ? "Grey" : "White";
-            ctx.fillText("START", 9.5 * PARAMS.BLOCKWIDTH, 9.5 * PARAMS.BLOCKWIDTH);
+            // ctx.fillStyle = this.gameEngine.mousemove && this.gameEngine.mousemove.y > 430 && this.gameEngine.mousemove.y < 460 ? "Grey" : "White";
+            ctx.fillText("START", 9 * PARAMS.BLOCKWIDTH, 8 * PARAMS.BLOCKWIDTH);
         } 
         if (PARAMS.DEBUG) {
             // shows keys
