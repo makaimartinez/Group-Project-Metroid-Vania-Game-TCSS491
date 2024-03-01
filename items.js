@@ -86,14 +86,14 @@ class Potion {
             this.x *= PARAMS.BLOCKWIDTH;
             this.y *= PARAMS.BLOCKWIDTH;
         }
-        // if (this.type == 0) {
+        if (this.type == 0) {
             this.spritesheet = ASSET_MANAGER.getAsset("./assets/healthpotion.png");
             this.BB = new BoundingBox(this.x + this.sourceOffsetX, this.y  + this.sourceOffsetY, this.width, this.height, "healthpotion");
-        // }
-        // if (this.type == 1) {
-        //     this.spritesheet = ASSET_MANAGER.getAsset("./assets/speedpotion.png");
-        //     this.BB = new BoundingBox(this.x + this.sourceOffsetX, this.y  + this.sourceOffsetY, this.width, this.height, "speedpotion");
-        // }
+        }
+        if (this.type == 1) {
+            this.spritesheet = ASSET_MANAGER.getAsset("./assets/speedpotion.png");
+            this.BB = new BoundingBox(this.x + this.sourceOffsetX, this.y  + this.sourceOffsetY, this.width, this.height, "speedpotion");
+        }
         this.onEnter();
     };
 

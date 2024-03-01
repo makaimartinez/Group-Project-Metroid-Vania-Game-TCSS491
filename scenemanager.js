@@ -7,7 +7,7 @@ class SceneManager {
         this.coins = 0;
         this.levelNum = theLevel;
 
-        this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
+        // this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
 
         this.levels = [
             new levelOne(this.gameEngine, this.player),
@@ -15,22 +15,41 @@ class SceneManager {
             new bossLevel(this.gameEngine, this.player)
         ];
 
-        // this.checkLevel(this.level);
-        this.currentLevel = this.levels[this.levelNum];
-        console.log(this.levels);
-        this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
-
+        this.loadGame(false, true);
 
         // build level 1
         // build level 2
         // lvl2.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
+        // take out this code once start screen is implemented
+        this.currentLevel = this.levels[this.levelNum];
+        console.log(this.levels);
+        this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+        // MUSIC
+        // if (this.currentLevel.music) {   // && !this.title
+        //     ASSET_MANAGER.pauseBackgroundMusic();
+        //     ASSET_MANAGER.playAsset(this.currentLevel.music);
+        // }
+
     };
 
+    loadGame (transition, title) {
+        this.title = title;
+        if (transition) {
+            this.game.addEntity(new TransitionScreen(this.game, this.levelNum, this.x, y, this.title, this.loading));
+        } else if (!this.title) {
+
+            // this.checkLevel(this.level);
+            this.currentLevel = this.levels[this.levelNum];
+            console.log(this.levels);
+            this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+        }
+    }
+
     clearEntities() {
-            gameEngine.entities.forEach(function (entity) {
-                entity.removeFromWorld = true;
-            });
+        gameEngine.entities.forEach(function (entity) {
+            entity.removeFromWorld = true;
+        });
     };
 
     // check HTML elements
@@ -54,9 +73,40 @@ class SceneManager {
             // create new player
             //this.player = new Player(this.gameEngine, 100, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
         }
+
+        if (this.title && this.gameEngine.leftclick) {
+            console.log("in click check");
+            if (this.gameEngine.leftclick && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mousemove.y < 9.5 * PARAMS.BLOCKWIDTH) {
+                this.title = false;
+                this.inTransition = true;
+                this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
+                this.loadGame(false, true); 
+            }
+        }
     }
 
     draw(ctx) {
+    
+
+
+        // TITLE SCREEN DRAW
+        if (this.title) {
+            var width = 180;
+            var height = 90;
+            const titlecard = ASSET_MANAGER.getAsset("./assets/title.png");
+
+            // testing start screen
+            ctx.fillStyle = "Black";
+            ctx.fillRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
+
+            ctx.font = PARAMS.BLOCKWIDTH / 2 + 'px "Press Start 2P"';
+            ctx.fillStyle = "White";
+            var titlecardplace = (PARAMS.CANVAS_WIDTH / 2) - (width  * PARAMS.SCALE/ 2);
+            ctx.drawImage(titlecard, titlecardplace, 2 * PARAMS.BLOCKWIDTH, width * PARAMS.SCALE, height * PARAMS.SCALE);
+            // ctx.fillStyle = this.gameEngine.mousemove && this.gameEngine.mousemove.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mousemove.y < 10 * PARAMS.BLOCKWIDTH ? "Grey" : "White";
+            ctx.fillStyle = this.gameEngine.mousemove && this.gameEngine.mousemove.y > 430 && this.gameEngine.mousemove.y < 460 ? "Grey" : "White";
+            ctx.fillText("START", 9.5 * PARAMS.BLOCKWIDTH, 9.5 * PARAMS.BLOCKWIDTH);
+        } 
         if (PARAMS.DEBUG) {
             // shows keys
             // ctx.translate(0, -10); // hack to move elements up by 10 pixels instead of adding -10 to all y coordinates below
@@ -105,7 +155,6 @@ class SceneManager {
             ctx.fillStyle = ctx.strokeStyle;
             ctx.font = PARAMS.BLOCKWIDTH / 2 + 'px "Press Start 2P"';
             ctx.fillText("HP", 0.5 * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH - 10);
-
             if (this.player.health <= this.player.maxHealth) {
                 ctx.strokeStyle = "Green";
                 ctx.fillStyle = ctx.strokeStyle;
