@@ -6,8 +6,10 @@ class SceneManager {
         this.score = 0;
         this.coins = 0;
         this.levelNum = theLevel;
+        // this.removeFromWorld = false;
 
-        // this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
+
+        this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
 
         this.levels = [
             new levelOne(this.gameEngine, this.player),
@@ -22,27 +24,29 @@ class SceneManager {
         // lvl2.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
         // take out this code once start screen is implemented
-        this.currentLevel = this.levels[this.levelNum];
-        console.log(this.levels);
-        this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
-        // MUSIC
-        // if (this.currentLevel.music) {   // && !this.title
-        //     ASSET_MANAGER.pauseBackgroundMusic();
-        //     ASSET_MANAGER.playAsset(this.currentLevel.music);
-        // }
-
+        // this.currentLevel = this.levels[this.levelNum];
+        // console.log(this.levels);
+        // this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+        
     };
 
     loadGame (transition, title) {
         this.title = title;
         if (transition) {
-            this.game.addEntity(new TransitionScreen(this.game, this.levelNum, this.x, y, this.title, this.loading));
+            this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, this.title, this.loading));
         } else if (!this.title) {
-
+            this.clearEntities();
             // this.checkLevel(this.level);
+            // this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
             this.currentLevel = this.levels[this.levelNum];
             console.log(this.levels);
             this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+            // MUSIC
+            if (this.currentLevel.music) {
+                ASSET_MANAGER.pauseBackgroundMusic();
+                ASSET_MANAGER.playAsset(this.currentLevel.music);
+            }
+
         }
     }
 
@@ -65,24 +69,27 @@ class SceneManager {
         PARAMS.DEBUG = document.getElementById("debug").checked;
         this.updateAudio();
 
-        let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
-        
-        this.x = this.player.x - midpoint;
-
-        if (this.player.respawn) {
-            // create new player
-            //this.player = new Player(this.gameEngine, 100, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
-        }
-
         if (this.title && this.gameEngine.leftclick) {
-            console.log("in click check");
-            if (this.gameEngine.leftclick && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mousemove.y < 9.5 * PARAMS.BLOCKWIDTH) {
+            if (this.gameEngine.leftclick ) {   // && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.click.y < 9.5 * PARAMS.BLOCKWIDTH
+                console.log("in click check");
                 this.title = false;
                 this.inTransition = true;
-                this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
-                this.loadGame(false, true); 
+                this.loadGame(true, false); 
             }
         }
+
+        let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
+        
+        if (this.player) {
+            this.x = this.player.x - midpoint;
+            if (this.player.respawn) {
+                // create new player
+                //this.player = new Player(this.gameEngine, 100, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
+            }
+        }
+
+
+
     }
 
     draw(ctx) {

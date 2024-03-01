@@ -90,8 +90,16 @@ class GameEngine {
         }
 
         function mouseLeftClickListener (e) {
-            if(e.button == 0) that.leftclick = true;
-            if (PARAMS.DEBUG) console.log("leftclick is clicked");
+            switch (e.button) {
+                case 0:
+                    that.leftclick = true;
+                    if (PARAMS.DEBUG) console.log("leftclick is clicked");
+                    break;
+                default:
+                    that.leftclick = false;
+                
+            }
+            
         }
 
         function wheelListener (e) {
@@ -169,7 +177,7 @@ class GameEngine {
         // this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
         that.mousemove = mouseListener;
         that.click = mouseClickListener;
-        that.leftclick = mouseLeftClickListener;
+        // that.left = mouseLeftClickListener;
         that.wheelscroll = wheelListener;
         that.keydown = keydownListener;
         that.keyup = keyUpListener;
@@ -178,7 +186,7 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("click", that.click, false);
 
-        this.ctx.canvas.addEventListener("click", that.leftclick, false);
+        this.ctx.canvas.addEventListener("click", mouseLeftClickListener, false);
 
         this.ctx.canvas.addEventListener("wheel", that.wheelscroll, false);
 
@@ -211,7 +219,8 @@ class GameEngine {
         // go through every entity and ask it to update
         for (let i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
-
+            // console.log(i);
+            // console.log(this.entities[i]);
             // if the entity is removefromworld it does not get the chance to update. Or...
             if (!entity.removeFromWorld) { // if the entity is not going to be removed
                 entity.update();            // it calls update
@@ -222,6 +231,8 @@ class GameEngine {
 
         // counts backwards like we are removing as we iterate, doesn't miss any elements
         for (let i = this.entities.length - 1; i >= 0; --i) {
+            // console.log(i);
+            // console.log(this.entities[i]);
             if (this.entities[i].removeFromWorld) {     // checking for remove from world flag (true/null)
                 this.entities.splice(i, 1);  // splice is a special array method, used to delete element at index i
             }

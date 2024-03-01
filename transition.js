@@ -1,14 +1,14 @@
 class TransitionScreen {
-    constructor(game, level, x, y, gameOver, loading) {
-        Object.assign(this, { game, level, x, y, gameOver, loading });
-
+    constructor(game, gameOver, loading) {
+        Object.assign(this, { game, gameOver, loading });
+        // this.removeFromWorld = false;
         this.elapsed = 0;
     };
 
     update() {
         this.elapsed += this.game.clockTick;
         this.titleActive = false;
-        if (this.elapsed > .5) {
+        if (this.elapsed > 2) {
             // after 2 secs load level but false in transition flag to end transition
             // this.game.camera.loadLevel(this.level, this.x, this.y, false, this.gameOver);
             this.game.camera.loadGame(false, false);
