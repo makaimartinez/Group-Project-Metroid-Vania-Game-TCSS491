@@ -87,13 +87,14 @@ class Potion {
             this.y *= PARAMS.BLOCKWIDTH;
         }
         if (this.type == 0) {
+            this.name = "healthpotion";
             this.spritesheet = ASSET_MANAGER.getAsset("./assets/healthpotion.png");
-            this.BB = new BoundingBox(this.x + this.sourceOffsetX, this.y  + this.sourceOffsetY, this.width, this.height, "healthpotion");
         }
         if (this.type == 1) {
+            this.name = "speedpotion"
             this.spritesheet = ASSET_MANAGER.getAsset("./assets/speedpotion.png");
-            this.BB = new BoundingBox(this.x + this.sourceOffsetX, this.y  + this.sourceOffsetY, this.width, this.height, "speedpotion");
         }
+        this.BB = new BoundingBox(this.x + this.sourceOffsetX, this.y  + this.sourceOffsetY, this.width, this.height, this.name);
         this.onEnter();
     };
 
@@ -143,8 +144,7 @@ class Potion {
 
     updateBB() {
         this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.x + this.sourceOffsetX, this.y  + this.sourceOffsetY, this.width, this.height, "healthpotion");
-        // this.BB = new BoundingBox(this.x, this.y, this.width, this.height, "healthpotion");
+        this.BB = new BoundingBox(this.x + this.sourceOffsetX, this.y  + this.sourceOffsetY, this.width, this.height, this.name);
     }
 
 

@@ -11,11 +11,11 @@ class SceneManager {
 
         this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
 
-        this.levels = [
-            new levelOne(this.gameEngine, this.player),
-            new levelTwo(this.gameEngine, this.player),
-            new bossLevel(this.gameEngine, this.player)
-        ];
+        // this.levels = [
+        //     new levelOne(this.gameEngine, this.player),
+        //     new levelTwo(this.gameEngine, this.player),
+        //     new bossLevel(this.gameEngine, this.player)
+        // ];
 
         this.loadGame(false, true);
 
@@ -36,11 +36,15 @@ class SceneManager {
             this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, this.title, this.loading));
         } else if (!this.title) {
             this.clearEntities();
-            // this.checkLevel(this.level);
-            // this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
+            this.levels = [
+                new levelOne(this.gameEngine, this.player),
+                new levelTwo(this.gameEngine, this.player),
+                new bossLevel(this.gameEngine, this.player)
+            ];
             this.currentLevel = this.levels[this.levelNum];
             console.log(this.levels);
             this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
+
             // MUSIC
             if (this.currentLevel.music) {
                 ASSET_MANAGER.pauseBackgroundMusic();

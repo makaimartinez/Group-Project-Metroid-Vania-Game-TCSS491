@@ -18,6 +18,13 @@ class Player {
         this.state = this.currentState.name; //0 = idle, 1 = walk, 2 = run, 3= jump, 4= fall, 5= land, 6= attackDown, 7= attackUp, 8 = hurt, 9 = defeat
         this.newState;
         this.animations = [];
+
+        //speed potion
+        this.speedEnable = false;
+        this.speedDuration = 4;
+        this.speedCountup = 0;
+        this.speedVal = 1.5;
+
         this.loadAnimations();
         this.updateBB();
         this.updateLastBB();
@@ -116,6 +123,11 @@ class Player {
         if(this.game.leftclick) this.game.leftclick = false;
         // if(this.game.leftclick && !this.game.titleActive) this.game.leftclick = false;        
 
+        console.log(this.speedEnable)
+        if (this.speedEnable) {
+            this.updateCooldown(TICK);
+        }
+
         // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
         this.physics(TICK);        
         this.updateLastBB();
@@ -147,6 +159,15 @@ class Player {
                 this.removeFromWorld = true;
             }  
          }
+    }
+
+    updateCooldown(tick) {
+        this.speedCountup += tick;
+        // increase speed
+        if(this.speedCountup >= this.speedDuration) {
+            this.speedCountup = 0; 
+            this.speedEnable = false;
+        }
     }
 
     draw(ctx) {
@@ -192,7 +213,11 @@ class Player {
         this.velocity.y += 100 * TICK;
 
         this.y+= this.velocity.y * TICK * 2;
-        this.x+= this.velocity.x * TICK * 2;
+        if (this.speedEnable) {
+            this.x+= this.velocity.x * TICK * 2 * this.speedVal;
+        } else {
+            this.x+= this.velocity.x * TICK * 2;
+        }
     }
 
     collide(theGame) {
@@ -230,9 +255,9 @@ class Player {
                 }
                 if(entity.BB.name == "speedpotion") {
                     // increase player speed (temporarily)
-                    // this.elapsed += this.game.clockTick;
-                    //    if (this.elapsed > 100) ...
-    
+                    entity.collect();
+                    that.speedCountup = 0; 
+                    that.speedEnable = true;
                 }
 
                 if (entity.BB.name == "door") {
