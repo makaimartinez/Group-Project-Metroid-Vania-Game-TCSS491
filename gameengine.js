@@ -86,14 +86,14 @@ class GameEngine {
 
         function mouseClickListener (e) {
             that.click = getXandY(e);
-            if (PARAMS.DEBUG) console.log(that.click);
+            // if (PARAMS.DEBUG) console.log(that.click);
         }
 
         function mouseLeftClickListener (e) {
             switch (e.button) {
                 case 0:
                     that.leftclick = true;
-                    if (PARAMS.DEBUG) console.log("leftclick is clicked");
+                    // if (PARAMS.DEBUG) console.log("leftclick is clicked");
                     break;
                 default:
                     that.leftclick = false;

@@ -42,7 +42,7 @@ class SceneManager {
                 new bossLevel(this.gameEngine, this.player)
             ];
             this.currentLevel = this.levels[this.levelNum];
-            console.log(this.levels);
+            // console.log(this.levels);
             this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
             // MUSIC
@@ -75,7 +75,7 @@ class SceneManager {
 
         if (this.title && this.gameEngine.leftclick) {
             if (this.gameEngine.leftclick ) {   // && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.click.y < 9.5 * PARAMS.BLOCKWIDTH
-                console.log("in click check");
+                // console.log("in click check");
                 this.title = false;
                 this.inTransition = true;
                 this.loadGame(true, false); 

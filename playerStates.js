@@ -132,7 +132,6 @@ class Player {
         if(this.game.leftclick) this.game.leftclick = false;
         // if(this.game.leftclick && !this.game.titleActive) this.game.leftclick = false;        
 
-        console.log(this.speedEnable)
         if (this.speedEnable) {
             this.updateCooldown(TICK);
         }
@@ -248,7 +247,6 @@ class Player {
                     that.x = entity.BB.right; 
                     that.velocity.x = 0;
                 } else if(entity.BB.name == "ground" && (that.lastBB.left) <= entity.BB.right)  {
-                    console.log("collide");
                     that.x = entity.BB.left - that.BB.width - 0.1; 
                     that.velocity.x = 0;
                 }
@@ -277,7 +275,7 @@ class Player {
             }
 
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
-                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly" || entity.BB.name == "chest") {
+                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly" || entity.BB.name == "chest" || entity.BB.name == "specterBoss") {
                     entity.hit();
                     // if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }

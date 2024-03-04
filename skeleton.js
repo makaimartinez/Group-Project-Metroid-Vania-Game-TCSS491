@@ -79,6 +79,14 @@ class skelly {
     hit() {
         this.hurt = true;
     }
+    
+    receive() {
+        if(this.hurt && this.health <= 0 && this.state != 5) {
+            this.newState = new skellyDeath(this);
+        } else if(this.hurt && (this.state != 4 && this.state != 5)) {
+            this.newState = new skellyHurt(this);
+        } 
+    }
 
     update() {
         const TICK = this.game.clockTick;
@@ -116,14 +124,6 @@ class skelly {
     updateBB() {
         this.lastBB = this.BB;
         this.BB = new BoundingBox(this.x, this.y + 25, 44, 65,"skelly");
-    }
-
-    receive() {
-        if(this.hurt && this.health <= 0 && this.state != 5) {
-            this.newState = new skellyDeath(this);
-        } else if(this.hurt && (this.state != 4 && this.state != 5)) {
-            this.newState = new skellyHurt(this);
-        } 
     }
 
     physics() {
@@ -273,7 +273,6 @@ class skellyHurt {
 
     update(TICK) {
         this.elaspedTime+=TICK;
-        // console.log(this.elaspedTime);
         if(this.elaspedTime >= this.duration) {
             return new skellyIdle(this.stateManager);
         }
@@ -296,7 +295,6 @@ class skellyDeath {
         this.elaspedTime = 0;
     }
     onEnter() {
-        console.log("enter");
         this.stateManager.dead = true;
         this.stateManager.BBName = "defeatedEnemy";
     }
