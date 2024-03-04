@@ -26,7 +26,7 @@ class GameEngine {
         this.keys = {};
 
         // Controls what level the player is on (0 is currently level 1)
-        this.levelNum = 2;
+        this.levelNum = 0;
         this.playerLives = 3;
 
         this.titleActive = true;
