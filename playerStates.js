@@ -247,6 +247,7 @@ class Player {
                     that.x = entity.BB.right; 
                     that.velocity.x = 0;
                 } else if(entity.BB.name == "ground" && (that.lastBB.left) <= entity.BB.right)  {
+                    // console.log("collide");
                     that.x = entity.BB.left - that.BB.width - 0.1; 
                     that.velocity.x = 0;
                 }
@@ -269,7 +270,7 @@ class Player {
                 }
 
                 if (entity.BB.name == "door") {
-                    theGame.levelAdvance();
+                    theGame.camera.levelAdvance();
                 }
 
             }
