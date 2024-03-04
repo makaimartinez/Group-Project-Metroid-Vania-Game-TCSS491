@@ -18,6 +18,8 @@ ASSET_MANAGER.queueDownload("./assets/Skeleton_spritesheet.png");
 // items and environment
 ASSET_MANAGER.queueDownload("./assets/bg_groundTiles.png");
 ASSET_MANAGER.queueDownload("./assets/bg_door.png");
+ASSET_MANAGER.queueDownload("./assets/bg_tree.png");
+ASSET_MANAGER.queueDownload("./assets/bg_bush.png");
 
 ASSET_MANAGER.queueDownload("./assets/chest.png");
 ASSET_MANAGER.queueDownload("./assets/openchest.png");

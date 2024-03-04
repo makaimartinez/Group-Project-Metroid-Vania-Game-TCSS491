@@ -264,6 +264,10 @@ class Player {
                     theGame.levelAdvance();
                 }
 
+                if (entity.BB.name == "killbarrier") {
+                    that.newState = new playerDeath(that,entity.BB);
+                }
+
             }
 
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
