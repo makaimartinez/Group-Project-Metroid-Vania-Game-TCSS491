@@ -43,7 +43,7 @@ class levelOne {
     build(theGame, thePlayer) {
         theGame.camera.x = 0;     // reset camera 
 
-        // this.assets.push(new skelly(theGame, 500, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        this.assets.push(new skelly(theGame, 500, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         console.log("PLAYER: " + thePlayer);
         this.assets.push(thePlayer);
 
