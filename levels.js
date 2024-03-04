@@ -76,12 +76,6 @@ class levelOne {
 
         // Draw Background last
         this.assets.push(new Background_Day(theGame, 260));
-        
-        // MUSIC
-        // if (this.music) {   // && !this.title
-        //     ASSET_MANAGER.pauseBackgroundMusic();
-        //     ASSET_MANAGER.playAsset(this.music);
-        // }
 
     }
 
