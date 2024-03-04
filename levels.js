@@ -154,7 +154,10 @@ class bossLevel {
 
     build(theGame, thePlayer) {
 
-        this.assets.push(new SpecterKnight(theGame, 590, -50, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        // this.assets.push(new SpecterKnight(theGame, -460, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 1000, 50, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 3200, 0, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 1700, 50, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new SpecterBoss(theGame, 100, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new skelly(theGame, 500, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         // thePlayer.x = 0;
@@ -167,45 +170,93 @@ class bossLevel {
         // Fourth argument is the Y level
         // Fifth argument is the array to store assets
 
-        this.functions.invisibleWall(-1, this.assets);
-
-        this.functions.buildFloor(1, 0, 30, 11, this.assets);
-        this.functions.buildFloor(1, 30, 20, 9, this.assets);
-        // this.functions.buildFloor(1, 50, 5, 5, this.assets);
-
+        this.functions.invisibleWall(-20, this.assets);
+        //decor floor
         this.functions.buildFloor(1, 0, 9, 12, this.assets);
         this.functions.buildFloor(1, 0, 7, 13, this.assets);
         
-        //start wall
-        this.assets.push(new StoneTile(theGame, 0, 9));
-        this.assets.push(new StoneTile(theGame, 0, 10));
-        this.assets.push(new StoneTile(theGame, 0, 8));
+        //1st area (stretches to 2nd area)
+        this.functions.buildFloor(1, -11, 50, 11, this.assets);
+        //tester arena
+        this.assets.push(new Chest(theGame, -10, 10));
+        this.assets.push(new StoneTile(theGame, -11, 6));
+        this.assets.push(new StoneTile(theGame, -11, 8));
+        this.assets.push(new StoneTile(theGame, -11, 9));
+        this.assets.push(new StoneTile(theGame, -11, 10));
 
-        this.assets.push(new StoneTile(theGame, 100, 9));
-        this.assets.push(new StoneTile(theGame, 100, 10));
-        this.assets.push(new StoneTile(theGame, 100, 8));
+        //start wall
+        this.assets.push(new StoneTile(theGame, 0, 3));
+        this.assets.push(new StoneTile(theGame, 0, 4));
+        this.assets.push(new StoneTile(theGame, 0, 5));
+        this.assets.push(new StoneTile(theGame, 0, 6));        
+        this.assets.push(new StoneTile(theGame, 0, 7));
+        this.assets.push(new StoneTile(theGame, 0, 10));
         
-        // this.assets.push(new StoneTile(theGame, 9, 10));
-        this.assets.push(new Chest(theGame, 10, 6));
-        this.functions.buildFloor(1, 9, 4, 7, this.assets);
+        //1st stairs
+        this.assets.push(new Chest(theGame, 10, 7));
         this.functions.buildFloor(1, 8, 4, 8, this.assets);
         this.functions.buildFloor(1, 7, 4, 9, this.assets);
         this.assets.push(new StoneTile(theGame, 6, 10));
         this.assets.push(new StoneTile(theGame, 8, 10));
         this.assets.push(new StoneTile(theGame, 10, 10));
-
-        this.assets.push(new StoneTile(theGame, 20, 9));
-        this.assets.push(new StoneTile(theGame, 30, 9));
-        this.assets.push(new StoneTile(theGame, 31, 5));
-        this.assets.push(new StoneTile(theGame, 32, 5));
         
-        this.assets.push(new StoneTile(theGame, 50, 5));
-        // this.functions.buildFloor(1, 0, 30, 0, this.assets);
+        //1st top wall
+        this.functions.buildFloor(1, 19, 5, 0, this.assets);
+        this.assets.push(new StoneTile(theGame, 20, 0));
+        this.assets.push(new StoneTile(theGame, 20, 1));
+        this.assets.push(new StoneTile(theGame, 20, 2));
+        this.assets.push(new StoneTile(theGame, 20, 3));
+        this.assets.push(new StoneTile(theGame, 20, 9));
+        //1st bot wall
+        // this.assets.push(new StoneTile(theGame, 19, 10));
+        this.assets.push(new StoneTile(theGame, 20, 10));
+        this.assets.push(new StoneTile(theGame, 21, 10));
 
-        // this.assets.push(new StoneTile(theGame, 10, 1));
-        // this.assets.push(new StoneTile(theGame, 11, 1));
-        // this.assets.push(new StoneTile(theGame, 11, 2));
-        // this.assets.push(new StoneTile(theGame, 11, 3));
+        //2nd area
+        //floor
+        this.functions.buildFloor(1, 30, 10, 9, this.assets);
+        this.assets.push(new StoneTile(theGame, 30, 10));
+        //hole barrier
+        this.assets.push(new StoneTile(theGame, 39, 10));
+        this.assets.push(new StoneTile(theGame, 39, 11));
+        this.assets.push(new StoneTile(theGame, 39, 12));
+        this.assets.push(new StoneTile(theGame, 39, 13));
+        //hole
+        //*imagine putting a hole here
+        //other side of the hole
+        this.functions.buildFloor(1, 45, 5, 9, this.assets);
+        //hole barrier
+        this.assets.push(new StoneTile(theGame, 45, 10));
+        this.assets.push(new StoneTile(theGame, 45, 11));
+        this.assets.push(new StoneTile(theGame, 45, 12));
+        this.assets.push(new StoneTile(theGame, 45, 13));
+
+        //*ceiling (is also a floor and sneaks the door)
+        this.assets.push(new NextLevelDoor(theGame, 31, 1));
+        this.assets.push(new StoneTile(theGame, 30, 1));
+        this.assets.push(new StoneTile(theGame, 30, 2));
+        this.functions.buildFloor(1, 30, 8, 3, this.assets);
+        this.assets.push(new StoneTile(theGame, 38, 4));
+
+        this.functions.buildFloor(1, 50, 6, 3, this.assets);
+        this.assets.push(new StoneTile(theGame, 56, 4));
+        this.assets.push(new StoneTile(theGame, 57, 5));
+        this.assets.push(new StoneTile(theGame, 58, 6));
+        this.assets.push(new StoneTile(theGame, 59, 7));
+        //3rd area
+        //floor
+        this.assets.push(new StoneTile(theGame, 49, 10));
+        this.assets.push(new StoneTile(theGame, 49, 11));
+        this.functions.buildFloor(1, 50, 15, 12, this.assets);
+        this.functions.buildFloor(1, 62, 10, 10, this.assets);
+        this.functions.buildFloor(1, 65, 4, 8, this.assets);//table...?
+        this.assets.push(new Chest(theGame, 66, 7));
+
+        //backwall
+        this.assets.push(new StoneTile(theGame, 72, 5));
+        this.assets.push(new StoneTile(theGame, 72, 6));
+        this.assets.push(new StoneTile(theGame, 72, 7));
+        this.assets.push(new StoneTile(theGame, 72, 8));
 
         // items
         // this.assets.push(new Chest(theGame, 4, 10));
