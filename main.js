@@ -8,11 +8,14 @@ ASSET_MANAGER.queueDownload("./assets/bg_background.png");
 ASSET_MANAGER.queueDownload("./assets/bg_backgroundUG.png");
 ASSET_MANAGER.queueDownload("./assets/title.png");
 ASSET_MANAGER.queueDownload("./assets/title screen.png");
+ASSET_MANAGER.queueDownload("./assets/transitionscreen.png");
+ASSET_MANAGER.queueDownload("./assets/defeatscreen.png");
 // player and enemies
 ASSET_MANAGER.queueDownload("./assets/slime.png");
 ASSET_MANAGER.queueDownload("./assets/pack_loreon_char_free_modified.png");
 ASSET_MANAGER.queueDownload("./assets/miku spritesheet.png");
 ASSET_MANAGER.queueDownload("./assets/specter knight.png");
+ASSET_MANAGER.queueDownload("./assets/specter boss.png");
 ASSET_MANAGER.queueDownload("./assets/playerHead.png")
 ASSET_MANAGER.queueDownload("./assets/Skeleton_spritesheet.png");
 // items and environment
@@ -46,7 +49,7 @@ ASSET_MANAGER.downloadAll(function () {
 
 	gameEngine.init(ctx);
 
-	// gameEngine.addEntity(new SceneManager(gameEngine));
+	gameEngine.addEntity(new SceneManager(gameEngine));
 
 	gameEngine.start();
 });
