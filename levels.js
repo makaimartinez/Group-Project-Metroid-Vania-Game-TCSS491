@@ -144,7 +144,7 @@ class levelTwo {
     }
 }
 
-//currently a practice world that includes a specterBoss
+//boss level in progres... O_O
 class bossLevel {
     constructor(theGame, thePlayer) {
         this.functions = new levelFunctions;
@@ -166,13 +166,17 @@ class bossLevel {
         // Third argument is the total length in blocks
         // Fourth argument is the Y level
         // Fifth argument is the array to store assets
+
+        this.functions.invisibleWall(-1, this.assets);
+
         this.functions.buildFloor(1, 0, 30, 11, this.assets);
         this.functions.buildFloor(1, 30, 20, 9, this.assets);
-        this.functions.buildFloor(1, 50, 5, 5, this.assets);
+        // this.functions.buildFloor(1, 50, 5, 5, this.assets);
 
         this.functions.buildFloor(1, 0, 9, 12, this.assets);
         this.functions.buildFloor(1, 0, 7, 13, this.assets);
         
+        //start wall
         this.assets.push(new StoneTile(theGame, 0, 9));
         this.assets.push(new StoneTile(theGame, 0, 10));
         this.assets.push(new StoneTile(theGame, 0, 8));

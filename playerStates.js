@@ -3,6 +3,15 @@ class Player {
         Object.assign(this, { game, x, y, spritesheet});
         
         this.velocity = {x:0, y:0};
+        this.JUMPVELOCITY = -120;
+        this.MIN_WALK = 30;
+        this.MAX_WALK = 100;
+        this.MAX_RUN = 130;
+        this.ACC_WALK = 50;
+        this.ACC_RUN = 60;
+        this.DEC_SKID = 200;
+        this.DEC_REL = 120;
+
         this.overchargeHealth = 20;
         this.maxHealth = 10;
         this.health = 5;
@@ -210,7 +219,8 @@ class Player {
 
     physics(TICK) {
         //falling
-        this.velocity.y += 100 * TICK;
+        //natural fall rate
+        this.velocity.y += 130 * TICK;
 
         this.y+= this.velocity.y * TICK * 2;
         if (this.speedEnable) {
@@ -341,11 +351,11 @@ class playerWalk {
     }
 
     update(game, TICK) {
-        const MIN_WALK = 30;
-        const MAX_WALK = 120;
-        const ACC_WALK = 40;
-        const DEC_SKID = 200;
-        const DEC_REL = 100;
+        const MIN_WALK = this.stateManager.MIN_WALK;
+        const MAX_WALK = this.stateManager.MAX_WALK;
+        const ACC_WALK = this.stateManager.ACC_WALK;
+        const DEC_SKID = this.stateManager.DEC_SKID;
+        const DEC_REL = this.stateManager.DEC_REL;
 
         let stateManager = this.stateManager;
         if(!stateManager.facing) {
@@ -414,12 +424,18 @@ class playerRun {
     }
 
     update(game, TICK) {
-        const MIN_WALK = 30;
+        const MIN_WALK = this.stateManager.MIN_WALK;
         const MAX_RUN = 130;
-        const MAX_WALK = 120;
-        const ACC_WALK = 40;
-        const DEC_SKID = 200;
-        const DEC_REL = 100;
+        const MAX_WALK = this.stateManager.MAX_WALK;
+        const ACC_WALK = this.stateManager.ACC_WALK;
+        const DEC_SKID = this.stateManager.DEC_SKID;
+        const DEC_REL = this.stateManager.DEC_REL;
+        // const MIN_WALK = 30;
+        // 
+        // const MAX_WALK = 120;
+        // const ACC_WALK = 40;
+        // const DEC_SKID = 200;
+        // const DEC_REL = 100;
 
         let stateManager = this.stateManager;
         if(!stateManager.facing) {
@@ -477,14 +493,14 @@ class playerJump {
     }
 
     onEnter() {
-        this.stateManager.velocity.y = -100;
+        this.stateManager.velocity.y = this.stateManager.JUMPVELOCITY;
     }
 
     update(game, TICK) {
         //air physics
-        const MAX_WALK = 160;
-        const ACC_WALK = 40;
-        const ACC_RUN = 60;
+        const MAX_WALK = this.stateManager.MAX_WALK;
+        const ACC_WALK = this.stateManager.ACC_WALK;
+        const ACC_RUN = this.stateManager.ACC_RUN;
 
         let stateManager = this.stateManager;
         // horizontal physics
@@ -528,9 +544,9 @@ class playerFall {
 
     update(game, TICK) {
         //air physics
-        const MAX_WALK = 160;
-        const ACC_WALK = 40;
-        const ACC_RUN = 60;
+        const MAX_WALK = this.stateManager.MAX_WALK;
+        const ACC_WALK = this.stateManager.ACC_WALK;
+        const ACC_RUN = this.stateManager.ACC_RUN;
 
         let stateManager = this.stateManager;
         // horizontal physics
