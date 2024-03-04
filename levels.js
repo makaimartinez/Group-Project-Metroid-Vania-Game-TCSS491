@@ -43,7 +43,10 @@ class levelOne {
     build(theGame, thePlayer) {
         theGame.camera.x = 0;     // reset camera 
 
-        // this.assets.push(new skelly(theGame, 500, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        this.assets.push(new skelly(theGame, 500, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+
+        // this.assets.push(new NextLevelDoor(theGame, 4, 9));
+
         console.log("PLAYER: " + thePlayer);
         this.assets.push(thePlayer);
 
@@ -92,6 +95,7 @@ class levelTwo {
         this.functions = new levelFunctions;
         this.assets = [];
         this.build(theGame, thePlayer);
+        
     }
 
     build(theGame, thePlayer) {
@@ -99,6 +103,7 @@ class levelTwo {
         this.assets.push(new skelly(theGame, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         this.assets.push(new SpecterKnight(theGame, 300, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         this.assets.push(thePlayer);
+        if(thePlayer) console.log("built position " + thePlayer.BB.x + " " + thePlayer.BB.y);
 
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the X start position

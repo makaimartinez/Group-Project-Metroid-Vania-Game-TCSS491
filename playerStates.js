@@ -123,7 +123,7 @@ class Player {
         if(this.game.leftclick) this.game.leftclick = false;
         // if(this.game.leftclick && !this.game.titleActive) this.game.leftclick = false;        
 
-        console.log(this.speedEnable)
+        // console.log(this.speedEnable)
         if (this.speedEnable) {
             this.updateCooldown(TICK);
         }
@@ -149,6 +149,7 @@ class Player {
     }
     
     update() {
+        console.log("my position " + this.x + " " + this.y);
         if(this.state != 10 && !this.dead) this.updateloop();
          //if outside the screen or if dead, trigger death screen
          if(this.y > 640 + 50) this.dead = true;
@@ -191,8 +192,8 @@ class Player {
 
     resetPlayer(startX, startY) {
         this.x = startX;
-        this.y= startY;
-        this.health = 5
+        this.y = startY;
+        // this.health = 5
         this.dead = false;
         this.currentState = new playerIdle(this);
         this.state = 0;
@@ -720,6 +721,6 @@ class playerDeath {
     onExit() {
         this.stateManager.state = 10;
         this.stateManager.dead = true;
-        this.game.respawnRestart();
+        this.game.camera.respawnRestart();
     }
 }
