@@ -74,7 +74,7 @@ class SceneManager {
         this.updateAudio();
 
         if (this.title && this.gameEngine.leftclick) {
-            if (this.gameEngine.leftclick ) {   // && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.click.y < 9.5 * PARAMS.BLOCKWIDTH
+            if (this.gameEngine.leftclick && this.gameEngine.click.y > 7 * PARAMS.BLOCKWIDTH && this.gameEngine.click.y < 8 * PARAMS.BLOCKWIDTH) {   // && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.click.y < 9.5 * PARAMS.BLOCKWIDTH
                 console.log("in click check");
                 this.title = false;
                 this.inTransition = true;
@@ -113,8 +113,7 @@ class SceneManager {
             ctx.fillStyle = "White";
             var titlecardplace = (PARAMS.CANVAS_WIDTH / 2) - (width  * PARAMS.SCALE/ 2);
             ctx.drawImage(titlecard, titlecardplace, 1.5 * PARAMS.BLOCKWIDTH, width * PARAMS.SCALE, height * PARAMS.SCALE);
-            // ctx.fillStyle = this.gameEngine.mousemove && this.gameEngine.mousemove.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.mousemove.y < 10 * PARAMS.BLOCKWIDTH ? "Grey" : "White";
-            // ctx.fillStyle = this.gameEngine.mousemove && this.gameEngine.mousemove.y > 430 && this.gameEngine.mousemove.y < 460 ? "Grey" : "White";
+            ctx.fillStyle = this.gameEngine.mouse && this.gameEngine.mouse.y > 7 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 8 * PARAMS.BLOCKWIDTH ? "Grey" : "White";
             ctx.fillText("START", 9 * PARAMS.BLOCKWIDTH, 8 * PARAMS.BLOCKWIDTH);
         } 
         if (PARAMS.DEBUG) {
