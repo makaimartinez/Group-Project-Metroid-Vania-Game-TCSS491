@@ -739,6 +739,6 @@ class playerDeath {
     onExit() {
         this.stateManager.state = 10;
         this.stateManager.dead = true;
-        this.game.respawnRestart();
+        this.game.camera.respawnRestart();
     }
 }
