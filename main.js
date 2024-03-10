@@ -53,9 +53,3 @@ ASSET_MANAGER.downloadAll(function () {
 
 	gameEngine.start();
 });
-
-
-function myFunction() {
-	gameEngine.darkness = !gameEngine.darkness;
-	console.log(gameEngine.darkness);
-}
