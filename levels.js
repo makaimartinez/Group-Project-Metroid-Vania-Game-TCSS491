@@ -95,6 +95,7 @@ class levelTwo {
     }
 
     build(theGame, thePlayer) {
+        this.assets.push(new darkness(theGame));
 
         this.assets.push(new skelly(theGame, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         this.assets.push(new SpecterKnight(theGame, 300, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
@@ -147,8 +148,8 @@ class bossLevel {
     }
 
     build(theGame, thePlayer) {
-        //lighting effect  first
-        // this.assets.push(new darkness(theGame));
+        //lighting effect 
+        this.assets.push(new darkness(theGame));
 
         // this.assets.push(new SpecterKnight(theGame, -200, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
 

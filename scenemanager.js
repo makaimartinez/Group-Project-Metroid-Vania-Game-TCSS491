@@ -5,6 +5,7 @@ class SceneManager {
         this.x = 0;
         this.score = 0;
         this.coins = 0;
+        this.once = 0;
         
         this.darkness=true; //enabled 
 
@@ -23,7 +24,7 @@ class SceneManager {
         this.loadGame(false, true, false);
 
         // Controls what level the player is on (0 is currently level 1)
-        this.levelNum = 2;
+        this.levelNum = 0;
         this.playerLives = 3;
 
         // build level 1
@@ -80,6 +81,7 @@ class SceneManager {
     clearEntities() {
         gameEngine.entities.forEach(function (entity) {
             entity.removeFromWorld = true;
+            if(entity instanceof darkness) entity.clear();
         });
     };
 
@@ -95,7 +97,7 @@ class SceneManager {
     update() {
         PARAMS.DEBUG = document.getElementById("debug").checked;
         this.updateAudio();
-
+        
         if (this.title && this.gameEngine.leftclick) {
             if (this.gameEngine.leftclick && this.gameEngine.click.y > 7 * PARAMS.BLOCKWIDTH && this.gameEngine.click.y < 8 * PARAMS.BLOCKWIDTH) {   // && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.click.y < 9.5 * PARAMS.BLOCKWIDTH
                 console.log("in click check");
@@ -176,6 +178,8 @@ class SceneManager {
 
         } else if (!this.title && !this.transition) {                   // HUD
 
+            ctx.save();
+
             // Health Bar
             ctx.strokeStyle = "White";
             ctx.fillStyle = ctx.strokeStyle;
@@ -212,6 +216,7 @@ class SceneManager {
             // tutorial message
             ctx.font = PARAMS.BLOCKWIDTH / 4 + 'px "Press Start 2P"';
             ctx.fillText("left click to attack enemies and open chests", 9 * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH - 10);
+            ctx.restore();
         }
     }
 };
