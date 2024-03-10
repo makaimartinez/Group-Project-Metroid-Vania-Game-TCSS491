@@ -5,13 +5,11 @@ class SceneManager {
         this.x = 0;
         this.score = 0;
         this.coins = 0;
-        this.once = 0;
-        
-        this.darkness=true; //enabled 
-
-        this.gameEngine.respawnRestart = this.respawnRestart();
+        this.playerLives = 3;
         // this.removeFromWorld = false;
 
+        // Controls what level the player is on (0 is currently level 1)
+        this.levelNum = 0;
 
         this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
 
@@ -23,9 +21,6 @@ class SceneManager {
 
         this.loadGame(false, true, false);
 
-        // Controls what level the player is on (0 is currently level 1)
-        this.levelNum = 0;
-        this.playerLives = 3;
 
         // build level 1
         // build level 2
@@ -44,6 +39,7 @@ class SceneManager {
         if (transition) {
             this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, gameOver, transition));
         } else if (!title) {
+            console.log(this.playerLives);
             this.clearEntities();
             this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
             this.levels = [
@@ -74,7 +70,15 @@ class SceneManager {
  
     respawnRestart() {
         //get preserved player values
-        this.playerLives--;
+        this.playerLives -= 1;
+        if (this.playerLives > 0) {
+            this.clearEntities();
+            this.loadGame(false, false, false);
+        } else {
+            console.log("GO");
+            this.clearEntities();
+            this.loadGame(true, false, true);
+        }
         // this.scene = new SceneManager(this, this.levelNum);
     }
 

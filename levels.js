@@ -24,6 +24,12 @@ class levelFunctions {
         };
     };
 
+    killFloor(theStartX, theLength, theArray) {
+        for (var i = 0; i < theLength; i++) {
+            theArray.push(new KillBarrier(this.gameEngine, theStartX + i, 16));
+        };
+    }
+
     invisibleWall(theStartX, theArray) {
         for (var i = 0; i < 15; i++) {
             theArray.push(new InvWallTile(this.gameEngine, theStartX, i));
@@ -47,6 +53,7 @@ class levelOne {
         console.log("PLAYER: " + thePlayer);
         this.assets.push(thePlayer);
 
+        this.functions.killFloor(13, 30, this.assets);
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the X start position
         // Third argument is the total length in blocks
@@ -69,7 +76,12 @@ class levelOne {
         this.assets.push(new GrassTile(theGame, 18, 9));
         this.assets.push(new DirtTile(theGame, 18, 10));
         
-        
+        this.assets.push(new Bush(theGame, 9, 10));
+        this.assets.push(new Bush(theGame, 17, 8));
+        this.assets.push(new Bush(theGame, 28, 10));
+        this.assets.push(new Tree(theGame, 5, 7));
+        this.assets.push(new Tree(theGame, 28, 7));
+
         // items
         this.assets.push(new Chest(theGame, 9, 10));
         this.assets.push(new NextLevelDoor(theGame, 33, 9));
@@ -100,6 +112,8 @@ class levelTwo {
         this.assets.push(new skelly(theGame, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         this.assets.push(new SpecterKnight(theGame, 300, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         this.assets.push(thePlayer);
+
+        this.functions.killFloor(10, 4, this.assets);
 
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the X start position

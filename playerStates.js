@@ -307,6 +307,10 @@ class Player {
                     theGame.camera.levelAdvance();
                 }
 
+                if (entity.BB.name == "killbarrier") {
+                    that.newState = new playerDeath(that,entity.BB);
+                }
+
             }
 
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
@@ -769,6 +773,6 @@ class playerDeath {
     onExit() {
         this.stateManager.state = 10;
         this.stateManager.dead = true;
-        this.game.respawnRestart();
+        this.game.camera.respawnRestart();
     }
 }
