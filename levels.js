@@ -147,6 +147,8 @@ class bossLevel {
     }
 
     build(theGame, thePlayer) {
+        //lighting effect  first
+        // this.assets.push(new darkness(theGame));
 
         // this.assets.push(new SpecterKnight(theGame, -200, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
 
@@ -159,6 +161,7 @@ class bossLevel {
         // thePlayer.x = 0;
         // thePlayer.y = 0;
         this.assets.push(thePlayer);
+        // this.assets.push(new darkness(theGame));
 
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the X start position
@@ -256,7 +259,7 @@ class bossLevel {
 
         // items
         // this.assets.push(new Chest(theGame, 4, 10));
-        
+        // this.assets.push(new darkness(theGame));
         // Draw Background last
         this.assets.push(new Background_Cave(theGame, 260));
     }

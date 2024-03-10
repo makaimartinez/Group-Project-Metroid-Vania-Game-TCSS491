@@ -1,10 +1,14 @@
 class SceneManager {
     constructor(game) {
         this.gameEngine = game;
-        this.gameEngine.camera = this;
+        this.gameEngine.camera = this; //a way to access scenemanager
         this.x = 0;
         this.score = 0;
         this.coins = 0;
+        
+        this.darkness=true; //enabled 
+
+        this.gameEngine.respawnRestart = this.respawnRestart();
         // this.removeFromWorld = false;
 
 
@@ -19,7 +23,7 @@ class SceneManager {
         this.loadGame(false, true, false);
 
         // Controls what level the player is on (0 is currently level 1)
-        this.levelNum = 0;
+        this.levelNum = 2;
         this.playerLives = 3;
 
         // build level 1

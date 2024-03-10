@@ -7,6 +7,9 @@ class GameEngine {
         this.ctx = null;
         this.scene = null;
 
+        //lighting information
+        this.darkness = true;
+
         // Everything that will be updated and drawn each frame
         this.entities = [];
 
@@ -182,15 +185,152 @@ class GameEngine {
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         // We erase it, but we never give it the chance to update the monitor as such.
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        let ctx = this.ctx;
+        ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
             this.entities[i].draw(this.ctx, this);
         }
 
+        if(this.darknes) {
+            let screenshot = ctx.getImageData(0,0,PARAMS.CANVAS_WIDTH,PARAMS.CANVAS_HEIGHT);
+            ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            // ctx.putImageData(screenshot, 0, 0);
+            // loop
+            let ambientLight=.1;
+            let intensity=1;
+            let amb= 'rgba(0,0,0,' + (1-ambientLight) + ')';
+            let that = this;
+            ctx.fillStyle = 'rgba(0,0,0,1)';
+            ctx.globalCompositeOperation = 'xor';
+            ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            this.entities.forEach(function(entity) {
+                if(entity && entity.light){
+                    let x = entity.BB.center.x - that.camera.x;
+                    let y = entity.BB.center.y;
+                    let r = entity.radius;
+                    // let g = that.ctx.createRadialGradient(x, y, 1 * r / 5, x, y, r);
+                    // g.addColorStop(1, 'rgba(0,0,0,' + (1- intensity) + ')');
+                    // g.addColorStop(0,amb);
+                    // ctx.fillStyle = g;
+                    // ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+                    // ctx.clearRect(x - r, y - r, 2 * r, 2 * r);
+                    // ctx.fillStyle = that.ctx.createRadialGradient(x, y, r / 5, x, y, r);
+                    ctx.fillStyle = 'rgba(260,260,260,1)';
+                    // ctx.beginPath();
+                    // ctx.arc(x, y, r, 0, 2 * Math.PI);
+                    // ctx.fill();
+                    ctx.clearRect(x - r, y - r, 2 * r, 2 * r);
+                    // ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+                    // ctx.beginPath();/
+                    // ctx.arc(x, y, r/3, 0, 2 * Math.PI);        
+                    // ctx.fill();
+                    
+                }
+            })
+            let screenshot2 = ctx.getImageData(0,0,PARAMS.CANVAS_WIDTH,PARAMS.CANVAS_HEIGHT);
+            // ctx.putImageData(screenshot, 0, 0);
+            // ctx.putImageData(screenshot2, 0, 0);
+        }
+
+        if (false) {
+            let screenshot = ctx.getImageData(0,0,PARAMS.CANVAS_WIDTH,PARAMS.CANVAS_HEIGHT);
+            // let screenshot = document.getElementById("gameWorld").toDataURL();
+            // let imgURL = screenshot.toDataURL();
+            ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            // document.getElementById("gameWorld").style.backgroundImage = screenshot; 
+            ctx.putImageData(screenshot, 0, 0);
+            // loop
+            let ambientLight=.1;
+            let intensity=1;
+            let amb= 'rgba(0,0,0,' + (1-ambientLight) + ')';
+
+            let that = this;
+            this.entities.forEach(function(entity) {
+                if(entity && entity.light){
+                    let x = entity.BB.center.x - that.camera.x;
+                    let y = entity.BB.center.y;
+                    let r = entity.radius;
+                    let g = that.ctx.createRadialGradient(x, y, 1 * r / 5, x, y, r);
+                    // g.addColorStop(1, 'rgba(0,0,0,' + (1- intensity) + ')');
+                    // g.addColorStop(0,amb);
+                    // ctx.fillStyle = g;
+                    // ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+                    // ctx.clearRect(x, y, r, r);
+                    // ctx.fillStyle = that.ctx.createRadialGradient(x, y, r / 5, x, y, r);
+                    ctx.fillStyle = 'rgba(0,0,0,1)';
+                    ctx.beginPath();
+                    ctx.arc(x, y, r, 0, 2 * Math.PI);        
+                    ctx.fill();
+                    ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+                    // ctx.beginPath();/
+                    // ctx.arc(x, y, r/3, 0, 2 * Math.PI);        
+                    // ctx.fill();
+                    
+                }
+            })
+            
+            // ctx.drawImage(screenshot, 0, 0)
+            // ctx.fillStyle = amb;
+            ctx.fillStyle = 'rgba(0,0,0,1)';
+            // ctx.globalCompositeOperation = 'xor';
+            ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            
+            
+            // this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        }
+
         // prioritize the camera and draw after everything
         this.camera.draw(this.ctx);
+
+        //when rendering DARKNESS and Light, 
+        //save the image,
+        //clear canvas 
+        //then draw circles
+        //then apply XOR
+        //then fill screen with 'darkness'
+        
+        if (this.darkness == false) {
+            let screenshot = this.ctx.getImageData(0,0,PARAMS.CANVAS_WIDTH,PARAMS.CANVAS_HEIGHT);
+            ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            // this.ctx.putImageData(screenshot, 0, 0);
+            // loop
+            let ambientLight=.1;
+            let intensity=1;
+            let amb= 'rgba(0,0,0,' + (1-ambientLight) + ')';
+
+            let that = this;
+            this.entities.forEach(function(entity) {
+                if(entity && entity.light){
+                    let x = entity.BB.center.x - that.camera.x;
+                    let y = entity.BB.center.y;
+                    let r = entity.radius;
+                    let g = that.ctx.createRadialGradient(x, y, r / 3, x, y, r);
+                    g.addColorStop(1, 'rgba(0,0,0,' + (1- intensity) + ')');
+                    g.addColorStop(0,amb);
+                    ctx.fillStyle = g;
+                    // ctx.fillStyle = 'rgba(0,0,0,1)';
+                    ctx.fillRect(x - r, y - r, x + r, y + r);
+                    ctx.beginPath();
+                    // ctx.clearRect(entity.BB.x - that.game.camera.x, entity.BB.y, entity.radius, entity.radius);
+                    ctx.fillStyle = that.ctx.createRadialGradient(x, y, r / 5, x, y, r);
+                    
+                    // ctx.arc(entity.BB.center.x - that.camera.x, entity.BB.center.y, entity.radius, 0, 2 * Math.PI);        
+                    
+                    ctx.fill();
+                    
+                }
+            })
+            document.getElementById("gameWorld").style.backgroundImage = screenshot; 
+            ctx.fillStyle = amb;
+            this.ctx.globalCompositeOperation = 'xor';
+            // this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            
+            
+            // this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        }
+        
     };
 
     update() {

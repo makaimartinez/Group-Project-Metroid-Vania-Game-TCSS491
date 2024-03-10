@@ -13,6 +13,9 @@ class SpecterBoss {
         this.attackCDCountDown = 0;
         this.target = null;
         
+        this.light =true;
+        this.radius = this.engageRange
+
         this.health = 10;
         this.hurt = false;
 

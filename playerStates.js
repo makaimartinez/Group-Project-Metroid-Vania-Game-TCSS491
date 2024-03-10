@@ -12,6 +12,9 @@ class Player {
         this.DEC_SKID = 200;
         this.DEC_REL = 120;
 
+        this.light = true;
+        this.radius = 60;
+
         this.overchargeHealth = 20;
         this.maxHealth = 10;
         this.health = 5;
@@ -20,7 +23,7 @@ class Player {
         this.respawn = false;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
-        this.radius = 60;
+        
         this.BB = new BoundingBox(this.x, this.y, 42, 86, "player");
         this.lastBB;
         this.dmgBB;
@@ -180,6 +183,37 @@ class Player {
 
     draw(ctx) {
         this.adjustSpritePosition(ctx, this.scale);
+        
+        //darkness
+        if(this.game.camera.darkness) {
+
+            if(false) {
+                let interval = this.radius/3
+                ctx.beginPath();
+                ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, interval, 0, 2 * Math.PI);        
+                ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+                ctx.fill();
+                
+                interval = 2 * this.radius/3
+                ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, interval, 0, 2 * Math.PI);        
+                // ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+                ctx.fill();
+        
+                interval = this.radius
+                ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, interval, 0, 2 * Math.PI);        
+                // ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+                ctx.fill();
+                ctx.fillStyle = "none"
+            }
+            if(true) {
+                // ctx.globalCompositeOperation = "soft-light";
+                // ctx.beginPath();
+                // ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, this.radius, 0, 2 * Math.PI);        
+                // ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+                // ctx.fill();
+            }
+        }
+
         if(PARAMS.DEBUG) {
             ctx.strokeStyle = "orange";
             // ctx.strokeRect(this.x - this.game.camera.x - 70, this.y - 30, 180, 105);
@@ -190,7 +224,7 @@ class Player {
             ctx.fillText("HP " + this.health, this.x + 30 - this.game.camera.x, this.y + 0);
             ctx.setLineDash([5, 5]);
             ctx.beginPath();
-            ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, 60, 0, 2 * Math.PI);
+            ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, this.radius, 0, 2 * Math.PI);
             ctx.stroke();
             ctx.setLineDash([]);
             // ctx.strokeRect(this.x + 20, this.y + 10 - 100, 42, 86);
