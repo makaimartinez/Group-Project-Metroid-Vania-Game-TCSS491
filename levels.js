@@ -175,6 +175,7 @@ class levelTwo {
         this.assets.push(new SpecterKnight(theGame, 300, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         this.assets.push(new SpecterKnight(theGame, 900, 300, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         this.assets.push(new SpecterKnight(theGame, 1500, 150, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 2600, 190, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
        
         this.assets.push(thePlayer);
 
