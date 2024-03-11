@@ -33,9 +33,9 @@ class Player {
 
         //speed potion
         this.speedEnable = false;
-        this.speedDuration = 4;
+        this.speedDuration = 5;
         this.speedCountup = 0;
-        this.speedVal = 1.5;
+        this.speedVal = 1.75;
 
         this.loadAnimations();
         this.updateBB();

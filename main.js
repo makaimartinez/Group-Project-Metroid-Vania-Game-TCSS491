@@ -10,6 +10,7 @@ ASSET_MANAGER.queueDownload("./assets/title.png");
 ASSET_MANAGER.queueDownload("./assets/title screen.png");
 ASSET_MANAGER.queueDownload("./assets/transitionscreen.png");
 ASSET_MANAGER.queueDownload("./assets/defeatscreen.png");
+ASSET_MANAGER.queueDownload("./assets/winscreen.png");
 // player and enemies
 ASSET_MANAGER.queueDownload("./assets/slime.png");
 ASSET_MANAGER.queueDownload("./assets/pack_loreon_char_free_modified.png");
@@ -23,15 +24,17 @@ ASSET_MANAGER.queueDownload("./assets/bg_groundTiles.png");
 ASSET_MANAGER.queueDownload("./assets/bg_door.png");
 ASSET_MANAGER.queueDownload("./assets/bg_tree.png");
 ASSET_MANAGER.queueDownload("./assets/bg_bush.png");
-
 ASSET_MANAGER.queueDownload("./assets/chest.png");
 ASSET_MANAGER.queueDownload("./assets/openchest.png");
 ASSET_MANAGER.queueDownload("./assets/healthpotion.png");
 ASSET_MANAGER.queueDownload("./assets/speedpotion.png");
 
-
 // music
-ASSET_MANAGER.queueDownload("./assets/music/lvl1.mp3");		
+ASSET_MANAGER.queueDownload("./assets/music/lvl1.mp3");
+ASSET_MANAGER.queueDownload("./assets/music/lvl2.mp3");
+ASSET_MANAGER.queueDownload("./assets/music/bosslvl.mp3");
+ASSET_MANAGER.queueDownload("./assets/music/win.mp3");
+
 // sfx
 
 ASSET_MANAGER.downloadAll(function () {

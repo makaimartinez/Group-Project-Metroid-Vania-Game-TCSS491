@@ -9,7 +9,7 @@ class SceneManager {
         // this.removeFromWorld = false;
 
         // Controls what level the player is on (0 is currently level 1)
-        this.levelNum = 1;
+        this.levelNum = 2;
 
         this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
 
@@ -36,16 +36,18 @@ class SceneManager {
     loadGame (transition, title, gameOver) {
         this.transition = transition;
         this.title = title;
+
         if (transition) {
+            
             this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, gameOver, transition));
         } else if (!title) {
             console.log(this.playerLives);
             this.clearEntities();
             this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
             this.levels = [
-                new levelOne(this.gameEngine, this.player),
-                new levelTwo(this.gameEngine, this.player),
-                new bossLevel(this.gameEngine, this.player)
+                new levelOne(this.gameEngine, this.player),     // levelNum = 0
+                new levelTwo(this.gameEngine, this.player),     // levelNum = 1
+                new bossLevel(this.gameEngine, this.player)     // levelNum = 2
             ];
             this.currentLevel = this.levels[this.levelNum];
             // console.log(this.levels);
@@ -65,7 +67,14 @@ class SceneManager {
         this.levelNum++;
         this.clearEntities();
         this.x = 0;
-        this.loadGame(true, false, false);
+        if (this.levelNum === this.levels.length) {      // if we get to the end of the levels
+            ASSET_MANAGER.pauseBackgroundMusic();
+            ASSET_MANAGER.playAsset("./assets/music/win.mp3");
+            this.gameEngine.addEntity(new GameWinScreen());
+        } else {
+            this.loadGame(true, false, false);
+
+        }
     }
  
     respawnRestart() {
@@ -180,7 +189,7 @@ class SceneManager {
             // ctx.strokeStyle = "White";
             // ctx.fillStyle = ctx.strokeStyle;
 
-        } else if (!this.title && !this.transition) {                   // HUD
+        } else if (!this.title && !this.transition && (this.levelNum !== this.levels.length)) {                   // HUD
 
             ctx.save();
 
