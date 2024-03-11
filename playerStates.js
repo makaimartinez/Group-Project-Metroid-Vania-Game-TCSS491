@@ -3,6 +3,18 @@ class Player {
         Object.assign(this, { game, x, y, spritesheet});
         
         this.velocity = {x:0, y:0};
+        this.JUMPVELOCITY = -120;
+        this.MIN_WALK = 30;
+        this.MAX_WALK = 100;
+        this.MAX_RUN = 130;
+        this.ACC_WALK = 50;
+        this.ACC_RUN = 60;
+        this.DEC_SKID = 200;
+        this.DEC_REL = 120;
+
+        this.light = true;
+        this.radius = 100;
+
         this.overchargeHealth = 20;
         this.maxHealth = 10;
         this.health = 5;
@@ -11,7 +23,7 @@ class Player {
         this.respawn = false;
         this.facing = false; //facing true: left false: right
         this.currentState = new playerIdle(this); 
-        this.radius = 60;
+        
         this.BB = new BoundingBox(this.x, this.y, 42, 86, "player");
         this.lastBB;
         this.dmgBB;
@@ -21,9 +33,9 @@ class Player {
 
         //speed potion
         this.speedEnable = false;
-        this.speedDuration = 4;
+        this.speedDuration = 5;
         this.speedCountup = 0;
-        this.speedVal = 1.5;
+        this.speedVal = 1.75;
 
         this.loadAnimations();
         this.updateBB();
@@ -123,7 +135,6 @@ class Player {
         if(this.game.leftclick) this.game.leftclick = false;
         // if(this.game.leftclick && !this.game.titleActive) this.game.leftclick = false;        
 
-        // console.log(this.speedEnable)
         if (this.speedEnable) {
             this.updateCooldown(TICK);
         }
@@ -149,7 +160,6 @@ class Player {
     }
     
     update() {
-        console.log("my position " + this.x + " " + this.y);
         if(this.state != 10 && !this.dead) this.updateloop();
          //if outside the screen or if dead, trigger death screen
          if(this.y > 640 + 50) this.dead = true;
@@ -173,6 +183,37 @@ class Player {
 
     draw(ctx) {
         this.adjustSpritePosition(ctx, this.scale);
+        
+        //darkness
+        if(this.game.camera.darkness) {
+
+            if(false) {
+                let interval = this.radius/3
+                ctx.beginPath();
+                ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, interval, 0, 2 * Math.PI);        
+                ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+                ctx.fill();
+                
+                interval = 2 * this.radius/3
+                ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, interval, 0, 2 * Math.PI);        
+                // ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+                ctx.fill();
+        
+                interval = this.radius
+                ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, interval, 0, 2 * Math.PI);        
+                // ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+                ctx.fill();
+                ctx.fillStyle = "none"
+            }
+            if(true) {
+                // ctx.globalCompositeOperation = "soft-light";
+                // ctx.beginPath();
+                // ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, this.radius, 0, 2 * Math.PI);        
+                // ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+                // ctx.fill();
+            }
+        }
+
         if(PARAMS.DEBUG) {
             ctx.strokeStyle = "orange";
             // ctx.strokeRect(this.x - this.game.camera.x - 70, this.y - 30, 180, 105);
@@ -183,7 +224,7 @@ class Player {
             ctx.fillText("HP " + this.health, this.x + 30 - this.game.camera.x, this.y + 0);
             ctx.setLineDash([5, 5]);
             ctx.beginPath();
-            ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, 60, 0, 2 * Math.PI);
+            ctx.arc(this.x - this.game.camera.x + 21, this.y + 43, this.radius, 0, 2 * Math.PI);
             ctx.stroke();
             ctx.setLineDash([]);
             // ctx.strokeRect(this.x + 20, this.y + 10 - 100, 42, 86);
@@ -192,8 +233,8 @@ class Player {
 
     resetPlayer(startX, startY) {
         this.x = startX;
-        this.y = startY;
-        // this.health = 5
+        this.y= startY;
+        this.health = 5
         this.dead = false;
         this.currentState = new playerIdle(this);
         this.state = 0;
@@ -211,7 +252,8 @@ class Player {
 
     physics(TICK) {
         //falling
-        this.velocity.y += 100 * TICK;
+        //natural fall rate
+        this.velocity.y += 130 * TICK;
 
         this.y+= this.velocity.y * TICK * 2;
         if (this.speedEnable) {
@@ -265,10 +307,14 @@ class Player {
                     theGame.camera.levelAdvance();
                 }
 
+                if (entity.BB.name == "killbarrier") {
+                    that.newState = new playerDeath(that,entity.BB);
+                }
+
             }
 
             if(that.dmgBB && entity.BB && entity.BB != that && that.dmgBB.collide(entity.BB)) {
-                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly" || entity.BB.name == "chest") {
+                if(entity.BB.name == "slime" || entity.BB.name == "specter" || entity.BB.name == "skelly" || entity.BB.name == "chest" || entity.BB.name == "specterBoss") {
                     entity.hit();
                     // if(that.state != 8) that.newState = new playerHurt(that, entity);
                 }
@@ -342,11 +388,11 @@ class playerWalk {
     }
 
     update(game, TICK) {
-        const MIN_WALK = 30;
-        const MAX_WALK = 120;
-        const ACC_WALK = 40;
-        const DEC_SKID = 200;
-        const DEC_REL = 100;
+        const MIN_WALK = this.stateManager.MIN_WALK;
+        const MAX_WALK = this.stateManager.MAX_WALK;
+        const ACC_WALK = this.stateManager.ACC_WALK;
+        const DEC_SKID = this.stateManager.DEC_SKID;
+        const DEC_REL = this.stateManager.DEC_REL;
 
         let stateManager = this.stateManager;
         if(!stateManager.facing) {
@@ -415,12 +461,18 @@ class playerRun {
     }
 
     update(game, TICK) {
-        const MIN_WALK = 30;
+        const MIN_WALK = this.stateManager.MIN_WALK;
         const MAX_RUN = 130;
-        const MAX_WALK = 120;
-        const ACC_WALK = 40;
-        const DEC_SKID = 200;
-        const DEC_REL = 100;
+        const MAX_WALK = this.stateManager.MAX_WALK;
+        const ACC_WALK = this.stateManager.ACC_WALK;
+        const DEC_SKID = this.stateManager.DEC_SKID;
+        const DEC_REL = this.stateManager.DEC_REL;
+        // const MIN_WALK = 30;
+        // 
+        // const MAX_WALK = 120;
+        // const ACC_WALK = 40;
+        // const DEC_SKID = 200;
+        // const DEC_REL = 100;
 
         let stateManager = this.stateManager;
         if(!stateManager.facing) {
@@ -478,14 +530,14 @@ class playerJump {
     }
 
     onEnter() {
-        this.stateManager.velocity.y = -100;
+        this.stateManager.velocity.y = this.stateManager.JUMPVELOCITY;
     }
 
     update(game, TICK) {
         //air physics
-        const MAX_WALK = 160;
-        const ACC_WALK = 40;
-        const ACC_RUN = 60;
+        const MAX_WALK = this.stateManager.MAX_WALK;
+        const ACC_WALK = this.stateManager.ACC_WALK;
+        const ACC_RUN = this.stateManager.ACC_RUN;
 
         let stateManager = this.stateManager;
         // horizontal physics
@@ -529,9 +581,9 @@ class playerFall {
 
     update(game, TICK) {
         //air physics
-        const MAX_WALK = 160;
-        const ACC_WALK = 40;
-        const ACC_RUN = 60;
+        const MAX_WALK = this.stateManager.MAX_WALK;
+        const ACC_WALK = this.stateManager.ACC_WALK;
+        const ACC_RUN = this.stateManager.ACC_RUN;
 
         let stateManager = this.stateManager;
         // horizontal physics

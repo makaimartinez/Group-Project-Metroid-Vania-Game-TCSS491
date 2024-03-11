@@ -66,14 +66,14 @@ class GameEngine {
 
         function mouseClickListener (e) {
             that.click = getXandY(e);
-            if (PARAMS.DEBUG) console.log(that.click);
+            // if (PARAMS.DEBUG) console.log(that.click);
         }
 
         function mouseLeftClickListener (e) {
             switch (e.button) {
                 case 0:
                     that.leftclick = true;
-                    if (PARAMS.DEBUG) console.log("leftclick is clicked");
+                    // if (PARAMS.DEBUG) console.log("leftclick is clicked");
                     break;
                 default:
                     that.leftclick = false;
@@ -182,14 +182,13 @@ class GameEngine {
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         // We erase it, but we never give it the chance to update the monitor as such.
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        let ctx = this.ctx;
+        ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
             this.entities[i].draw(this.ctx, this);
         }
-
-        // prioritize the camera and draw after everything
         this.camera.draw(this.ctx);
     };
 

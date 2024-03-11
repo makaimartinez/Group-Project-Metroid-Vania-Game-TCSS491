@@ -1,27 +1,26 @@
 class SceneManager {
     constructor(game) {
         this.gameEngine = game;
-        this.gameEngine.camera = this;
+        this.gameEngine.camera = this; //a way to access scenemanager
         this.x = 0;
         this.score = 0;
         this.coins = 0;
+        this.playerLives = 3;
         // this.removeFromWorld = false;
 
+        // Controls what level the player is on (0 is currently level 1)
+        this.levelNum = 2;
 
         this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
-        this.savedPlayer = this.player;
+
         // this.levels = [
         //     new levelOne(this.gameEngine, this.player),
         //     new levelTwo(this.gameEngine, this.player),
         //     new bossLevel(this.gameEngine, this.player)
         // ];
 
-        this.loadGame(false, true, false, false);
+        this.loadGame(false, true, false);
 
-        // Controls what level the player is on (0 is currently level 1)
-        this.levelNum = 0;
-        this.intialLives = 3;
-        this.playerLives = this.intialLives;
 
         // build level 1
         // build level 2
@@ -34,29 +33,23 @@ class SceneManager {
         
     };
 
-    loadGame (transition, title, gameOver, respawn){//, newLevel) {
-        this.savedPlayer = this.player;
-        this.clearEntities();
-        // console.log(transition + " " + title + " "+ gameOver + " " + respawn);
+    loadGame (transition, title, gameOver) {
         this.transition = transition;
         this.title = title;
-        this.gameOver = gameOver;
-        
-        if (transition || gameOver) {           // switch to transition screen then start new level OR switch to game over screen then start new game
-            this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, title, gameOver, transition));
-        } else if (title) {                     // switch to title screen
-            //reset 
-            this.playerLives = this.intialLives;
-            this.levelNum = 0;
-            this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, title, gameOver, transition));
-        } else if (respawn) {                   // if respawn then respawn player but keep lives and level number
+
+        if (transition) {
+            this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, gameOver, transition));
+        } else if (!title) {
+            console.log(this.playerLives);
+            this.clearEntities();
             this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
             this.levels = [
-                new levelOne(this.gameEngine, this.player),
-                new levelTwo(this.gameEngine, this.player),
-                new bossLevel(this.gameEngine, this.player)
+                new levelOne(this.gameEngine, this.player),     // levelNum = 0
+                new levelTwo(this.gameEngine, this.player),     // levelNum = 1
+                new bossLevel(this.gameEngine, this.player)     // levelNum = 2
             ];
             this.currentLevel = this.levels[this.levelNum];
+            // console.log(this.levels);
             this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
 
             // MUSIC
@@ -64,49 +57,41 @@ class SceneManager {
                 ASSET_MANAGER.pauseBackgroundMusic();
                 ASSET_MANAGER.playAsset(this.currentLevel.music);
             }
-        } else if (!title && !gameOver && !respawn) {       // new level or new game
 
-            this.player = this.savedPlayer;
-            
-            this.player.resetPlayer(100, 440);
-            
-            this.levels = [
-                new levelOne(this.gameEngine, this.player),
-                new levelTwo(this.gameEngine, this.player),
-                new bossLevel(this.gameEngine, this.player)
-            ];
-            this.currentLevel = this.levels[this.levelNum];
-            this.currentLevel.getAssets().forEach((element) => this.gameEngine.addEntity(element));
-
-            // MUSIC
-            if (this.currentLevel.music) {
-                ASSET_MANAGER.pauseBackgroundMusic();
-                ASSET_MANAGER.playAsset(this.currentLevel.music);
-            }
         }
     }
 
     levelAdvance() {
+        //get preserved player values
         this.levelNum++;
+        this.clearEntities();
         this.x = 0;
-        this.loadGame(true, false, false, false);
+        if (this.levelNum === this.levels.length) {      // if we get to the end of the levels
+            this.gameEngine.addEntity(new GameWinScreen());
+        } else {
+            this.loadGame(true, false, false);
+
+        }
     }
  
     respawnRestart() {
-        this.playerLives--;
-        this.x = 0;
-        if (this.playerLives == 0) {                    // player is out of lives so display game over transition screen
-            this.loadGame(false, false, true, false);
-        } else {                                        // player still has lives so respawn
-            this.loadGame(false, false, false, true);
+        //get preserved player values
+        this.playerLives -= 1;
+        if (this.playerLives > 0) {
+            this.clearEntities();
+            this.loadGame(false, false, false);
+        } else {
+            console.log("GO");
+            this.clearEntities();
+            this.loadGame(true, false, true);
         }
+        // this.scene = new SceneManager(this, this.levelNum);
     }
-
-
 
     clearEntities() {
         gameEngine.entities.forEach(function (entity) {
             entity.removeFromWorld = true;
+            if(entity instanceof darkness) entity.clear();
         });
     };
 
@@ -122,11 +107,24 @@ class SceneManager {
     update() {
         PARAMS.DEBUG = document.getElementById("debug").checked;
         this.updateAudio();
+        
+        if (this.title && this.gameEngine.leftclick) {
+            if (this.gameEngine.leftclick && this.gameEngine.click.y > 7 * PARAMS.BLOCKWIDTH && this.gameEngine.click.y < 8 * PARAMS.BLOCKWIDTH) {   // && this.gameEngine.click.y > 9 * PARAMS.BLOCKWIDTH && this.gameEngine.click.y < 9.5 * PARAMS.BLOCKWIDTH
+                console.log("in click check");
+                this.title = false;
+                this.inTransition = true;
+                this.loadGame(true, false); 
+            }
+        }
 
         let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
         
         if (this.player) {
             this.x = this.player.x - midpoint;
+            if (this.player.respawn) {
+                // create new player
+                //this.player = new Player(this.gameEngine, 100, 300, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"))
+            }
         }
 
     }
@@ -134,6 +132,21 @@ class SceneManager {
     draw(ctx) {
     
         // TITLE SCREEN DRAW
+        if (this.title) {
+            var width = 140;
+            var height = 70;
+            const titlescreen = ASSET_MANAGER.getAsset("./assets/title screen.png");
+            const titlecard = ASSET_MANAGER.getAsset("./assets/title.png");
+
+            ctx.drawImage(titlescreen, 0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
+
+            ctx.font = PARAMS.BLOCKWIDTH / 1.5 + 'px "Press Start 2P"';
+            ctx.fillStyle = "White";
+            var titlecardplace = (PARAMS.CANVAS_WIDTH / 2) - (width  * PARAMS.SCALE/ 2);
+            ctx.drawImage(titlecard, titlecardplace, 1.5 * PARAMS.BLOCKWIDTH, width * PARAMS.SCALE, height * PARAMS.SCALE);
+            ctx.fillStyle = this.gameEngine.mouse && this.gameEngine.mouse.y > 7 * PARAMS.BLOCKWIDTH && this.gameEngine.mouse.y < 8 * PARAMS.BLOCKWIDTH ? "Grey" : "White";
+            ctx.fillText("START", 9 * PARAMS.BLOCKWIDTH, 8 * PARAMS.BLOCKWIDTH);
+        } 
         if (PARAMS.DEBUG) {
             // shows keys
             // ctx.translate(0, -10); // hack to move elements up by 10 pixels instead of adding -10 to all y coordinates below
@@ -173,7 +186,9 @@ class SceneManager {
             // ctx.strokeStyle = "White";
             // ctx.fillStyle = ctx.strokeStyle;
 
-        } else if (!this.title && !this.transition && !this.gameOver) {                   // HUD
+        } else if (!this.title && !this.transition && (this.levelNum !== this.levels.length)) {                   // HUD
+
+            ctx.save();
 
             // Health Bar
             ctx.strokeStyle = "White";
@@ -211,6 +226,7 @@ class SceneManager {
             // tutorial message
             ctx.font = PARAMS.BLOCKWIDTH / 4 + 'px "Press Start 2P"';
             ctx.fillText("left click to attack enemies and open chests", 9 * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH - 10);
+            ctx.restore();
         }
     }
 };

@@ -6,23 +6,29 @@ class SpecterKnight {
 
         this.facing = false;
         this.hurt = false;
-        this.engageRange = 240;
-        this.disengageRange = 500;
+        this.engageRange = 230;
+        this.disengageRange = 400;
         this.attackRange = 110;
         this.attackCD = 3;
         this.attackCDCountDown = 0;
         this.target = null;
+        
+        this.light = true;
+        this.radius = this.engageRange
+
+        this.health = 2;
+        this.hurt = false;
 
         this.BB = new BoundingBox(this.x + 25, this.y, 55, 100, "specter");
         this.lastBB = this.BB;
         this.dmgBB = null;
-        this.animations = []; //0 = idle, 1 = foward, 2= backward, 3 = attack, 4 = spawn, 5 = death;
+        this.animations = []; //0 = idle, 1 = foward, 2= backward (unused), 3 = attack, 4 = spawn (unused), 5 = death;
         this.loadAnimations();
 
         this.currentState = new SpecKnightIdle(this);
         // this.currentState = new SpecKnightAttack(this);
         this.animation = this.currentState.animation;
-        this.state = this.currentState.name; //idle, forward, follow, attack, hurt, death
+        this.state = this.currentState.name; //0 = idle, 1 = forward, 2 = follow, 3 = attack, 4 = hurt, 5 = death
     }
 
     loadAnimations() {
@@ -35,7 +41,7 @@ class SpecterKnight {
         this.animations[2] = new Animator(this.spritesheet, 2, 212, 78, 72, 4, 0.25, 2, false, true); // backward
         this.animations[3] = new Animator(this.spritesheet, 2, 478, 161, 82, 3, 0.32, 2, false, true); //slash
         this.animations[4] = new Animator(this.spritesheet, 2, 348, 74, 62, 7, 0.3, 2, false, true); //appear
-        this.animations[5] = new Animator(this.spritesheet, 2, 285, 64, 62, 10, 0.3, 2, false, true); //dissappear
+        this.animations[5] = new Animator(this.spritesheet, 2, 285, 64, 62, 10, 0.225, 2, false, true); //dissappear
         
         this.animations[6] = new Animator(this.spritesheet, 2, 2, 41, 64, 4, 0.2, 2, false, true); //idle
         this.animations[7] = new Animator(this.spritesheet, 2, 412, 68, 64, 4, 0.285, 2, false, true); //prepare slash
@@ -98,21 +104,31 @@ class SpecterKnight {
     hit() {
         this.hurt = true;
     }
+
+    receive() {
+        if(this.hurt && this.health <= 0 && this.state != 5) {
+            this.newState = new SpecKnightDeath(this);
+        } else if(this.hurt && (this.state != 4 && this.state != 5)) {
+            // console.log("state " + this.state);
+            this.newState = new SpecKnightHurt(this);
+        } 
+    }
+
     updateloop() {
         const TICK = this.game.clockTick;
         let game = this.game;
         this.newState = this.currentState.update(game,TICK);
 
-        // console.log("x " + this.x + "\ty " + this.y + "\nvel" + this.velocity.x + "\t" + this.velocity.y);
         this.physics(TICK);
         this.collide();
         this.updateBB();
         this.cooldowns(TICK);
+        this.receive();
 
         //if it's a new state, switch to that state
         //change the current animation
         if(this.newState != this.state) {
-            // console.log(this.newState);
+            console.log("new State " + this.newState.name);
             this.state = this.newState.name;
             this.animation = this.newState.animation;
             this.currentState.onExit();
@@ -169,25 +185,25 @@ class SpecterKnight {
         this.game.entities.forEach(function(entity) {
             if(entity.BB && entity.BB != that){
                 if(entity.BB.name == "player") {
-                    if(that.state == 2 || that.state == 3) {
-                        if(!(that.BB.circleCollide(entity, that.disengageRange, entity.radius))) {
-                            that.target = null
-                            that.newState = new SpecKnightIdle(that);
+                    if(that.state != 4 && that.state != 5){//not hurt or dead 
+                        if(that.state == 2 || that.state == 3) {
+                            if(!(that.BB.circleCollide(entity, that.disengageRange, entity.radius))) {
+                                that.target = null
+                                that.newState = new SpecKnightIdle(that);
+                            }
                         }
-                    }
-                    if(that.state != 2 && that.state != 3) {
-                        if(that.BB.circleCollide(entity, that.engageRange, entity.radius)) {
-                            console.log("enter " + that.BB.center.x + " " + entity.BB.center.x);
-                            that.target = entity;
-                            that.newState = new SpecKnightFollow(that);
+                        if(that.state != 2 && that.state != 3) {
+                            if(that.BB.circleCollide(entity, that.engageRange, entity.radius)) {
+                                that.target = entity;
+                                that.newState = new SpecKnightFollow(that);
+                            }
+                            
                         }
-                        
-                    }
-                    if(that.state != 3) {
-                        if(that.BB.circleCollide(entity, that.attackRange, entity.radius) && that.attackCDCountDown <= 0) {
-                            // console.log(that.attackCDCountDown + " " + that.attackCD)
-                            that.attackCDCountDown = that.attackCD;
-                            that.newState = new SpecKnightAttack(that);
+                        if(that.state != 3) {
+                            if(that.BB.circleCollide(entity, that.attackRange, entity.radius) && that.attackCDCountDown <= 0) {
+                                that.attackCDCountDown = that.attackCD;
+                                that.newState = new SpecKnightAttack(that);
+                            }
                         }
                     }
                 }
@@ -208,6 +224,7 @@ class SpecKnightIdle {
     }
     
     onEnter() {
+        this.stateManager.radius = this.stateManager.engageRange;
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
     }
@@ -276,89 +293,17 @@ class SpecKnightFollow {
         //full stop
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
-
+        this.stateManager.radius = this.stateManager.disengageRange; 
         //determine inital direction
         var dist = getDistance(this.stateManager, this.target);
         var difX = (this.target.x - this.stateManager.x) / dist;
         var difY = (this.target.y - this.stateManager.y) / dist;
-        // this.stateManager.velocity.x += difX * 10000 / (dist * dist);
-        // this.stateManager.velocity.y += difY * 10000 / (dist * dist);
-
-        if(this.target != null) {
-            console.log("target spotted, following");
-        } else {
-            console.log("error, target unknown");
-        }
-
         
     }
 
     update(game,TICK) {
         this.radialChase();
-        // this.analogChase();
         return this.name;
-    }
-
-    analogChase() {
-        //diff boundary
-        //xspeed is slightly faster than player's
-        //if target is to the right, move to the right
-        const ACC_X = 2;
-        const ACC_XIFAWAY = 1.2;
-        const ACC_Y = 0.2;
-        const MAX_X = 70;
-        const MAX_Y = 50;
-        const CHASE_RANGE = 150;
-        let manager = this.stateManager;
-        let target = this.target;
-        let xDirection = target.x - manager.x
-        // console.log(direction);
-        //if target is running away
-        if(xDirection > 0) { //if to the right
-            manager.facing = false;
-            if(target.velocity.x > 0) { //running to the right
-                if(xDirection > CHASE_RANGE) manager.velocity.x += ACC_X; //distance away to enage
-            }
-            if(target.velocity.x < 0) { //running to the left
-                // if(xDirection > CHASE_RANGE) manager.velocity.x -= ACC_XIFAWAY; //distance away to disengage
-            }
-            if(target.velocity.x == 0) {
-                manager.velocity.x += ACC_X
-            }
-        }
-        
-        if(Math.abs(xDirection) <= CHASE_RANGE) manager.velocity.x = 0
-
-        if(xDirection < 0) { //if to the left
-            manager.facing = true;
-            if(target.velocity.x < 0) { //running to the left
-                if(xDirection < -CHASE_RANGE) manager.velocity.x -= ACC_X;
-            }
-            if(target.velocity.x > 0) { //running to the right
-                // if(xDirection < -CHASE_RANGE) manager.velocity.x += ACC_XIFAWAY; //distance away to enagage
-            }
-            if(target.velocity.x == 0) {
-                manager.velocity.x += ACC_X
-            }
-        }
-        
-        let yDirection = target.y - manager.y
-
-        if(yDirection > 0) { //if below
-            manager.velocity.y += ACC_Y;
-        }
-        if(Math.abs(yDirection) <= 20) manager.velocity.y /= 1.1;
-        if(yDirection < 0) { //if above
-            manager.velocity.y -= ACC_Y;
-        }
-
-        //this.target.velocity.x
-
-        if(manager.velocity.x >= MAX_X) manager.velocity.x = MAX_X;
-        if(manager.velocity.x <= -MAX_X) manager.velocity.x = -MAX_X;
-        
-        if(manager.velocity.y >= MAX_Y) manager.velocity.y = MAX_Y;
-        if(manager.velocity.y <= -MAX_Y) manager.velocity.y = -MAX_Y;
     }
 
     radialChase() {
@@ -371,11 +316,6 @@ class SpecKnightFollow {
         let manager = this.stateManager;
         let target = this.target;
 
-        //close distance
-        // console.log(this.stateManager.velocity.y);
-        // if(manager.y < this.target.y) {
-        //     manager.velocity.y += verticalSpeed * TICK;
-        // }
         var dist = getDistance(manager, this.target);
         var difX = (this.target.x - manager.x) / dist;
         var difY = (this.target.y - manager.y) / dist;
@@ -396,20 +336,12 @@ class SpecKnightFollow {
         if (manager.velocity.x < 0) manager.facing = true;
         if (manager.velocity.x > 0) manager.facing = false;
 
-        // if(getDistance(manager,manager.target) > manager.engageRange + this.target.radius) {
-            // console.log(manager.target.BB.name)
         if(!manager.BB.circleCollide(manager.target,manager.engageRange,this.target.radius)) {    
             return new SpecKnightIdle(manager);
         }
-        
-        // if(getDistance(manager,manager.target) <= manager.attackRange + this.target.radius) {
-        // if(manager.BB.circleCollide(manager.target.BB, manager.attackRange, this.target.radius)) {
-            // return new SpecKnightAttack(manager);
-        // }
     }
 
     onExit() {
-        console.log("exit");
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
     }
@@ -484,6 +416,9 @@ class SpecKnightHurt {
         Object.assign(this, {stateManager});
         this.name = 4;
         this.animation = 0;
+        //stunnedDuration
+        this.duration = 0.8;
+        this.elaspedTime = 0;
     }
 
     onEnter() {
@@ -491,12 +426,11 @@ class SpecKnightHurt {
         // this.stateManager.velocity.x = dmgDirection * 4; 
     }
 
-    update(TICK) {
+    update(game, TICK) {
         //flicker for duration
-
         this.elaspedTime+=TICK;
-        
         if(this.elaspedTime >= this.duration) {
+            // console.log("exit");
             return new SpecKnightIdle(this.stateManager);
         }
 
@@ -513,22 +447,26 @@ class SpecKnightDeath {
         Object.assign(this, {stateManager});
         this.name = 5;
         this.animation = 5
-        this.duration = this.stateManager.animations[this.name].totalTime - 0.1;
+        this.duration = this.stateManager.animations[this.animation].totalTime - 0.1;
         this.elaspedTime = 0;
     }
     onEnter() {
+        
         this.stateManager.dead = true;
         this.stateManager.BBName = "defeatedEnemy";
     }
 
-    update(TICK) {
+    update(game, TICK) {
         this.elaspedTime+=TICK;
+        // console.log("elasped " + this.elaspedTime)
         if(this.elaspedTime >= this.duration) {
             return new SpecKnightIdle(this.stateManager);
         }
         return this.name;
     }
     onExit() {
+        console.log("total time " + this.duration);
+        console.log("exit" + this.elaspedTime)
         this.stateManager.removeFromWorld = true;
     }
 }

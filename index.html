@@ -21,15 +21,32 @@
             background-color: black;
         }
         canvas {
-            padding-left: 0;
-            padding-right: 0;
-            margin-left: auto;
-            margin-right: auto;
             display: block;
             font-size: 20px;
         }
-        div {
+        #stack {
+            position:relative;
+            padding-left: 0;
+            padding-right: 0;
+            width: 1024px;
+            margin: auto;
+        }
+        #gameWorld {
+            position: absolute; z-index: 0;
+        }
+        #filtered {
+            position: absolute; z-index: 1;
+            pointer-events:none;
+        }
+        div{
             text-align: center;
+        }
+        #options {
+            position:absolute;
+            bottom: 0;
+            left: 10%;
+            right: 10%;
+            margin: auto;
         }
     </style>
     <script type="text/javascript" src="./assetmanager.js"></script>
@@ -51,18 +68,22 @@
     <script type="text/javascript" src="./levels.js"></script>
     <script type="text/javascript" src="./specterKnight.js"></script>
     <script type="text/javascript" src="./specterBoss.js"></script>
-
+    <script type="text/javascript" src="./darkness.js"></script>
     <script type="text/javascript" src="./util.js"></script>
     <script type="text/javascript" src="./main.js"></script>
 </head>
 <body>
     <div>
-        <br>Untitled MetroidVania Game <br /> <br>
+        <br>Entropy <br /> <br>
     </div>
-    <canvas id="gameWorld" width="1024" height="640" style="background: rgb(255, 255, 255); border: 3px solid black;" tabindex ="0" autofocus></canvas>    <!-- The Canvas is a HTML5 element -->
-
-    <div>
-        <br />
+    <div id="stack">
+        <canvas id="gameWorld" width="1024" height="640" style="background: white; border: 3px solid black;" tabindex ="0" autofocus></canvas>    <!-- The Canvas is a HTML5 element -->
+        <canvas id="filtered" width="1024" height="640" tabindex="0" style=" border: 1px solid black" autofocus></canvas>
+    </div>
+    <br />
+    <!-- <canvas id="filtered" width="1024" height="640" style="background-image:url('http://placekitten.com/500/500');" tabindex="0" autofocus></canvas> -->
+    <div id="options">
+        <br>
         <input type="checkbox" id="debug"> Debug <input type="checkbox" id="mute"> Mute <input type="range" id="volume" min="0" max="1" value="0.05" step = "0.5"> Volume
     </div>
 
