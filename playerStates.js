@@ -13,7 +13,7 @@ class Player {
         this.DEC_REL = 120;
 
         this.light = true;
-        this.radius = 60;
+        this.radius = 100;
 
         this.overchargeHealth = 20;
         this.maxHealth = 10;
