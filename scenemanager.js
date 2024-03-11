@@ -38,6 +38,7 @@ class SceneManager {
         this.title = title;
 
         if (transition) {
+            
             this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, gameOver, transition));
         } else if (!title) {
             console.log(this.playerLives);
