@@ -49,23 +49,6 @@ class Animator {
         }
     }
 
-    // setFrameDurationArr(NumArr) {
-    //     if(NumArr.length == frameCount) {
-    //         this.variedDuration = true;
-    //         this.frameDurationArr = NumArr;
-    //         this.totalTime = 0;
-    //         for (const duration in NumArr) {
-    //             if (Object.hasOwnProperty.call(NumArr, duration)) {
-    //                 const element = NumArr[duration];
-    //                 this.totalTime+= element;
-    //             }
-    //         }
-    //     } else {
-    //         //return error
-    //         console.log("Frame Duration Array length not valid");
-    //     }
-    // }
-
     currentFrame() {
         return Math.floor(this.elaspedTime / this.frameDuration);
     };

@@ -33,8 +33,26 @@ class TransitionScreen {
             ctx.drawImage(this.gameoverscreen, 0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
         }
     };
+};
 
-    // drawMinimap() {
+class GameWinScreen {
+    constructor() {
+        this.gamewonscreen = ASSET_MANAGER.getAsset("./assets/winscreen.png");
+    };
 
-    // };
+    update() {
+
+    };
+
+    draw(ctx) {
+        ctx.drawImage(this.gamewonscreen, 0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
+        ctx.font = PARAMS.BLOCKWIDTH + 'px "Press Start 2P"';
+        ctx.fillStyle = "White";
+        ctx.fillText("WINNER!", 7.5 * PARAMS.BLOCKWIDTH, 7.5 * PARAMS.BLOCKWIDTH);
+        ctx.font = PARAMS.BLOCKWIDTH / 4 + 'px "Press Start 2P"';
+        ctx.fillText("Thanks for Playing", 8.5 * PARAMS.BLOCKWIDTH, 8 * PARAMS.BLOCKWIDTH);
+
+
+
+    };
 };

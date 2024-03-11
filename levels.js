@@ -164,6 +164,7 @@ class levelTwo {
     constructor(theGame, thePlayer) {
         this.functions = new levelFunctions;
         this.assets = [];
+        this.music = "./assets/music/lvl2.mp3";
         this.build(theGame, thePlayer);
     }
 
@@ -218,6 +219,7 @@ class levelTwo {
 class bossLevel {
     constructor(theGame, thePlayer) {
         this.functions = new levelFunctions;
+        this.music = "./assets/music/bosslvl.mp3";
         this.assets = [];
         this.build(theGame, thePlayer);
     }
