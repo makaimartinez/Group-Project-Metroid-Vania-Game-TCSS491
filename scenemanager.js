@@ -67,6 +67,8 @@ class SceneManager {
         this.clearEntities();
         this.x = 0;
         if (this.levelNum === this.levels.length) {      // if we get to the end of the levels
+            ASSET_MANAGER.pauseBackgroundMusic();
+            ASSET_MANAGER.playAsset("./assets/music/win.mp3");
             this.gameEngine.addEntity(new GameWinScreen());
         } else {
             this.loadGame(true, false, false);

@@ -30,7 +30,11 @@ ASSET_MANAGER.queueDownload("./assets/healthpotion.png");
 ASSET_MANAGER.queueDownload("./assets/speedpotion.png");
 
 // music
-ASSET_MANAGER.queueDownload("./assets/music/lvl1.mp3");		
+ASSET_MANAGER.queueDownload("./assets/music/lvl1.mp3");
+ASSET_MANAGER.queueDownload("./assets/music/lvl2.mp3");
+ASSET_MANAGER.queueDownload("./assets/music/bosslvl.mp3");
+ASSET_MANAGER.queueDownload("./assets/music/win.mp3");
+
 // sfx
 
 ASSET_MANAGER.downloadAll(function () {
