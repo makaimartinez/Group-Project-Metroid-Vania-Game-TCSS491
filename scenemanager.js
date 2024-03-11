@@ -10,7 +10,7 @@ class SceneManager {
         // this.removeFromWorld = false;
 
         // Controls what level the player is on (0 is currently level 1)
-        this.levelNum = 1;
+        this.levelNum = 0;
 
         this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
 
@@ -45,6 +45,7 @@ class SceneManager {
 
             this.clearEntities();
 
+            // this.player = new Player(this.gameEngine, 1400, 420, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
             this.player = new Player(this.gameEngine, 100, 440, ASSET_MANAGER.getAsset("./assets/pack_loreon_char_free_modified.png"));
             this.player.health = this.playerHealth;
 

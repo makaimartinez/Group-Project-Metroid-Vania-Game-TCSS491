@@ -50,25 +50,70 @@ class levelOne {
         theGame.camera.x = 0;     // reset camera 
 
         this.assets.push(new skelly(theGame, 500, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        this.assets.push(new skelly(theGame, 600, 190, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        this.assets.push(new skelly(theGame, 1400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        
         console.log("PLAYER: " + thePlayer);
         this.assets.push(thePlayer);
 
-        this.functions.killFloor(13, 30, this.assets);
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the X start position
         // Third argument is the total length in blocks
         // Fourth argument is the Y level
         // Fifth argument is the array to store assets
         this.functions.buildFloor(0, 0, 13, 11, this.assets);
-        this.functions.buildFloor(2, 0, 13, 12, this.assets);
-        this.functions.buildFloor(2, 0, 13, 13, this.assets);
+        this.functions.buildFloor(2, 1, 9, 12, this.assets);
+        this.functions.buildFloor(2, 2, 7, 13, this.assets);
 
-        this.functions.buildFloor(0, 26, 10, 11, this.assets);
-        this.functions.buildFloor(2, 26, 8, 12, this.assets);
-        this.functions.buildFloor(2, 26, 7, 13, this.assets);
+        this.functions.buildFloor(0, 9, 5, 6, this.assets);
+
+        this.functions.buildFloor(0, 21, 2, 7, this.assets);
+        this.assets.push(new DirtTile(theGame, 21, 8));
+        this.assets.push(new DirtTile(theGame, 11, 7));
+
+        // middle spire
+        this.functions.buildFloor(2, 23, 9, 13, this.assets);
+        this.functions.buildFloor(2, 24, 7, 12, this.assets);
+        this.functions.buildFloor(2, 25, 3, 11, this.assets);
+        this.functions.buildFloor(0, 28, 3, 11, this.assets);
+        this.functions.buildFloor(2, 25, 2, 10, this.assets);
+        this.functions.buildFloor(2, 25, 2, 9, this.assets);
+        this.functions.buildFloor(2, 25, 2, 8, this.assets);
+        this.assets.push(new GrassTile(theGame, 23, 12));
+        this.assets.push(new GrassTile(theGame, 24, 11));
+        this.assets.push(new GrassTile(theGame, 25, 6));
+        this.assets.push(new DirtTile(theGame, 25, 7));
+        this.assets.push(new GrassTile(theGame, 26, 7));
+        this.assets.push(new GrassTile(theGame, 27, 10));
+        this.assets.push(new GrassTile(theGame, 31, 12));
+        
+        // Floating chest island
+        this.functions.buildFloor(0, 31, 4, 5, this.assets);
+        this.functions.buildFloor(2, 32, 3, 6, this.assets);
+        this.assets.push(new DirtTile(theGame, 33, 7));
+
+        this.functions.buildFloor(2, 37, 4, 13, this.assets);
+        this.functions.buildFloor(2, 38, 2, 12, this.assets);
+        this.functions.buildFloor(0, 38, 2, 11, this.assets);
+        this.assets.push(new GrassTile(theGame, 37, 12));
+        this.assets.push(new GrassTile(theGame, 40, 12));
+        this.functions.buildFloor(0, 41, 2, 10, this.assets);
+
+        this.functions.buildFloor(2, 45, 11, 13, this.assets);
+        this.functions.buildFloor(2, 46, 10, 12, this.assets);
+        this.functions.buildFloor(2, 47, 10, 11, this.assets);
+        this.functions.buildFloor(2, 47, 12, 10, this.assets);
+        this.functions.buildFloor(2, 55, 3, 9, this.assets);
+        this.functions.buildFloor(0, 55, 3, 8, this.assets);
+        this.functions.buildFloor(0, 47, 8, 9, this.assets);
+        this.assets.push(new GrassTile(theGame, 45, 12));
+        this.assets.push(new GrassTile(theGame, 46, 11));
+        this.assets.push(new GrassTile(theGame, 58, 9));
 
         // Invisible wall to left of player start
         this.functions.invisibleWall(-1, this.assets);
+        this.functions.invisibleWall(61, this.assets);
+        this.functions.killFloor(0, 60, this.assets);
 
         this.assets.push(new GrassTile(theGame, 17, 9));
         this.assets.push(new GrassTile(theGame, 16, 10));
@@ -76,15 +121,31 @@ class levelOne {
         this.assets.push(new GrassTile(theGame, 18, 9));
         this.assets.push(new DirtTile(theGame, 18, 10));
         
-        this.assets.push(new Bush(theGame, 9, 10));
-        this.assets.push(new Bush(theGame, 17, 8));
-        this.assets.push(new Bush(theGame, 28, 10));
-        this.assets.push(new Tree(theGame, 5, 7));
-        this.assets.push(new Tree(theGame, 28, 7));
-
+        this.functions.buildFloor(0, -11, 6, 6, this.assets);
+        this.functions.buildFloor(2, -11, 4, 7, this.assets);
+        this.functions.buildFloor(2, -11, 3, 8, this.assets);
+        this.assets.push(new DirtTile(theGame, -11, 9));
+        
         // items
-        this.assets.push(new Chest(theGame, 9, 10));
-        this.assets.push(new NextLevelDoor(theGame, 33, 9));
+        this.assets.push(new Chest(theGame, 11, 5));
+        this.assets.push(new Chest(theGame, 32, 4));
+        this.assets.push(new NextLevelDoor(theGame, 52, 7));
+
+        // Foliage
+        this.assets.push(new Bush(theGame, -8, 5));
+        this.assets.push(new Bush(theGame, 9, 10));
+        this.assets.push(new Bush(theGame, 32, 4));
+        this.assets.push(new Bush(theGame, 17, 8));
+        this.assets.push(new Bush(theGame, 41, 9));
+        this.assets.push(new Bush(theGame, 48, 8));
+        this.assets.push(new Tree(theGame, -10, 2));
+        this.assets.push(new Tree(theGame, 5, 7));
+        this.assets.push(new Tree(theGame, 0, 7));
+        this.assets.push(new Tree(theGame, 9, 2));
+        this.assets.push(new Tree(theGame, 28, 7));
+        this.assets.push(new Tree(theGame, 49, 5));
+        this.assets.push(new Tree(theGame, 55, 4));
+
 
         // Draw Background last
         this.assets.push(new Background_Day(theGame, 260));
