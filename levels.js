@@ -247,7 +247,7 @@ class bossLevel {
         // Fifth argument is the array to store assets
 
         this.functions.invisibleWall(-20, this.assets);
-        this.functions.killFloor(13, 30, this.assets);
+        this.functions.killFloor(13, 100, this.assets);
         //decor floor
         this.functions.buildFloor(1, 0, 9, 12, this.assets);
         this.functions.buildFloor(1, 0, 7, 13, this.assets);
