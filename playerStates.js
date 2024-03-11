@@ -14,6 +14,7 @@ class Player {
 
         this.overchargeHealth = 20;
         this.maxHealth = 10;
+        this.defaultHealth = 5;
         this.health = 5;
         this.scale = 3;
         this.dead = false;
