@@ -46,7 +46,6 @@ class SceneManager {
             this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, title, gameOver, transition));
         } else if (title) {                     // switch to title screen
             //reset 
-            
             this.playerLives = this.intialLives;
             this.levelNum = 0;
             this.gameEngine.addEntity(new TransitionScreen(this.gameEngine, title, gameOver, transition));
