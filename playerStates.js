@@ -277,7 +277,7 @@ class Player {
                 } else if (entity.BB.name == "ground" && (that.lastBB.top) >= entity.BB.bottom) {
                     that.y = entity.BB.bottom;
                     that.velocity.y = 0; 
-                }else if(entity.BB.name == "ground" && (that.lastBB.right) >= entity.BB.left)  {
+                } else if(entity.BB.name == "ground" && (that.lastBB.right) >= entity.BB.left)  {
                     that.x = entity.BB.right; 
                     that.velocity.x = 0;
                 } else if(entity.BB.name == "ground" && (that.lastBB.left) <= entity.BB.right)  {
