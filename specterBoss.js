@@ -4,15 +4,18 @@ class SpecterBoss {
 
         this.velocity = {x:0, y:0};
 
-        this.facing = false;
+        this.facing = true;
         this.hurt = false;
         this.engageRange = 300;
-        this.disengageRange = 1000;
+        this.disengageRange = 600;
         this.attackRange = 80;
         this.attackCD = 2;
         this.attackCDCountDown = 0;
         this.target = null;
         
+        this.light = true;
+        this.radius = this.engageRange
+
         this.health = 10;
         this.hurt = false;
 
@@ -221,6 +224,7 @@ class SpecBossIdle {
     }
     
     onEnter() {
+        this.stateManager.radius = this.stateManager.engageRange;
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
     }
@@ -244,7 +248,7 @@ class SpecBossFoward {
         this.stateManager = stateManager;
         this.name = 1;
         this.animation = 1;
-        this.forwardDuration = 4;
+        this.forwardDuration = 5;
         this.forwardTime = 0;
     }
     
@@ -289,90 +293,26 @@ class SpecBossFollow {
         //full stop
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
-
-        //determine inital direction
-        var dist = getDistance(this.stateManager, this.target);
-        var difX = (this.target.x - this.stateManager.x) / dist;
-        var difY = (this.target.y - this.stateManager.y) / dist;
-        
+        this.stateManager.radius = this.stateManager.disengageRange;
+        //determine inital direction        
     }
 
     update(game,TICK) {
         this.radialChase();
-        // this.analogChase();
         return this.name;
     }
-    analogChase() {
-        //diff boundary
-        //xspeed is slightly faster than player's
-        //if target is to the right, move to the right
-        const ACC_X = 2;
-        const ACC_XIFAWAY = 1.2;
-        const ACC_Y = 0.2;
-        const MAX_X = 70;
-        const MAX_Y = 50;
-        const CHASE_RANGE = 150;
-        let manager = this.stateManager;
-        let target = this.target;
-        let xDirection = target.x - manager.x
-        //if target is running away
-        if(xDirection > 0) { //if to the right
-            manager.facing = false;
-            if(target.velocity.x > 0) { //running to the right
-                if(xDirection > CHASE_RANGE) manager.velocity.x += ACC_X; //distance away to enage
-            }
-            if(target.velocity.x < 0) { //running to the left
-                if(xDirection > CHASE_RANGE) manager.velocity.x -= ACC_XIFAWAY; //distance away to disengage
-            }
-            if(target.velocity.x == 0) {
-                manager.velocity.x += ACC_X
-            }
-        }
-        
-        if(Math.abs(xDirection) <= CHASE_RANGE) manager.velocity.x = 0
-
-        if(xDirection < 0) { //if to the left
-            manager.facing = true;
-            if(target.velocity.x < 0) { //running to the left
-                if(xDirection < -CHASE_RANGE) manager.velocity.x -= ACC_X;
-            }
-            if(target.velocity.x > 0) { //running to the right
-                if(xDirection < -CHASE_RANGE) manager.velocity.x += ACC_XIFAWAY; //distance away to enagage
-            }
-            if(target.velocity.x == 0) {
-                manager.velocity.x += ACC_X
-            }
-        }
-        
-        let yDirection = target.y - manager.y
-
-        if(yDirection > 0) { //if below
-            manager.velocity.y += ACC_Y;
-        }
-        if(Math.abs(yDirection) <= 20) manager.velocity.y /= 1.1;
-        if(yDirection < 0) { //if above
-            manager.velocity.y -= ACC_Y;
-        }
-
-        //this.target.velocity.x
-
-        if(manager.velocity.x >= MAX_X) manager.velocity.x = MAX_X;
-        if(manager.velocity.x <= -MAX_X) manager.velocity.x = -MAX_X;
-        
-        if(manager.velocity.y >= MAX_Y) manager.velocity.y = MAX_Y;
-        if(manager.velocity.y <= -MAX_Y) manager.velocity.y = -MAX_Y;
-    }
-
 
     radialChase() {
         const verticalSpeed = 2000;
         const MAX_VERTICAL = 20000;
-        const MAX_X = 100;
+        const MIN_X = 20;
+        const MAX_X = 1000;
         const MAX_Y = 50;
-        const CHASE_RANGE = 150;
+        const CHASE_RANGE = 100;
         
         let manager = this.stateManager;
         let target = this.target;
+        let facing = manager.facing;
 
         var dist = getDistance(manager, this.target);
         var difX = (this.target.x - manager.x) / dist;
@@ -383,7 +323,9 @@ class SpecBossFollow {
         let xDirection = target.x - manager.x
         let yDirection = target.y - manager.y
 
+        //stop when too close
         if(Math.abs(xDirection) <= CHASE_RANGE) manager.velocity.x = 0
+        // if(facing && manager.velocity.x >= -MIN_X) manager.velocity.x = -MIN_X;
 
         if(manager.velocity.x >= MAX_X) manager.velocity.x = MAX_X;
         if(manager.velocity.x <= -MAX_X) manager.velocity.x = -MAX_X;
@@ -416,6 +358,7 @@ class SpecBossAttack {
     }
 
     onEnter() {
+        // this.stateManager.radius = this.stateManager.attackRange;
         this.stateManager.velocity.x = 0;
         this.stateManager.velocity.y = 0;
         //rest animation frame

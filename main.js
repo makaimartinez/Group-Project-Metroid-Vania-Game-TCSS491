@@ -42,7 +42,7 @@ ASSET_MANAGER.downloadAll(function () {
 	// We access the HTML canvas using the global document variable and the getElementByID function.
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");	// Paint to canvas element through a 2D context
-	ctx.imageSmoothingEnabled = false;	
+	ctx.imageSmoothingEnabled = false;
 
 	PARAMS.CANVAS_WIDTH = canvas.width;
 	PARAMS.CANVAS_HEIGHT = canvas.height;

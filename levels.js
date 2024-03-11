@@ -107,6 +107,7 @@ class levelTwo {
     }
 
     build(theGame, thePlayer) {
+        this.assets.push(new darkness(theGame));
 
         this.assets.push(new skelly(theGame, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         this.assets.push(new SpecterKnight(theGame, 300, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
@@ -161,18 +162,20 @@ class bossLevel {
     }
 
     build(theGame, thePlayer) {
+        //lighting effect 
+        this.assets.push(new darkness(theGame));
 
-        // this.assets.push(new SpecterKnight(theGame, -200, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, -600, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
 
-        // this.assets.push(new SpecterKnight(theGame, -460, 200, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
-        // this.assets.push(new SpecterKnight(theGame, 1000, 50, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
-        // this.assets.push(new SpecterKnight(theGame, 3200, 0, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        // this.assets.push(new SpecterKnight(theGame, 1000, 0, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
         // this.assets.push(new SpecterKnight(theGame, 1700, 50, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
-        this.assets.push(new SpecterBoss(theGame, 100, 100, ASSET_MANAGER.getAsset("./assets/specter boss.png")));
-        this.assets.push(new skelly(theGame, 500, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        this.assets.push(new SpecterBoss(theGame, 500, -10, ASSET_MANAGER.getAsset("./assets/specter boss.png")));
+        // this.assets.push(new SpecterBoss(theGame, 2900, 0, ASSET_MANAGER.getAsset("./assets/specter boss.png")));
+        this.assets.push(new skelly(theGame, 800, 430, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         // thePlayer.x = 0;
         // thePlayer.y = 0;
         this.assets.push(thePlayer);
+        // this.assets.push(new darkness(theGame));
 
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the X start position
@@ -181,6 +184,7 @@ class bossLevel {
         // Fifth argument is the array to store assets
 
         this.functions.invisibleWall(-20, this.assets);
+        this.functions.killFloor(13, 30, this.assets);
         //decor floor
         this.functions.buildFloor(1, 0, 9, 12, this.assets);
         this.functions.buildFloor(1, 0, 7, 13, this.assets);
@@ -270,7 +274,7 @@ class bossLevel {
 
         // items
         // this.assets.push(new Chest(theGame, 4, 10));
-        
+        // this.assets.push(new darkness(theGame));
         // Draw Background last
         this.assets.push(new Background_Cave(theGame, 260));
     }
