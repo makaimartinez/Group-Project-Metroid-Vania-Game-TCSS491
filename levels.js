@@ -171,30 +171,64 @@ class levelTwo {
     build(theGame, thePlayer) {
         this.assets.push(new darkness(theGame));
 
-        this.assets.push(new skelly(theGame, 400, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
+        this.assets.push(new skelly(theGame, 960, 420, ASSET_MANAGER.getAsset("./assets/Skeleton_spritesheet.png")));
         this.assets.push(new SpecterKnight(theGame, 300, 100, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 900, 300, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+        this.assets.push(new SpecterKnight(theGame, 1500, 150, ASSET_MANAGER.getAsset("./assets/specter knight.png")));
+       
         this.assets.push(thePlayer);
 
-        this.functions.killFloor(10, 4, this.assets);
+        this.functions.killFloor(10, 80, this.assets);
 
         // Types: 0 - Grass | 1 - Stone | 2 - Dirt | Any Other Int - Dev
         // Second argument is the X start position
         // Third argument is the total length in blocks
         // Fourth argument is the Y level
         // Fifth argument is the array to store assets
-        this.functions.buildFloor(1, 0, 7, 11, this.assets);
-        this.functions.buildFloor(1, 0, 9, 12, this.assets);
-        this.functions.buildFloor(1, 0, 10, 13, this.assets);
+        this.functions.buildFloor(1, -5, 11, 11, this.assets);
+        this.functions.buildFloor(1, -6, 15, 12, this.assets);
+        this.functions.buildFloor(1, -6, 16, 13, this.assets);
 
-        this.functions.buildFloor(1, 12, 10, 11, this.assets);
-        this.functions.buildFloor(1, 14, 8, 12, this.assets);
+        this.functions.buildFloor(1, 12, 13, 11, this.assets);
+        this.functions.buildFloor(1, 14, 9, 12, this.assets);
         this.functions.buildFloor(1, 15, 7, 13, this.assets);
+
+        this.functions.buildFloor(1, 30, 3, 10, this.assets);
+        this.assets.push(new StoneTile(theGame, 31, 11));
+        this.functions.buildFloor(1, 31, 2, 12, this.assets);
+        this.functions.buildFloor(1, 30, 3, 13, this.assets);
+        
+        this.assets.push(new StoneTile(theGame, 35, 8));
+        this.assets.push(new StoneTile(theGame, 35, 9));
+        this.assets.push(new StoneTile(theGame, 35, 10));
+        this.assets.push(new StoneTile(theGame, 35, 11));
+        this.assets.push(new StoneTile(theGame, 35, 12));
+        this.assets.push(new StoneTile(theGame, 35, 13));
+        this.assets.push(new StoneTile(theGame, 36, 12));
+        this.assets.push(new StoneTile(theGame, 36, 13));
+        
+        this.assets.push(new StoneTile(theGame, 43, 10));
+        this.assets.push(new StoneTile(theGame, 44, 10));
+        this.assets.push(new StoneTile(theGame, 43, 11));
+        this.assets.push(new StoneTile(theGame, 44, 10));
+        this.assets.push(new StoneTile(theGame, 45, 10));
+        this.assets.push(new StoneTile(theGame, 44, 11));
+        this.assets.push(new StoneTile(theGame, 43, 12));
+        this.assets.push(new StoneTile(theGame, 43, 13));
 
         this.functions.invisibleWall(-1, this.assets);
         
         this.assets.push(new StoneTile(theGame, 15, 10));
         this.assets.push(new StoneTile(theGame, 16, 10));
-        this.functions.buildFloor(1, 0, 22, 0, this.assets);
+        this.functions.buildFloor(1, 0, 80, 0, this.assets);
+        this.functions.buildFloor(1, -11, 5, 0, this.assets);
+        this.functions.buildFloor(1, -11, 4, 1, this.assets);
+        this.functions.buildFloor(1, -11, 2, 2, this.assets);
+        this.functions.buildFloor(1, -1, 6, 1, this.assets);
+        this.functions.buildFloor(1, -3, 4, 2, this.assets);
+        this.functions.buildFloor(1, 12, 4, 1, this.assets);
+        this.functions.buildFloor(1, 23, 9, 1, this.assets);
+        this.functions.buildFloor(1, 25, 3, 2, this.assets);
 
         this.assets.push(new StoneTile(theGame, 10, 1));
         this.assets.push(new StoneTile(theGame, 11, 1));
@@ -203,7 +237,8 @@ class levelTwo {
 
         // items
         this.assets.push(new Chest(theGame, 13, 10));
-        this.assets.push(new NextLevelDoor(theGame, 19, 9));
+        this.assets.push(new Chest(theGame, 43, 9));
+        this.assets.push(new NextLevelDoor(theGame, 45, 8));
         
         // Draw Background last
         this.assets.push(new Background_Cave(theGame, 260));
